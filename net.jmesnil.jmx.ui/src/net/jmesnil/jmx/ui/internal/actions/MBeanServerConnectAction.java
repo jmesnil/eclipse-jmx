@@ -45,12 +45,9 @@ public class MBeanServerConnectAction implements IViewActionDelegate {
             return;
         }
         try {
-            String host = dialog.getHost();
-            int port = dialog.getPort();
+            String url = dialog.getURL();
             MBeanServerConnectionWrapper connection = JMXCoreActivator
-                    .getDefault().connect(
-                            "service:jmx:rmi:///jndi/rmi://" + host + ":" //$NON-NLS-1$ //$NON-NLS-2$
-                                    + port + "/jmxrmi"); //$NON-NLS-1$
+                    .getDefault().connect(url);
             view.setMBeanServerConnection(connection);
         } catch (IOException e) {
             MessageDialog.openError(view.getSite().getShell(),

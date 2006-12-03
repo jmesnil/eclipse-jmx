@@ -31,6 +31,8 @@ public class Messages extends NLS {
 
     public static String ConnectionSelectionDialog_invalid_port;
 
+    public static String ConnectionSelectionDialog_invalid_url;
+
     public static String ConnectionSelectionDialog_port;
 
     public static String ConnectionSelectionDialog_title;
@@ -70,6 +72,10 @@ public class Messages extends NLS {
     public static String MBeanOperationInvocationView_success;
 
     public static String MBeanServerConnectAction_error;
+
+    public static String MBeanServerConnectDialog_advancedTab;
+
+    public static String MBeanServerConnectDialog_simpleTab;
 
     public static String name;
 

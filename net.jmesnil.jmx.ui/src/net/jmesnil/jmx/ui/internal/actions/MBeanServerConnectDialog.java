@@ -30,6 +30,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
@@ -40,13 +42,13 @@ public class MBeanServerConnectDialog extends SelectionDialog {
 
     private final static int SIZING_SELECTION_WIDGET_WIDTH = 300;
 
-    private Text hostText, portText;
+    private Text hostText, portText, urlText;
 
     private Shell parent;
 
-    private int port;
+    private String url;
 
-    private String host;
+    private TabFolder folder;
 
     public MBeanServerConnectDialog(Shell parentShell) {
         super(parentShell);
@@ -73,14 +75,29 @@ public class MBeanServerConnectDialog extends SelectionDialog {
         Font font = parent.getFont();
         composite.setFont(font);
 
-        createMessageArea(composite);
+        // createMessageArea(composite);
+
+        folder = new TabFolder(composite, SWT.TOP);
+        TabItem simpleItem = new TabItem(folder, SWT.NONE);
+        simpleItem.setText(Messages.MBeanServerConnectDialog_simpleTab);
+        simpleItem.setControl(createSimpleConnectionPage(folder));
+
+        TabItem advancedItem = new TabItem(folder, SWT.NONE);
+        advancedItem.setText(Messages.MBeanServerConnectDialog_advancedTab);
+        advancedItem.setControl(createAdvancedConnectionPage(folder));
+
+        folder.setSelection(0);
+        return composite;
+    }
+
+    private Control createSimpleConnectionPage(Composite parent) {
+        Composite fieldComposite = new Composite(parent, SWT.NULL);
+        fieldComposite.setLayout(new GridLayout(5, false));
 
         GridData data = new GridData(GridData.FILL_BOTH);
         data.heightHint = SIZING_SELECTION_WIDGET_HEIGHT;
         data.widthHint = SIZING_SELECTION_WIDGET_WIDTH;
 
-        Composite fieldComposite = new Composite(composite, SWT.NULL);
-        fieldComposite.setLayout(new GridLayout(5, false));
         // 1 host label
         Label label = new Label(fieldComposite, SWT.CENTER);
         label.setText(Messages.ConnectionSelectionDialog_host);
@@ -100,7 +117,27 @@ public class MBeanServerConnectDialog extends SelectionDialog {
         data = new GridData();
         data.widthHint = convertWidthInCharsToPixels(6);
         portText.setLayoutData(data);
-        return composite;
+        return fieldComposite;
+    }
+
+    private Control createAdvancedConnectionPage(Composite parent) {
+        Composite fieldComposite = new Composite(parent, SWT.NULL);
+        fieldComposite.setLayout(new GridLayout(2, false));
+
+        GridData data = new GridData(GridData.FILL_BOTH);
+        data.heightHint = SIZING_SELECTION_WIDGET_HEIGHT;
+        data.widthHint = SIZING_SELECTION_WIDGET_WIDTH;
+
+        // 1 host label
+        Label label = new Label(fieldComposite, SWT.CENTER);
+        label.setText("JMX URL"); //$NON-NLS-1$
+        // 2 URL text entry
+        urlText = new Text(fieldComposite, SWT.BORDER);
+        urlText.setText("service:jmx:"); //$NON-NLS-1$
+        data = new GridData(GridData.FILL_BOTH);
+        data.widthHint = convertWidthInCharsToPixels(25);
+        urlText.setLayoutData(data);
+        return fieldComposite;
     }
 
     /*
@@ -109,46 +146,55 @@ public class MBeanServerConnectDialog extends SelectionDialog {
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
     protected void okPressed() {
-        if (hostText.getText().equals("")) { //$NON-NLS-1$
-            MessageDialog.openError(parent.getShell(),
-                    Messages.ConnectionSelectionDialog_error,
-                    Messages.ConnectionSelectionDialog_invalid_host);
-            return;
-        }
-        try {
-            InetAddress.getByName(hostText.getText());
-        } catch (UnknownHostException e) {
-            MessageDialog.openError(parent.getShell(),
-                    Messages.ConnectionSelectionDialog_error,
-                    Messages.ConnectionSelectionDialog_invalid_host);
-            return;
-        }
-        host = hostText.getText();
-        if (portText.getText().equals("")) { //$NON-NLS-1$
-            MessageDialog.openError(parent.getShell(),
-                    Messages.ConnectionSelectionDialog_error,
-                    Messages.ConnectionSelectionDialog_invalid_port);
-            return;
-        }
-        try {
-            port = Integer.parseInt(portText.getText());
-            if (port < 1 || port > 0xffff) {
-                throw new NumberFormatException();
+        if (folder.getSelectionIndex() == 0) {
+            if (hostText.getText().equals("")) { //$NON-NLS-1$
+                MessageDialog.openError(parent.getShell(),
+                        Messages.ConnectionSelectionDialog_error,
+                        Messages.ConnectionSelectionDialog_invalid_host);
+                return;
             }
-        } catch (NumberFormatException e) {
-            MessageDialog.openError(parent.getShell(),
-                    Messages.ConnectionSelectionDialog_error,
-                    Messages.ConnectionSelectionDialog_invalid_port);
-            return;
+            try {
+                InetAddress.getByName(hostText.getText());
+            } catch (UnknownHostException e) {
+                MessageDialog.openError(parent.getShell(),
+                        Messages.ConnectionSelectionDialog_error,
+                        Messages.ConnectionSelectionDialog_invalid_host);
+                return;
+            }
+            String host = hostText.getText();
+            if (portText.getText().equals("")) { //$NON-NLS-1$
+                MessageDialog.openError(parent.getShell(),
+                        Messages.ConnectionSelectionDialog_error,
+                        Messages.ConnectionSelectionDialog_invalid_port);
+                return;
+            }
+            int port;
+            try {
+                port = Integer.parseInt(portText.getText());
+                if (port < 1 || port > 0xffff) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException e) {
+                MessageDialog.openError(parent.getShell(),
+                        Messages.ConnectionSelectionDialog_error,
+                        Messages.ConnectionSelectionDialog_invalid_port);
+                return;
+            }
+            url = "service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        }
+        if (folder.getSelectionIndex() == 1) {
+            if (urlText.getText().equals("")) { //$NON-NLS-1$
+                MessageDialog.openError(parent.getShell(),
+                        Messages.ConnectionSelectionDialog_error,
+                        Messages.ConnectionSelectionDialog_invalid_url);
+                return;
+            }
+            url = urlText.getText();
         }
         super.okPressed();
     }
 
-    String getHost() {
-        return host;
-    }
-
-    int getPort() {
-        return port;
+    String getURL() {
+        return url;
     }
 }
