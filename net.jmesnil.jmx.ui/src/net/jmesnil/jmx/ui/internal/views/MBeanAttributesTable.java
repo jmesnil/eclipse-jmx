@@ -19,7 +19,6 @@
 package net.jmesnil.jmx.ui.internal.views;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.management.MBeanAttributeInfo;
@@ -54,7 +53,6 @@ public class MBeanAttributesTable {
     protected class MBeanAttrContentProvider implements
             IStructuredContentProvider {
         private MBeanAttributeInfoWrapper[] attrs;
-
 
         /*
          * (non-Javadoc)
@@ -128,7 +126,9 @@ public class MBeanAttributesTable {
                             .getMBeanServerConnection();
                     ObjectName on = wrapper.getObjectName();
                     Object obj = mbsc.getAttribute(on, attrInfo.getName());
-                    return getDisplay(obj, attrInfo);
+                    boolean detailed = displayDetails.contains(attrInfo
+                            .getName());
+                    return AttributeDisplayUtil.toString(obj, detailed);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return Messages.MBeanAttributesTable_unvailable;
@@ -182,52 +182,26 @@ public class MBeanAttributesTable {
     }
 
     private TableViewer viewer;
-    private final List<String> displayDetails = new ArrayList<String>();
-    
-    private boolean toogleDetails(MBeanAttributeInfo attrInfo)
-    {
-      String type = attrInfo.getType();
-      try
-      {
-        if (Class.forName(type).isArray()) {
-          if (displayDetails.contains(attrInfo.getName()))
-          {
-            displayDetails.remove(attrInfo.getName());
-          } else {
-            displayDetails.add(attrInfo.getName());
-          }
-          return true;
-        } else {
-          return false;
-        }
-      }
-      catch (ClassNotFoundException e1)
-      {
-        return false;
-      }
-    }
-    
-    private String getDisplay(Object obj, MBeanAttributeInfo attrInfo)
-    {
-      if (obj instanceof Object[]) {
-        Object[] items = (Object[]) obj;
-        if (displayDetails.contains(attrInfo.getName()))
-        {
-          StringBuffer buff = new StringBuffer();
-          for (int i = 0; i < items.length; i++)
-          {
-            Object item = items[i];
-            buff.append(item).append("\n"); //$NON-NLS-1$
-          }
-          return buff.toString();
-        } else 
-        {
-            return Arrays.asList(items).toString();
-        }
-      }
-      return obj.toString();
-    }
 
+    private final List<String> displayDetails = new ArrayList<String>();
+
+    private boolean toogleDetails(MBeanAttributeInfo attrInfo) {
+        String type = attrInfo.getType();
+        try {
+            if (Class.forName(type).isArray()) {
+                if (displayDetails.contains(attrInfo.getName())) {
+                    displayDetails.remove(attrInfo.getName());
+                } else {
+                    displayDetails.add(attrInfo.getName());
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } catch (ClassNotFoundException e1) {
+            return false;
+        }
+    }
 
     public MBeanAttributesTable(Composite parent, final MBeanInfoView beanView) {
         final Table attrTable = beanView.getToolkit().createTable(
@@ -239,22 +213,23 @@ public class MBeanAttributesTable {
         attrTable.setLinesVisible(true);
         attrTable.setHeaderVisible(true);
         attrTable.addMouseListener(new MouseAdapter() {
-          public void mouseDoubleClick(MouseEvent e)
-          {
-            if (e.widget != attrTable) {
-              return;
+            public void mouseDoubleClick(MouseEvent e) {
+                if (e.widget != attrTable) {
+                    return;
+                }
+                TableItem item = attrTable.getSelection()[0];
+                if (item == null || item.getData() == null)
+                    return;
+                if (item.getData() instanceof MBeanAttributeInfoWrapper) {
+                    MBeanAttributeInfoWrapper wrapper = (MBeanAttributeInfoWrapper) item
+                            .getData();
+                    MBeanAttributeInfo attrInfo = wrapper
+                            .getMBeanAttributeInfo();
+                    if (toogleDetails(attrInfo)) {
+                        viewer.refresh(true);
+                    }
+                }
             }
-            TableItem item = attrTable.getSelection()[0];
-            if (item == null || item.getData() == null)
-              return;
-            if (item.getData() instanceof MBeanAttributeInfoWrapper) { 
-              MBeanAttributeInfoWrapper wrapper = (MBeanAttributeInfoWrapper) item.getData();
-              MBeanAttributeInfo attrInfo = wrapper.getMBeanAttributeInfo();
-              if (toogleDetails(attrInfo)) {
-                viewer.refresh(true);
-              }
-            }
-          }
         });
         viewer = new TableViewer(attrTable);
         viewer.setContentProvider(new MBeanAttrContentProvider());
