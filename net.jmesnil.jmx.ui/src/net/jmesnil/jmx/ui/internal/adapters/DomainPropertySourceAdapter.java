@@ -38,7 +38,7 @@ public class DomainPropertySourceAdapter implements IPropertySource {
     }
 
     public IPropertyDescriptor[] getPropertyDescriptors() {
-        List descriptors = new ArrayList();
+        List<IPropertyDescriptor> descriptors = new ArrayList<IPropertyDescriptor>();
         // General properties
         addDescriptor("name", Messages.domain, Messages.general, descriptors); //$NON-NLS-1$
         return (IPropertyDescriptor[]) descriptors
@@ -46,7 +46,7 @@ public class DomainPropertySourceAdapter implements IPropertySource {
     }
 
     private void addDescriptor(String id, String displayName, String category,
-            List descriptors) {
+            List<IPropertyDescriptor> descriptors) {
         PropertyDescriptor descriptor = new PropertyDescriptor(id, displayName);
         descriptor.setCategory(category);
         descriptors.add(descriptor);
