@@ -44,7 +44,7 @@ public class MBeanInfoPropertySourceAdapter implements IPropertySource {
     }
 
     public IPropertyDescriptor[] getPropertyDescriptors() {
-        List descriptors = new ArrayList();
+        List<PropertyDescriptor> descriptors = new ArrayList<PropertyDescriptor>();
         // General properties
         addDescriptor(
                 "objectname", Messages.objectName, Messages.general, descriptors); //$NON-NLS-1$
@@ -52,12 +52,12 @@ public class MBeanInfoPropertySourceAdapter implements IPropertySource {
                 "description", Messages.description, Messages.general, descriptors); //$NON-NLS-1$
         addDescriptor(
                 "classname", Messages.className, Messages.general, descriptors); //$NON-NLS-1$
-        return (IPropertyDescriptor[]) descriptors
+        return descriptors
                 .toArray(new IPropertyDescriptor[descriptors.size()]);
     }
 
     private void addDescriptor(String id, String displayName, String category,
-            List descriptors) {
+            List<PropertyDescriptor> descriptors) {
         PropertyDescriptor descriptor = new PropertyDescriptor(id, displayName);
         descriptor.setCategory(category);
         descriptors.add(descriptor);
