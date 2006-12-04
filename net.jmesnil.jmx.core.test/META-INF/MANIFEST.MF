@@ -7,3 +7,4 @@ Bundle-Vendor: %BundleProvider
 Fragment-Host: net.jmesnil.jmx.core
 Require-Bundle: org.junit
 Export-Package: net.jmesnil.jmx.core
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
