@@ -18,7 +18,9 @@
  */
 package net.jmesnil.jmx.ui.internal.views;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServerConnection;
@@ -36,6 +38,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -43,12 +47,14 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
 public class MBeanAttributesTable {
 
     protected class MBeanAttrContentProvider implements
             IStructuredContentProvider {
         private MBeanAttributeInfoWrapper[] attrs;
+
 
         /*
          * (non-Javadoc)
@@ -122,10 +128,7 @@ public class MBeanAttributesTable {
                             .getMBeanServerConnection();
                     ObjectName on = wrapper.getObjectName();
                     Object obj = mbsc.getAttribute(on, attrInfo.getName());
-                    if (obj instanceof Object[]) {
-                        return Arrays.asList((Object[]) obj).toString();
-                    }
-                    return obj.toString();
+                    return getDisplay(obj, attrInfo);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return Messages.MBeanAttributesTable_unvailable;
@@ -133,6 +136,7 @@ public class MBeanAttributesTable {
             }
             return getText(element);
         }
+
     }
 
     protected class MBeanAttrViewerSorter extends ViewerSorter {
@@ -178,18 +182,81 @@ public class MBeanAttributesTable {
     }
 
     private TableViewer viewer;
+    private final List<String> displayDetails = new ArrayList<String>();
+    
+    private boolean toogleDetails(MBeanAttributeInfo attrInfo)
+    {
+      String type = attrInfo.getType();
+      try
+      {
+        if (Class.forName(type).isArray()) {
+          if (displayDetails.contains(attrInfo.getName()))
+          {
+            displayDetails.remove(attrInfo.getName());
+          } else {
+            displayDetails.add(attrInfo.getName());
+          }
+          return true;
+        } else {
+          return false;
+        }
+      }
+      catch (ClassNotFoundException e1)
+      {
+        return false;
+      }
+    }
+    
+    private String getDisplay(Object obj, MBeanAttributeInfo attrInfo)
+    {
+      if (obj instanceof Object[]) {
+        Object[] items = (Object[]) obj;
+        if (displayDetails.contains(attrInfo.getName()))
+        {
+          StringBuffer buff = new StringBuffer();
+          for (int i = 0; i < items.length; i++)
+          {
+            Object item = items[i];
+            buff.append(item).append("\n"); //$NON-NLS-1$
+          }
+          return buff.toString();
+        } else 
+        {
+            return Arrays.asList(items).toString();
+        }
+      }
+      return obj.toString();
+    }
+
 
     public MBeanAttributesTable(Composite parent, final MBeanInfoView beanView) {
-        final Table opTable = beanView.getToolkit().createTable(
+        final Table attrTable = beanView.getToolkit().createTable(
                 parent,
                 SWT.BORDER | SWT.SINGLE | SWT.FLAT | SWT.FULL_SELECTION
                         | SWT.V_SCROLL | SWT.H_SCROLL);
-        createColumns(opTable);
-        opTable.setLayoutData(new GridData(GridData.FILL_BOTH));
-        opTable.setLinesVisible(true);
-        opTable.setHeaderVisible(true);
-
-        viewer = new TableViewer(opTable);
+        createColumns(attrTable);
+        attrTable.setLayoutData(new GridData(GridData.FILL_BOTH));
+        attrTable.setLinesVisible(true);
+        attrTable.setHeaderVisible(true);
+        attrTable.addMouseListener(new MouseAdapter() {
+          public void mouseDoubleClick(MouseEvent e)
+          {
+            if (e.widget != attrTable) {
+              return;
+            }
+            TableItem item = attrTable.getSelection()[0];
+            if (item == null || item.getData() == null)
+              return;
+            if (item.getData() instanceof MBeanAttributeInfoWrapper) { 
+              MBeanAttributeInfoWrapper wrapper = (MBeanAttributeInfoWrapper) item.getData();
+              MBeanAttributeInfo attrInfo = wrapper.getMBeanAttributeInfo();
+              if (toogleDetails(attrInfo)) {
+                viewer.refresh(true);
+              }
+            }
+          }
+        });
+        viewer = new TableViewer(attrTable);
         viewer.setContentProvider(new MBeanAttrContentProvider());
         viewer.setLabelProvider(new MBeanAttrLabelProvider());
     }
