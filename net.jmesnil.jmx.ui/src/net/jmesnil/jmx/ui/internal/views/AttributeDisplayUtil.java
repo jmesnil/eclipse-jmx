@@ -27,7 +27,7 @@ public class AttributeDisplayUtil {
         Assert.isNotNull(arrayObj);
         Assert.isLegal(arrayObj.getClass().isArray());
 
-        String type = arrayObj.getClass().getComponentType().getSimpleName();
+        String type = arrayObj.getClass().getComponentType().getName();
         int length = Array.getLength(arrayObj);
         return type + '[' + length + ']';
     }
@@ -52,5 +52,17 @@ public class AttributeDisplayUtil {
             }
         }
         return buff.toString();
+    }
+
+    public static String toString(String type) {
+        try {
+            Class clazz = AttributeDisplayUtil.class.getClassLoader()
+                    .loadClass(type);
+            if (clazz.isArray()) {
+                return clazz.getComponentType().getName() + "[]"; //$NON-NLS-1$
+            }
+        } catch (ClassNotFoundException e) {
+        }
+        return type;
     }
 }

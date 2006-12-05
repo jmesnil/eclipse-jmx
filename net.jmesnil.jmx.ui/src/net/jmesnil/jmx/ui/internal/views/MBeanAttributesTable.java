@@ -117,7 +117,8 @@ public class MBeanAttributesTable {
             case 0:
                 return ""; //$NON-NLS-1$
             case 1:
-                return attrInfo.getType();
+                String type = attrInfo.getType();
+                return AttributeDisplayUtil.toString(type);
             case 2:
                 return attrInfo.getName();
             case 3:
