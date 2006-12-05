@@ -17,7 +17,6 @@
 package net.jmesnil.jmx.resources;
 
 import javax.management.MBeanOperationInfo;
-import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
@@ -36,20 +35,5 @@ public class MBeanOperationInfoWrapper extends MBeanFeatureInfoWrapper {
 
     public MBeanOperationInfo getMBeanOperationInfo() {
         return info;
-    }
-
-    public String getSignature() {
-        MBeanParameterInfo[] paramInfos = info.getSignature();
-        StringBuffer signature = new StringBuffer(info.getName());
-        signature.append("("); //$NON-NLS-1$
-        for (int i = 0; i < paramInfos.length; i++) {
-            if (i > 0) {
-                signature.append(", "); //$NON-NLS-1$
-            }
-            MBeanParameterInfo paramInfo = paramInfos[i];
-            signature.append(paramInfo.getType());
-        }
-        signature.append(")"); //$NON-NLS-1$
-        return signature.toString();
     }
 }
