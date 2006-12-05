@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 
 import org.eclipse.core.runtime.Assert;
 
-public class AttributeDisplayUtil {
+public class StringUtils {
 
     private static final String NULL = "null"; //$NON-NLS-1$
 
@@ -56,7 +56,7 @@ public class AttributeDisplayUtil {
 
     public static String toString(String type) {
         try {
-            Class clazz = AttributeDisplayUtil.class.getClassLoader()
+            Class clazz = StringUtils.class.getClassLoader()
                     .loadClass(type);
             if (clazz.isArray()) {
                 return clazz.getComponentType().getName() + "[]"; //$NON-NLS-1$

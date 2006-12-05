@@ -118,7 +118,7 @@ public class MBeanAttributesTable {
                 return ""; //$NON-NLS-1$
             case 1:
                 String type = attrInfo.getType();
-                return AttributeDisplayUtil.toString(type);
+                return StringUtils.toString(type);
             case 2:
                 return attrInfo.getName();
             case 3:
@@ -129,7 +129,7 @@ public class MBeanAttributesTable {
                     Object obj = mbsc.getAttribute(on, attrInfo.getName());
                     boolean detailed = displayDetails.contains(attrInfo
                             .getName());
-                    return AttributeDisplayUtil.toString(obj, detailed);
+                    return StringUtils.toString(obj, detailed);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return Messages.MBeanAttributesTable_unvailable;
