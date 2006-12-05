@@ -32,6 +32,7 @@ import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanOperationInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanServerConnectionWrapper;
 import net.jmesnil.jmx.ui.internal.JMXImages;
+import net.jmesnil.jmx.ui.internal.MBeanUtils;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -110,7 +111,7 @@ public class MBeanView extends ViewPart {
         public String getText(Object obj) {
             if (obj instanceof MBeanOperationInfoWrapper) {
                 MBeanOperationInfoWrapper wrapper = (MBeanOperationInfoWrapper) obj;
-                return wrapper.getSignature();
+                return MBeanUtils.prettySignature(wrapper.getMBeanOperationInfo());
             }
             if (obj instanceof MBeanAttributeInfoWrapper) {
                 MBeanAttributeInfoWrapper wrapper = (MBeanAttributeInfoWrapper) obj;

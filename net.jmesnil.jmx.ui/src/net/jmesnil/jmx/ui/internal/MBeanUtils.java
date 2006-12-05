@@ -21,6 +21,7 @@ package net.jmesnil.jmx.ui.internal;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
 
 public class MBeanUtils {
@@ -86,5 +87,20 @@ public class MBeanUtils {
         } catch (NumberFormatException e) {
         }
         return null;
+    }
+
+    public static String prettySignature(MBeanOperationInfo opInfo) {
+        StringBuffer sig = new StringBuffer(opInfo.getName());
+        MBeanParameterInfo[] params = opInfo.getSignature();
+        sig.append('(');
+        for (int i = 0; i < params.length; i++) {
+            if (i > 0) {
+                sig.append(", "); //$NON-NLS-1$
+            }
+            MBeanParameterInfo param = params[i];
+            sig.append(StringUtils.toString(param.getType(), false));
+        }
+        sig.append(')');
+        return sig.toString();
     }
 }

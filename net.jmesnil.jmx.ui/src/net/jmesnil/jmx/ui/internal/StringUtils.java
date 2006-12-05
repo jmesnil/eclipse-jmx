@@ -1,4 +1,4 @@
-package net.jmesnil.jmx.ui.internal.views;
+package net.jmesnil.jmx.ui.internal;
 
 import java.lang.reflect.Array;
 
@@ -8,7 +8,7 @@ public class StringUtils {
 
     private static final String NULL = "null"; //$NON-NLS-1$
 
-    static String toString(Object obj, boolean detailed) {
+    public static String toString(Object obj, boolean detailed) {
         if (obj == null) {
             return NULL;
         }
@@ -53,7 +53,11 @@ public class StringUtils {
         return buff.toString();
     }
 
-    static String toString(String type) {
+    public static String toString(String type) {
+        return toString(type, true);
+    }
+
+    public static String toString(String type, boolean detailed) {
         Assert.isNotNull(type);
         Assert.isLegal(type.length() > 0);
         if (!isArray(type)) {
@@ -63,7 +67,11 @@ public class StringUtils {
         try {
             Class clazz = StringUtils.class.getClassLoader().loadClass(type);
             if (clazz.isArray()) {
-                return clazz.getComponentType().getName() + "[]"; //$NON-NLS-1$
+                if (detailed) {
+                    return clazz.getComponentType().getName() + "[]"; //$NON-NLS-1$
+                } else {
+                    return clazz.getComponentType().getSimpleName() + "[]"; //$NON-NLS-1$
+                }
             }
         } catch (ClassNotFoundException e) {
         }
