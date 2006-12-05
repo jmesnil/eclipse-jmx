@@ -61,4 +61,43 @@ public class ArrayType extends StandardMBean implements ArrayTypeMBean {
         return new String[] { "zero", "one", "two", "three" };
     }
 
+    public Object[] getObjects() {
+        return getStrings();
+    }
+
+    public boolean[] booleansOp(boolean[] b) {
+        return getBooleans();
+    }
+
+    public byte[] bytesOp(byte[] b) {
+        return getBytes();
+    }
+
+    public char[] charsOp(char[] c) {
+        return getChars();
+    }
+
+    public double[] doublesOp(double[] d) {
+        return getDoubles();
+    }
+
+    public float[] floatsOp(float[] f) {
+        return getFloats();
+    }
+
+    public int[] intsOp(int[] i) {
+        return getInts();
+    }
+
+    public long[] longsOp(long[] l) {
+        return getLongs();
+    }
+
+    public Object[] objectsOp(Object[] o) {
+        return getObjects();
+    }
+
+    public short[] shortsOp(short[] s) {
+        return getShorts();
+    }
 }

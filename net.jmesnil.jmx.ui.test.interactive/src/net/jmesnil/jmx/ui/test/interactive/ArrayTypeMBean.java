@@ -18,6 +18,7 @@ package net.jmesnil.jmx.ui.test.interactive;
 
 public interface ArrayTypeMBean {
 
+    // attributes
     boolean[] getBooleans();
 
     byte[] getBytes();
@@ -35,4 +36,25 @@ public interface ArrayTypeMBean {
     double[] getDoubles();
 
     String[] getStrings();
+
+    Object[] getObjects();
+
+    // operations
+    boolean[] booleansOp(boolean[] b);
+
+    byte[] bytesOp(byte[] b);
+
+    char[] charsOp(char[] c);
+
+    short[] shortsOp(short[] s);
+
+    int[] intsOp(int[] i);
+
+    long[] longsOp(long[] l);
+
+    float[] floatsOp(float[] f);
+
+    double[] doublesOp(double[] d);
+
+    Object[] objectsOp(Object[] o);
 }
