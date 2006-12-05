@@ -12,15 +12,14 @@ public class StringUtils {
         if (obj == null) {
             return NULL;
         }
-        Class clazz = obj.getClass();
-        if (clazz.isArray()) {
-            if (detailed) {
-                return toDetailedString(obj);
-            } else {
-                return toSimpleString(obj);
-            }
+        if (!isArray(obj.toString())) {
+            return obj.toString();
         }
-        return obj.toString();
+        if (detailed) {
+            return toDetailedString(obj);
+        } else {
+            return toSimpleString(obj);
+        }
     }
 
     private static final String toSimpleString(Object arrayObj) {
@@ -54,10 +53,15 @@ public class StringUtils {
         return buff.toString();
     }
 
-    public static String toString(String type) {
+    static String toString(String type) {
+        Assert.isNotNull(type);
+        Assert.isLegal(type.length() > 0);
+        if (!isArray(type)) {
+            return type;
+        }
+
         try {
-            Class clazz = StringUtils.class.getClassLoader()
-                    .loadClass(type);
+            Class clazz = StringUtils.class.getClassLoader().loadClass(type);
             if (clazz.isArray()) {
                 return clazz.getComponentType().getName() + "[]"; //$NON-NLS-1$
             }
@@ -65,4 +69,9 @@ public class StringUtils {
         }
         return type;
     }
+
+    private static boolean isArray(String type) {
+        return type.startsWith("["); //$NON-NLS-1$
+    }
+
 }
