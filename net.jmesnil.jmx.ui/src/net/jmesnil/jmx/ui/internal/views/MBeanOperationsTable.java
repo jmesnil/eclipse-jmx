@@ -113,8 +113,8 @@ public class MBeanOperationsTable {
             case 0:
                 return ""; //$NON-NLS-1$
             case 1:
-                return opInfo.getReturnType() != null ? opInfo.getReturnType()
-                        : "void"; //$NON-NLS-1$
+                return opInfo.getReturnType() != null ? StringUtils
+                        .toString(opInfo.getReturnType()) : "void"; //$NON-NLS-1$
             case 2:
                 return opInfo.getName();
             case 3:
@@ -124,7 +124,7 @@ public class MBeanOperationsTable {
                     String type = params[j].getType();
                     if (j != 0)
                         sb.append(", "); //$NON-NLS-1$
-                    sb.append(type);
+                    sb.append(StringUtils.toString(type));
                 }
                 return sb.toString();
             }

@@ -161,8 +161,8 @@ public class MBeanOperationInvocationView extends ViewPart implements
         Composite c = toolkit.createComposite(invocationComposite, SWT.NONE);
         c.setLayout(new GridLayout(5, false));
         // return type
-        toolkit.createLabel(c, opInfo.getReturnType() != null ? opInfo
-                .getReturnType() : "void"); //$NON-NLS-1$
+        toolkit.createLabel(c, opInfo.getReturnType() != null ? StringUtils
+                .toString(opInfo.getReturnType()) : "void"); //$NON-NLS-1$
         // method name
         InvokeOperationButton invocationButton = new InvokeOperationButton(c,
                 SWT.PUSH);
@@ -182,7 +182,7 @@ public class MBeanOperationInvocationView extends ViewPart implements
                 MBeanParameterInfo param = params[j];
                 textParams[j] = new Text(paramsComposite, SWT.SINGLE
                         | SWT.BORDER);
-                textParams[j].setText(param.getType());
+                textParams[j].setText(StringUtils.toString(param.getType()));
                 textParams[j].setLayoutData(new GridData(
                         GridData.GRAB_HORIZONTAL
                                 | GridData.HORIZONTAL_ALIGN_FILL));
