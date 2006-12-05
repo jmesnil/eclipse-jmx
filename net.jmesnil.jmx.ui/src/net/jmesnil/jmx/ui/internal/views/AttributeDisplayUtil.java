@@ -43,7 +43,10 @@ public class AttributeDisplayUtil {
         if (detailed) {
             StringBuffer buff = new StringBuffer();
             for (int i = 0; i < booleans.length; i++) {
-                buff.append(booleans[i]).append("\n"); //$NON-NLS-1$
+                if (i > 0) {
+                    buff.append('\n');
+                }
+                buff.append(booleans[i]);
             }
             return buff.toString();
         } else {
@@ -55,7 +58,10 @@ public class AttributeDisplayUtil {
         if (detailed) {
             StringBuffer buff = new StringBuffer();
             for (int i = 0; i < bytes.length; i++) {
-                buff.append(bytes[i]).append("\n"); //$NON-NLS-1$
+                if (i > 0) {
+                    buff.append('\n');
+                }
+                buff.append(bytes[i]);
             }
             return buff.toString();
         } else {
@@ -67,7 +73,10 @@ public class AttributeDisplayUtil {
         if (detailed) {
             StringBuffer buff = new StringBuffer();
             for (int i = 0; i < chars.length; i++) {
-                buff.append(chars[i]).append("\n"); //$NON-NLS-1$
+                if (i > 0) {
+                    buff.append('\n');
+                }
+                buff.append(chars[i]);
             }
             return buff.toString();
         } else {
@@ -79,7 +88,10 @@ public class AttributeDisplayUtil {
         if (detailed) {
             StringBuffer buff = new StringBuffer();
             for (int i = 0; i < shorts.length; i++) {
-                buff.append(shorts[i]).append("\n"); //$NON-NLS-1$
+                if (i > 0) {
+                    buff.append('\n');
+                }
+                buff.append(shorts[i]);
             }
             return buff.toString();
         } else {
@@ -91,7 +103,10 @@ public class AttributeDisplayUtil {
         if (detailed) {
             StringBuffer buff = new StringBuffer();
             for (int i = 0; i < ints.length; i++) {
-                buff.append(ints[i]).append("\n"); //$NON-NLS-1$
+                if (i > 0) {
+                    buff.append('\n');
+                }
+                buff.append(ints[i]);
             }
             return buff.toString();
         } else {
@@ -103,7 +118,10 @@ public class AttributeDisplayUtil {
         if (detailed) {
             StringBuffer buff = new StringBuffer();
             for (int i = 0; i < longs.length; i++) {
-                buff.append(longs[i]).append("\n"); //$NON-NLS-1$
+                if (i > 0) {
+                    buff.append('\n');
+                }
+                buff.append(longs[i]);
             }
             return buff.toString();
         } else {
@@ -115,7 +133,10 @@ public class AttributeDisplayUtil {
         if (detailed) {
             StringBuffer buff = new StringBuffer();
             for (int i = 0; i < floats.length; i++) {
-                buff.append(floats[i]).append("\n"); //$NON-NLS-1$
+                if (i > 0) {
+                    buff.append('\n');
+                }
+                buff.append(floats[i]);
             }
             return buff.toString();
         } else {
@@ -128,7 +149,10 @@ public class AttributeDisplayUtil {
         if (detailed) {
             StringBuffer buff = new StringBuffer();
             for (int i = 0; i < doubles.length; i++) {
-                buff.append(doubles[i]).append("\n"); //$NON-NLS-1$
+                if (i > 0) {
+                    buff.append('\n');
+                }
+                buff.append(doubles[i]);
             }
             return buff.toString();
         } else {
@@ -139,8 +163,11 @@ public class AttributeDisplayUtil {
     private static String getObjectArrayAsString(Object[] objs, boolean detailed) {
         if (detailed) {
             StringBuffer buff = new StringBuffer();
-            for (int i = 0; i < objs.length; i++) {
-                buff.append(objs[i]).append("\n"); //$NON-NLS-1$
+            for (int i = 0; i < objs.length; i++) {        
+                if (i > 0) {
+                    buff.append('\n');
+                }
+                buff.append(objs[i]);
             }
             return buff.toString();
         } else {
