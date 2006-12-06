@@ -65,6 +65,15 @@ public class ArrayType extends StandardMBean implements ArrayTypeMBean {
         return getStrings();
     }
 
+    public Object[][] getMultiDimensionalObjects() {
+        Object[] nestedObjs = getObjects();
+        Object[][] objs = new Object[3][nestedObjs.length];
+        for (int i = 0; i < objs.length; i++) {
+            objs[i] = nestedObjs;
+        }
+        return objs;
+    }
+
     public boolean[] booleansOp(boolean[] b) {
         return getBooleans();
     }
@@ -95,6 +104,10 @@ public class ArrayType extends StandardMBean implements ArrayTypeMBean {
 
     public Object[] objectsOp(Object[] o) {
         return getObjects();
+    }
+
+    public Object[][] multiDimensionalObjectsOp(Object[][] o) {
+        return getMultiDimensionalObjects();
     }
 
     public short[] shortsOp(short[] s) {

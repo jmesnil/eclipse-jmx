@@ -39,6 +39,8 @@ public interface ArrayTypeMBean {
 
     Object[] getObjects();
 
+    Object[][] getMultiDimensionalObjects();
+
     // operations
     boolean[] booleansOp(boolean[] b);
 
@@ -57,4 +59,7 @@ public interface ArrayTypeMBean {
     double[] doublesOp(double[] d);
 
     Object[] objectsOp(Object[] o);
+
+    Object[][] multiDimensionalObjectsOp(Object[][] o);
+
 }
