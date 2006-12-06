@@ -57,6 +57,10 @@ public class StringUtils {
         return toString(type, true);
     }
 
+    /*
+     * this function is be called recursively to display multi-dimensional
+     * arrays, e.g. int[][]
+     */
     public static String toString(String type, boolean detailed) {
         Assert.isNotNull(type);
         Assert.isLegal(type.length() > 0);
@@ -68,12 +72,23 @@ public class StringUtils {
             Class clazz = StringUtils.class.getClassLoader().loadClass(type);
             if (clazz.isArray()) {
                 if (detailed) {
-                    return clazz.getComponentType().getName() + "[]"; //$NON-NLS-1$
+                    return toString(clazz.getComponentType().getName(),
+                            detailed)
+                            + "[]"; //$NON-NLS-1$
                 } else {
-                    return clazz.getComponentType().getSimpleName() + "[]"; //$NON-NLS-1$
+                    return toString(clazz.getComponentType().getSimpleName(),
+                            detailed)
+                            + "[]"; //$NON-NLS-1$
                 }
             }
         } catch (ClassNotFoundException e) {
+            // we do not know the class but we can still display a user-friendly
+            // representation
+            // of the array
+            if (type.startsWith("[L") && type.endsWith(";")) {
+                return toString(type.substring(2, type.length() - 1), detailed)
+                        + "[]";
+            }
         }
         return type;
     }
