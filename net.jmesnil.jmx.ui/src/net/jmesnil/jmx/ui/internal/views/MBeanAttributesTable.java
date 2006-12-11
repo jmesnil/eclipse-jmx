@@ -18,192 +18,22 @@
  */
 package net.jmesnil.jmx.ui.internal.views;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.management.MBeanAttributeInfo;
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
-
-import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
-import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
-import net.jmesnil.jmx.ui.internal.StringUtils;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 
 public class MBeanAttributesTable {
 
-    protected class MBeanAttrContentProvider implements
-            IStructuredContentProvider {
-        private MBeanAttributeInfoWrapper[] attrs;
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-         */
-        public Object[] getElements(Object inputElement) {
-            if (attrs == null)
-                return new Object[0];
-            return attrs;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-         */
-        public void dispose() {
-            // nothing needs to be disposed
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-         *      java.lang.Object, java.lang.Object)
-         */
-        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-            attrs = (MBeanAttributeInfoWrapper[]) newInput;
-        }
-    }
-
-    protected class MBeanAttrLabelProvider extends LabelProvider implements
-            ITableLabelProvider {
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object,
-         *      int)
-         */
-        public Image getColumnImage(Object element, int columnIndex) {
-            switch (columnIndex) {
-            case 0:
-                return JMXImages.get(JMXImages.IMG_FIELD_PUBLIC);
-            }
-            return null;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object,
-         *      int)
-         */
-        public String getColumnText(Object element, int columnIndex) {
-            if (!(element instanceof MBeanAttributeInfoWrapper))
-                return super.getText(element);
-
-            MBeanAttributeInfoWrapper wrapper = (MBeanAttributeInfoWrapper) element;
-            MBeanAttributeInfo attrInfo = wrapper.getMBeanAttributeInfo();
-            switch (columnIndex) {
-            case 0:
-                return ""; //$NON-NLS-1$
-            case 1:
-                String type = attrInfo.getType();
-                return StringUtils.toString(type);
-            case 2:
-                return attrInfo.getName();
-            case 3:
-                try {
-                    MBeanServerConnection mbsc = wrapper
-                            .getMBeanServerConnection();
-                    ObjectName on = wrapper.getObjectName();
-                    Object obj = mbsc.getAttribute(on, attrInfo.getName());
-                    boolean detailed = displayDetails.contains(attrInfo
-                            .getName());
-                    return StringUtils.toString(obj, detailed);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return Messages.MBeanAttributesTable_unvailable;
-                }
-            }
-            return getText(element);
-        }
-
-    }
-
-    protected class MBeanAttrViewerSorter extends ViewerSorter {
-        int fDirection, fIndex;
-
-        protected MBeanAttrViewerSorter(int direction, int index) {
-            fDirection = (direction == SWT.UP ? -1 : 1);
-            fIndex = index;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer,
-         *      java.lang.Object, java.lang.Object)
-         */
-        public int compare(Viewer viewer, Object e1, Object e2) {
-            if (e1 instanceof MBeanAttributeInfoWrapper
-                    && e2 instanceof MBeanAttributeInfoWrapper) {
-                MBeanAttributeInfo attrInfo1 = ((MBeanAttributeInfoWrapper) e1)
-                        .getMBeanAttributeInfo();
-                MBeanAttributeInfo attrInfo2 = ((MBeanAttributeInfoWrapper) e2)
-                        .getMBeanAttributeInfo();
-                switch (fIndex) {
-                case 1:
-                    String a1 = attrInfo1.getType();
-                    String a2 = attrInfo2.getType();
-                    int p = a1.lastIndexOf('.');
-                    if (p != -1)
-                        a1 = a1.substring(p + 1);
-                    p = a2.lastIndexOf('.');
-                    if (p != -1)
-                        a2 = a2.substring(p + 1);
-                    return fDirection * a1.compareTo(a2);
-                case 2:
-                    return fDirection
-                            * attrInfo1.getName()
-                                    .compareTo(attrInfo2.getName());
-                }
-            }
-            return fDirection * super.compare(viewer, e1, e2);
-        }
-    }
-
     private TableViewer viewer;
-
-    private final List<String> displayDetails = new ArrayList<String>();
-
-    private boolean toogleDetails(MBeanAttributeInfo attrInfo) {
-        String type = attrInfo.getType();
-        try {
-            if (Class.forName(type).isArray()) {
-                if (displayDetails.contains(attrInfo.getName())) {
-                    displayDetails.remove(attrInfo.getName());
-                } else {
-                    displayDetails.add(attrInfo.getName());
-                }
-                return true;
-            } else {
-                return false;
-            }
-        } catch (ClassNotFoundException e1) {
-            return false;
-        }
-    }
 
     public MBeanAttributesTable(Composite parent, final MBeanInfoView beanView) {
         final Table attrTable = beanView.getToolkit().createTable(
@@ -211,40 +41,15 @@ public class MBeanAttributesTable {
                 SWT.BORDER | SWT.SINGLE | SWT.FLAT | SWT.FULL_SELECTION
                         | SWT.V_SCROLL | SWT.H_SCROLL);
         createColumns(attrTable);
-        attrTable.setLayoutData(new GridData(GridData.FILL_BOTH));
+        attrTable.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         attrTable.setLinesVisible(true);
         attrTable.setHeaderVisible(true);
-        attrTable.addMouseListener(new MouseAdapter() {
-            public void mouseDoubleClick(MouseEvent e) {
-                if (e.widget != attrTable) {
-                    return;
-                }
-                TableItem item = attrTable.getSelection()[0];
-                if (item == null || item.getData() == null)
-                    return;
-                if (item.getData() instanceof MBeanAttributeInfoWrapper) {
-                    MBeanAttributeInfoWrapper wrapper = (MBeanAttributeInfoWrapper) item
-                            .getData();
-                    MBeanAttributeInfo attrInfo = wrapper
-                            .getMBeanAttributeInfo();
-                    if (toogleDetails(attrInfo)) {
-                        viewer.refresh(true);
-                    }
-                }
-            }
-        });
         viewer = new TableViewer(attrTable);
-        viewer.setContentProvider(new MBeanAttrContentProvider());
-        viewer.setLabelProvider(new MBeanAttrLabelProvider());
+        viewer.setContentProvider(new AttributesContentProvider());
+        viewer.setLabelProvider(new AttributesLabelProvider());
     }
 
     private void createColumns(final Table attrTable) {
-        TableColumn blankCol = new TableColumn(attrTable, SWT.NONE);
-        blankCol.setText(""); //$NON-NLS-1$
-        blankCol.setWidth(20);
-        final TableColumn returnType = new TableColumn(attrTable, SWT.NONE);
-        returnType.setText(Messages.type);
-        returnType.setWidth(100);
         final TableColumn attrName = new TableColumn(attrTable, SWT.NONE);
         attrName.setText(Messages.name);
         attrName.setWidth(150);
@@ -265,22 +70,20 @@ public class MBeanAttributesTable {
                     attrTable.setSortColumn(currentColumn);
                     dir = SWT.UP;
                 }
+
                 int colIndex;
-                if (currentColumn == returnType)
-                    colIndex = 1;
-                else if (currentColumn == attrName)
-                    colIndex = 2;
+                if (currentColumn == attrName)
+                    colIndex = 0;
                 else if (currentColumn == attrValue)
-                    colIndex = 3;
+                    colIndex = 1;
                 else
                     return;
 
                 // sort the data based on column and direction
                 attrTable.setSortDirection(dir);
-                viewer.setSorter(new MBeanAttrViewerSorter(dir, colIndex));
+                viewer.setSorter(new AttributesViewerSorter(dir, colIndex));
             }
         };
-        returnType.addListener(SWT.Selection, sortListener);
         attrName.addListener(SWT.Selection, sortListener);
         attrTable.setSortColumn(attrName);
         attrTable.setSortDirection(SWT.UP);
@@ -291,5 +94,9 @@ public class MBeanAttributesTable {
             viewer.setInput(null);
         else
             viewer.setInput(input.getMBeanAttributeInfoWrappers());
+    }
+
+    public Viewer getViewer() {
+        return viewer;
     }
 }
