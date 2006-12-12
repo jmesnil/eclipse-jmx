@@ -1,13 +1,14 @@
 package net.jmesnil.jmx.ui.internal.views;
 
 import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
+import net.jmesnil.jmx.ui.internal.StringUtils;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -16,6 +17,8 @@ import org.eclipse.ui.forms.IDetailsPage;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 public class AttributesDetailPage implements IDetailsPage {
 
@@ -28,35 +31,50 @@ public class AttributesDetailPage implements IDetailsPage {
 
     private Button readableCheckbox, writableCheckbox;
 
+    private Font bold;
+
     public void initialize(IManagedForm form) {
         this.toolkit = form.getToolkit();
     }
 
     public void createContents(Composite parent) {
-        GridLayout glayout = new GridLayout();
-        glayout.numColumns = 2;
-        parent.setLayout(glayout);
+        FontData fd[] = parent.getFont().getFontData();
+        bold = new Font(parent.getDisplay(), fd[0].getName(), fd[0].height,
+            SWT.BOLD);
+        TableWrapLayout twlayout = new TableWrapLayout();
+        twlayout.numColumns = 2;
+        parent.setLayout(twlayout);
+        
         Label label = toolkit.createLabel(parent, "Name");
-        label.setLayoutData(new GridData(SWT.END));
+        label.setLayoutData(new TableWrapData(TableWrapData.FILL));
         nameText = toolkit.createText(parent, "", SWT.READ_ONLY);
-        nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | SWT.LEFT));
+        nameText.setFont(bold);
+        nameText.setLayoutData(new TableWrapData(TableWrapData.FILL));
         
         Label typeLabel = toolkit.createLabel(parent, "Type");
-        typeLabel.setLayoutData(new GridData(SWT.RIGHT));
+        typeLabel.setLayoutData(new TableWrapData(TableWrapData.FILL));
         typeText = toolkit.createText(parent, "", SWT.READ_ONLY);
-        typeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | SWT.LEFT));
+        typeText.setFont(bold);
+        typeText.setLayoutData(new TableWrapData(TableWrapData.FILL));
         
         Label descLabel = toolkit.createLabel(parent, "Description");
-        descLabel.setLayoutData(new GridData(SWT.RIGHT));
-        descText = toolkit.createText(parent, "", SWT.READ_ONLY);
-        descText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | SWT.LEFT));
+        descLabel.setLayoutData(new TableWrapData(TableWrapData.FILL));
+        descText = toolkit.createText(parent, "", SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
+        descText.setFont(bold);
+        TableWrapData twdata = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
+        twdata.grabHorizontal = twdata.grabVertical = true;
+        descText.setLayoutData(twdata);
         
         readableCheckbox = toolkit.createButton(parent, "Readable", SWT.CHECK);
-        readableCheckbox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | SWT.LEFT));
+        twdata = new TableWrapData(TableWrapData.FILL);
+        twdata.colspan = 2;
+        readableCheckbox.setLayoutData(twdata);
         readableCheckbox.setEnabled(false);
         
         writableCheckbox = toolkit.createButton(parent, "Writable", SWT.CHECK);
-        writableCheckbox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | SWT.LEFT));
+        twdata = new TableWrapData(TableWrapData.FILL);
+        twdata.colspan = 2;
+        writableCheckbox.setLayoutData(twdata);
         writableCheckbox.setEnabled(false);
     }
 
@@ -70,7 +88,7 @@ public class AttributesDetailPage implements IDetailsPage {
         Assert.isNotNull(attribute);
 
         nameText.setText(attribute.getMBeanAttributeInfo().getName());
-        typeText.setText(attribute.getMBeanAttributeInfo().getType());
+        typeText.setText(StringUtils.toString(attribute.getMBeanAttributeInfo().getType()));
         descText.setText(attribute.getMBeanAttributeInfo().getDescription());
         readableCheckbox.setSelection(attribute.getMBeanAttributeInfo().isReadable());
         writableCheckbox.setSelection(attribute.getMBeanAttributeInfo().isWritable());
@@ -80,6 +98,7 @@ public class AttributesDetailPage implements IDetailsPage {
     }
 
     public void dispose() {
+      bold.dispose();
     }
 
     public boolean isDirty() {
