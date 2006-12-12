@@ -22,12 +22,13 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 public class AttributesDetailPage implements IDetailsPage {
 
-    
     private MBeanAttributeInfoWrapper attribute;
 
     private FormToolkit toolkit;
 
-    private Text nameText, descText, typeText;
+    private Label nameLabel, typeLabel;
+
+    private Text descText;
 
     private Button readableCheckbox, writableCheckbox;
 
@@ -40,37 +41,36 @@ public class AttributesDetailPage implements IDetailsPage {
     public void createContents(Composite parent) {
         FontData fd[] = parent.getFont().getFontData();
         bold = new Font(parent.getDisplay(), fd[0].getName(), fd[0].height,
-            SWT.BOLD);
+                SWT.BOLD);
         TableWrapLayout twlayout = new TableWrapLayout();
         twlayout.numColumns = 2;
         parent.setLayout(twlayout);
-        
-        Label label = toolkit.createLabel(parent, "Name");
-        label.setLayoutData(new TableWrapData(TableWrapData.FILL));
-        nameText = toolkit.createText(parent, "", SWT.READ_ONLY);
-        nameText.setFont(bold);
-        nameText.setLayoutData(new TableWrapData(TableWrapData.FILL));
-        
-        Label typeLabel = toolkit.createLabel(parent, "Type");
+
+        toolkit.createLabel(parent, "Name");
+        nameLabel = toolkit.createLabel(parent, "", SWT.READ_ONLY);
+        nameLabel.setFont(bold);
+        nameLabel.setLayoutData(new TableWrapData(TableWrapData.FILL));
+
+        toolkit.createLabel(parent, "Type");
+        typeLabel = toolkit.createLabel(parent, "", SWT.READ_ONLY);
+        typeLabel.setFont(bold);
         typeLabel.setLayoutData(new TableWrapData(TableWrapData.FILL));
-        typeText = toolkit.createText(parent, "", SWT.READ_ONLY);
-        typeText.setFont(bold);
-        typeText.setLayoutData(new TableWrapData(TableWrapData.FILL));
-        
-        Label descLabel = toolkit.createLabel(parent, "Description");
-        descLabel.setLayoutData(new TableWrapData(TableWrapData.FILL));
-        descText = toolkit.createText(parent, "", SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
+
+        toolkit.createLabel(parent, "Description");
+        descText = toolkit.createText(parent, "", SWT.MULTI | SWT.WRAP
+                | SWT.READ_ONLY);
         descText.setFont(bold);
-        TableWrapData twdata = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
+        TableWrapData twdata = new TableWrapData(TableWrapData.FILL_GRAB,
+                TableWrapData.FILL_GRAB);
         twdata.grabHorizontal = twdata.grabVertical = true;
         descText.setLayoutData(twdata);
-        
+
         readableCheckbox = toolkit.createButton(parent, "Readable", SWT.CHECK);
         twdata = new TableWrapData(TableWrapData.FILL);
         twdata.colspan = 2;
         readableCheckbox.setLayoutData(twdata);
         readableCheckbox.setEnabled(false);
-        
+
         writableCheckbox = toolkit.createButton(parent, "Writable", SWT.CHECK);
         twdata = new TableWrapData(TableWrapData.FILL);
         twdata.colspan = 2;
@@ -87,18 +87,21 @@ public class AttributesDetailPage implements IDetailsPage {
     private void update() {
         Assert.isNotNull(attribute);
 
-        nameText.setText(attribute.getMBeanAttributeInfo().getName());
-        typeText.setText(StringUtils.toString(attribute.getMBeanAttributeInfo().getType()));
+        nameLabel.setText(attribute.getMBeanAttributeInfo().getName());
+        typeLabel.setText(StringUtils.toString(attribute
+                .getMBeanAttributeInfo().getType()));
         descText.setText(attribute.getMBeanAttributeInfo().getDescription());
-        readableCheckbox.setSelection(attribute.getMBeanAttributeInfo().isReadable());
-        writableCheckbox.setSelection(attribute.getMBeanAttributeInfo().isWritable());
+        readableCheckbox.setSelection(attribute.getMBeanAttributeInfo()
+                .isReadable());
+        writableCheckbox.setSelection(attribute.getMBeanAttributeInfo()
+                .isWritable());
     }
 
     public void commit(boolean onSave) {
     }
 
     public void dispose() {
-      bold.dispose();
+        bold.dispose();
     }
 
     public boolean isDirty() {
