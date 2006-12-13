@@ -59,8 +59,7 @@ public class MBeanOperationInfoPropertySourceAdapter implements IPropertySource 
                     "param" + i, paramInfo.getName(), Messages.parameters, //$NON-NLS-1$
                     descriptors);
         }
-        return descriptors
-                .toArray(new IPropertyDescriptor[descriptors.size()]);
+        return descriptors.toArray(new IPropertyDescriptor[descriptors.size()]);
     }
 
     private void addDescriptor(String id, String displayName, String category,

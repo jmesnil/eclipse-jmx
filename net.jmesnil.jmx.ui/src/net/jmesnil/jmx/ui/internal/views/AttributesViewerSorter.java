@@ -33,6 +33,7 @@ class AttributesViewerSorter extends ViewerSorter {
         this.index = index;
     }
 
+    @Override
     public int compare(Viewer viewer, Object e1, Object e2) {
         if (e1 instanceof MBeanAttributeInfoWrapper
                 && e2 instanceof MBeanAttributeInfoWrapper) {
@@ -42,8 +43,7 @@ class AttributesViewerSorter extends ViewerSorter {
                     .getMBeanAttributeInfo();
             if (index == 0)
                 return direction
-                        * attrInfo1.getName()
-                                .compareTo(attrInfo2.getName());
+                        * attrInfo1.getName().compareTo(attrInfo2.getName());
 
         }
         return direction * super.compare(viewer, e1, e2);

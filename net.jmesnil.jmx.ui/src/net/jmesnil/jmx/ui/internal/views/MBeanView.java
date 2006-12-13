@@ -108,10 +108,12 @@ public class MBeanView extends ViewPart {
 
     protected class ViewLabelProvider extends LabelProvider {
 
+        @Override
         public String getText(Object obj) {
             if (obj instanceof MBeanOperationInfoWrapper) {
                 MBeanOperationInfoWrapper wrapper = (MBeanOperationInfoWrapper) obj;
-                return MBeanUtils.prettySignature(wrapper.getMBeanOperationInfo());
+                return MBeanUtils.prettySignature(wrapper
+                        .getMBeanOperationInfo());
             }
             if (obj instanceof MBeanAttributeInfoWrapper) {
                 MBeanAttributeInfoWrapper wrapper = (MBeanAttributeInfoWrapper) obj;
@@ -138,6 +140,7 @@ public class MBeanView extends ViewPart {
             return obj.toString();
         }
 
+        @Override
         public Image getImage(Object obj) {
             if (obj instanceof MBeanAttributeInfoWrapper) {
                 return JMXImages.get(JMXImages.IMG_FIELD_PUBLIC);
@@ -167,6 +170,7 @@ public class MBeanView extends ViewPart {
      * This is a callback that will allow us to create the viewer and initialize
      * it.
      */
+    @Override
     public void createPartControl(Composite parent) {
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
         viewer.setContentProvider(new ViewContentProvider());
@@ -182,6 +186,7 @@ public class MBeanView extends ViewPart {
     /**
      * Passing the focus request to the viewer's control.
      */
+    @Override
     public void setFocus() {
         viewer.getControl().setFocus();
     }

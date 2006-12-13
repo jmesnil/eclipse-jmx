@@ -41,8 +41,7 @@ public class DomainPropertySourceAdapter implements IPropertySource {
         List<IPropertyDescriptor> descriptors = new ArrayList<IPropertyDescriptor>();
         // General properties
         addDescriptor("name", Messages.domain, Messages.general, descriptors); //$NON-NLS-1$
-        return (IPropertyDescriptor[]) descriptors
-                .toArray(new IPropertyDescriptor[descriptors.size()]);
+        return descriptors.toArray(new IPropertyDescriptor[descriptors.size()]);
     }
 
     private void addDescriptor(String id, String displayName, String category,

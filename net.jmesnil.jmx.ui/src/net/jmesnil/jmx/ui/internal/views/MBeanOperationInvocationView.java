@@ -59,21 +59,13 @@ public class MBeanOperationInvocationView extends ViewPart implements
 
     private Composite parentComp;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-     */
+    @Override
     public void createPartControl(Composite parent) {
         parentComp = parent;
         getSite().getPage().addSelectionListener(this);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.part.WorkbenchPart#dispose()
-     */
+    @Override
     public void dispose() {
         if (managedForm != null)
             managedForm.dispose();
@@ -81,22 +73,12 @@ public class MBeanOperationInvocationView extends ViewPart implements
         super.dispose();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-     */
+    @Override
     public void setFocus() {
         if (managedForm != null)
             managedForm.setFocus();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
-     *      org.eclipse.jface.viewers.ISelection)
-     */
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         if (!(selection instanceof IStructuredSelection))
             return;
@@ -212,11 +194,7 @@ public class MBeanOperationInvocationView extends ViewPart implements
             this.textParams = textParams;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-         */
+        @Override
         public void widgetSelected(SelectionEvent event) {
             try {
                 MBeanParameterInfo[] paramInfos = opInfoWrapper

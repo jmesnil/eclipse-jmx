@@ -52,8 +52,7 @@ public class MBeanInfoPropertySourceAdapter implements IPropertySource {
                 "description", Messages.description, Messages.general, descriptors); //$NON-NLS-1$
         addDescriptor(
                 "classname", Messages.className, Messages.general, descriptors); //$NON-NLS-1$
-        return descriptors
-                .toArray(new IPropertyDescriptor[descriptors.size()]);
+        return descriptors.toArray(new IPropertyDescriptor[descriptors.size()]);
     }
 
     private void addDescriptor(String id, String displayName, String category,

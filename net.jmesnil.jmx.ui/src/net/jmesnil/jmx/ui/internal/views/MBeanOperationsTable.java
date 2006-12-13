@@ -52,32 +52,16 @@ public class MBeanOperationsTable {
             IStructuredContentProvider {
         private MBeanOperationInfoWrapper[] opInfos;
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-         */
         public Object[] getElements(Object inputElement) {
             if (opInfos == null)
                 return new Object[0];
             return opInfos;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-         */
         public void dispose() {
             // nothing needs to be disposed
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-         *      java.lang.Object, java.lang.Object)
-         */
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
             opInfos = (MBeanOperationInfoWrapper[]) newInput;
         }
@@ -85,12 +69,7 @@ public class MBeanOperationsTable {
 
     protected class MBeanOpLabelProvider extends LabelProvider implements
             ITableLabelProvider {
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object,
-         *      int)
-         */
+
         public Image getColumnImage(Object element, int columnIndex) {
             switch (columnIndex) {
             case 0:
@@ -99,12 +78,6 @@ public class MBeanOperationsTable {
             return null;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object,
-         *      int)
-         */
         public String getColumnText(Object element, int columnIndex) {
             if (!(element instanceof MBeanOperationInfoWrapper))
                 return super.getText(element);
@@ -142,12 +115,7 @@ public class MBeanOperationsTable {
             fIndex = index;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer,
-         *      java.lang.Object, java.lang.Object)
-         */
+        @Override
         public int compare(Viewer viewer, Object e1, Object e2) {
             if (e1 instanceof MBeanOperationInfo
                     && e2 instanceof MBeanOperationInfo) {
@@ -199,6 +167,7 @@ public class MBeanOperationsTable {
         operationsTable.setLinesVisible(true);
         operationsTable.setHeaderVisible(true);
         operationsTable.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 if (e.item == null || e.item.getData() == null)
                     return;

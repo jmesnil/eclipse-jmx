@@ -54,21 +54,13 @@ public class MBeanServerConnectDialog extends SelectionDialog {
         super(parentShell);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.dialogs.SelectionDialog#configureShell(org.eclipse.swt.widgets.Shell)
-     */
+    @Override
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
         shell.setText(Messages.ConnectionSelectionDialog_title);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-     */
+    @Override
     protected Control createDialogArea(final Composite parent) {
         this.parent = parent.getShell();
         Composite composite = (Composite) super.createDialogArea(parent);
@@ -140,11 +132,7 @@ public class MBeanServerConnectDialog extends SelectionDialog {
         return fieldComposite;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-     */
+    @Override
     protected void okPressed() {
         if (folder.getSelectionIndex() == 0) {
             if (hostText.getText().equals("")) { //$NON-NLS-1$

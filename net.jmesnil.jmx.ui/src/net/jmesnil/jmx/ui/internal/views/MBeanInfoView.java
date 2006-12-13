@@ -44,6 +44,7 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -92,6 +93,7 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
     public MBeanInfoView() {
     }
 
+    @Override
     public void createPartControl(Composite parent) {
         FontData fd[] = parent.getFont().getFontData();
         bold = new Font(parent.getDisplay(), fd[0].getName(), fd[0].height,
@@ -111,8 +113,9 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
     private void createInfoSection(Composite parent, FormToolkit toolkit) {
         Composite infoSectionClient = createSection(parent, toolkit,
                 Messages.MBeanInfoView_infoSectionTitle,
-                Messages.MBeanInfoView_infoSectionDesc, Section.TITLE_BAR
-                        | Section.TWISTIE | Section.DESCRIPTION);
+                Messages.MBeanInfoView_infoSectionDesc,
+                ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE
+                        | Section.DESCRIPTION);
         infoSection = (Section) infoSectionClient.getParent();
 
         toolkit.createLabel(infoSectionClient, Messages.name);
@@ -120,7 +123,9 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
         nameLabel.setFont(bold);
         nameLabel.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
-        toolkit.createLabel(infoSectionClient, Messages.MBeanInfoView_javaClass);
+        toolkit
+                .createLabel(infoSectionClient,
+                        Messages.MBeanInfoView_javaClass);
         javaClassLabel = toolkit.createLabel(infoSectionClient, ""); //$NON-NLS-1$
         javaClassLabel.setFont(bold);
         javaClassLabel
@@ -132,15 +137,15 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
                         | SWT.READ_ONLY);
         descText.setFont(bold);
         descText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        // end of info section
     }
 
     private Composite createAttributesSection(Composite parent,
             FormToolkit toolkit) {
         Composite attrSectionClient = createSection(parent, toolkit,
                 Messages.MBeanInfoView_attrSectionTitle,
-                Messages.MBeanInfoView_attrSectionDesc, Section.TITLE_BAR
-                        | Section.TWISTIE | Section.DESCRIPTION);
+                Messages.MBeanInfoView_attrSectionDesc,
+                ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE
+                        | Section.DESCRIPTION);
         attrSection = (Section) attrSectionClient.getParent();
         attributesTable = new MBeanAttributesTable(attrSectionClient, toolkit,
                 this);
@@ -153,8 +158,8 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
     private void createAttributeDetailsSection(Composite parent,
             FormToolkit toolkit) {
         Composite attrDetailsSectionClient = createSection(parent, toolkit,
-                Messages.details, null, Section.SHORT_TITLE_BAR
-                        | Section.EXPANDED);
+                Messages.details, null, ExpandableComposite.SHORT_TITLE_BAR
+                        | ExpandableComposite.EXPANDED);
         attrDetailsSection = (Section) attrDetailsSectionClient.getParent();
 
         toolkit.createLabel(attrDetailsSectionClient, Messages.name);
@@ -196,8 +201,9 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
             FormToolkit toolkit) {
         Composite opSectionClient = createSection(parent, toolkit,
                 Messages.MBeanInfoView_opSectionTitle,
-                Messages.MBeanInfoView_opSectionDesct, Section.TITLE_BAR
-                        | Section.TWISTIE | Section.DESCRIPTION);
+                Messages.MBeanInfoView_opSectionDesct,
+                ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE
+                        | Section.DESCRIPTION);
         opSection = (Section) opSectionClient.getParent();
         opTable = new MBeanOperationsTable(opSectionClient, toolkit);
         opSection.setClient(opSectionClient);
@@ -210,6 +216,7 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
         Section section = toolkit.createSection(parent, flags);
         section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
         section.addExpansionListener(new ExpansionAdapter() {
+            @Override
             public void expansionStateChanged(ExpansionEvent e) {
                 form.reflow(true);
             }
@@ -306,12 +313,14 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
         attrReadableCheckbox.setSelection(attrInfo.isReadable());
     }
 
+    @Override
     public void dispose() {
         bold.dispose();
         form.dispose();
         super.dispose();
     }
 
+    @Override
     public void setFocus() {
     }
 

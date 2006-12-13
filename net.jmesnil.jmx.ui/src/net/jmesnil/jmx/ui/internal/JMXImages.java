@@ -87,8 +87,7 @@ public class JMXImages {
             for (Iterator<String> iter = fgAvoidSWTErrorMap.keySet().iterator(); iter
                     .hasNext();) {
                 String key = iter.next();
-                fgImageRegistry.put(key, fgAvoidSWTErrorMap
-                        .get(key));
+                fgImageRegistry.put(key, fgAvoidSWTErrorMap.get(key));
             }
             fgAvoidSWTErrorMap = null;
         }

@@ -51,6 +51,7 @@ public class MBeanAttributesTable {
         attrTable.setLinesVisible(true);
         attrTable.setHeaderVisible(true);
         attrTable.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 if (e.item == null || e.item.getData() == null)
                     return;

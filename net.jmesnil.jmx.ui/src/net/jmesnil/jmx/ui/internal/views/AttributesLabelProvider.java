@@ -42,8 +42,7 @@ class AttributesLabelProvider extends LabelProvider implements
             return attrInfo.getName();
         case 1:
             try {
-                MBeanServerConnection mbsc = wrapper
-                        .getMBeanServerConnection();
+                MBeanServerConnection mbsc = wrapper.getMBeanServerConnection();
                 ObjectName on = wrapper.getObjectName();
                 Object obj = mbsc.getAttribute(on, attrInfo.getName());
                 return StringUtils.toString(obj, false);
