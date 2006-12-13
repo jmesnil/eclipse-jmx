@@ -49,12 +49,16 @@ public class MBeanInfoWrapper {
         return info;
     }
 
+    public MBeanServerConnection getMBeanServerConnection() {
+        return mbsc;
+    }
+
     public MBeanAttributeInfoWrapper[] getMBeanAttributeInfoWrappers() {
         MBeanAttributeInfo[] attributes = info.getAttributes();
         MBeanAttributeInfoWrapper[] attrWrappers = new MBeanAttributeInfoWrapper[attributes.length];
         for (int i = 0; i < attributes.length; i++) {
             MBeanAttributeInfo attrInfo = attributes[i];
-            attrWrappers[i] = new MBeanAttributeInfoWrapper(attrInfo, on, mbsc);
+            attrWrappers[i] = new MBeanAttributeInfoWrapper(attrInfo, this);
         }
         return attrWrappers;
     }
@@ -76,7 +80,7 @@ public class MBeanInfoWrapper {
                 + operations.length];
         for (int i = 0; i < attributes.length; i++) {
             MBeanAttributeInfo attrInfo = attributes[i];
-            o[i] = new MBeanAttributeInfoWrapper(attrInfo, on, mbsc);
+            o[i] = new MBeanAttributeInfoWrapper(attrInfo, this);
         }
         for (int i = 0; i < operations.length; i++) {
             MBeanOperationInfo opInfo = operations[i];
@@ -85,5 +89,4 @@ public class MBeanInfoWrapper {
         }
         return o;
     }
-
 }

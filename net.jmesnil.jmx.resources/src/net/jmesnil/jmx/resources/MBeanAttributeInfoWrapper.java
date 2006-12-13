@@ -17,23 +17,25 @@
 package net.jmesnil.jmx.resources;
 
 import javax.management.MBeanAttributeInfo;
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
-
-import org.eclipse.core.runtime.Assert;
 
 public class MBeanAttributeInfoWrapper extends MBeanFeatureInfoWrapper {
 
     private MBeanAttributeInfo info;
 
-    public MBeanAttributeInfoWrapper(MBeanAttributeInfo info, ObjectName on,
-            MBeanServerConnection mbsc) {
-        super(on, mbsc);
-        Assert.isNotNull(info);
-        this.info = info;
+    private MBeanInfoWrapper mbeanInfoWrapper;
+
+    public MBeanAttributeInfoWrapper(MBeanAttributeInfo attrInfo,
+            MBeanInfoWrapper wrapper) {
+        super(wrapper.getObjectName(), wrapper.getMBeanServerConnection());
+        this.info = attrInfo;
+        mbeanInfoWrapper = wrapper;
     }
 
     public MBeanAttributeInfo getMBeanAttributeInfo() {
         return info;
+    }
+
+    public MBeanInfoWrapper getMBeanInfoWrapper() {
+        return mbeanInfoWrapper;
     }
 }
