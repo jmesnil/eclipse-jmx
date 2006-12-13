@@ -85,9 +85,9 @@ public class StringUtils {
             // we do not know the class but we can still display a user-friendly
             // representation
             // of the array
-            if (type.startsWith("[L") && type.endsWith(";")) {
+            if (type.startsWith("[L") && type.endsWith(";")) { //$NON-NLS-1$ //$NON-NLS-2$
                 return toString(type.substring(2, type.length() - 1), detailed)
-                        + "[]";
+                        + "[]"; //$NON-NLS-1$
             }
         }
         return type;
