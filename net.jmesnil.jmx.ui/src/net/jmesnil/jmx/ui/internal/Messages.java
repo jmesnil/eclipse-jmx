@@ -37,6 +37,8 @@ public class Messages extends NLS {
 
     public static String ConnectionSelectionDialog_title;
 
+    public static String details;
+
     public static String description;
 
     public static String domain;

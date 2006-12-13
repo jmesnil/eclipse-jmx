@@ -38,12 +38,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.TableWrapData;
 
 public class MBeanOperationsTable {
 
@@ -186,14 +187,15 @@ public class MBeanOperationsTable {
 
     private TableViewer viewer;
 
-    public MBeanOperationsTable(Composite parent,
-            final MBeanInfoView mbeanInfoView) {
-        final Table operationsTable = mbeanInfoView.getToolkit().createTable(
-                parent,
-                SWT.BORDER | SWT.SINGLE | SWT.FLAT | SWT.FULL_SELECTION
-                        | SWT.V_SCROLL | SWT.H_SCROLL);
+    public MBeanOperationsTable(Composite parent, final FormToolkit toolkit) {
+        final Table operationsTable = toolkit.createTable(parent, SWT.BORDER
+                | SWT.SINGLE | SWT.FLAT | SWT.FULL_SELECTION | SWT.V_SCROLL
+                | SWT.H_SCROLL);
         createColumns(operationsTable);
-        operationsTable.setLayoutData(new GridData(GridData.FILL_BOTH));
+        toolkit.paintBordersFor(operationsTable);
+        TableWrapData twdata = new TableWrapData(TableWrapData.FILL_GRAB);
+        twdata.colspan = 2;
+        operationsTable.setLayoutData(twdata);
         operationsTable.setLinesVisible(true);
         operationsTable.setHeaderVisible(true);
         operationsTable.addSelectionListener(new SelectionAdapter() {
@@ -202,8 +204,8 @@ public class MBeanOperationsTable {
                     return;
                 MBeanOperationInvocationView invocationView = ViewUtil
                         .getMBeanOperationInvocationView();
-                invocationView.selectionChanged(mbeanInfoView,
-                        new StructuredSelection(e.item.getData()));
+                invocationView.selectionChanged(null, new StructuredSelection(
+                        e.item.getData()));
             }
         });
 
