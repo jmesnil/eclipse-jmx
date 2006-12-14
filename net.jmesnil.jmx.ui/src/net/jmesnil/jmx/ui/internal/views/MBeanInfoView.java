@@ -22,21 +22,16 @@ package net.jmesnil.jmx.ui.internal.views;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
 
 import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.internal.Messages;
-import net.jmesnil.jmx.ui.internal.StringUtils;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -72,25 +67,13 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
 
     private ScrolledForm form;
 
-    private Label attrNameLabel;
-
-    private Label attrTypeLabel;
-
-    private Text attrDescText;
-
     private Section opSection;
 
     private MBeanOperationsTable opTable;
 
-    private Section attrDetailsSection;
-
-    private Button attrReadableCheckbox;
-
-    private Button attrWritableCheckbox;
-
-    private Text attrValueText;
-
     private ExpansionAdapter expansionAdapter;
+
+    private AttributeDetailsSection attrDetails;
 
     public MBeanInfoView() {
     }
@@ -106,12 +89,12 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
         form.getBody().setLayout(new TableWrapLayout());
 
         expansionAdapter = new ExpansionAdapter() {
-          @Override
-          public void expansionStateChanged(ExpansionEvent e) {
-            form.reflow(true);
-          }
+            @Override
+            public void expansionStateChanged(ExpansionEvent e) {
+                form.reflow(true);
+            }
         };
-      
+
         createInfoSection(form.getBody(), toolkit);
         createAttributesSection(form.getBody(), toolkit);
         createOperationsSection(form.getBody(), toolkit);
@@ -120,7 +103,7 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
     }
 
     private void createInfoSection(Composite parent, FormToolkit toolkit) {
-        Composite infoSectionClient = createSection(parent, toolkit,
+        Composite infoSectionClient = ViewUtil.createSection(parent, toolkit,
                 Messages.MBeanInfoView_infoSectionTitle,
                 Messages.MBeanInfoView_infoSectionDesc,
                 ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE
@@ -151,7 +134,7 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
 
     private Composite createAttributesSection(Composite parent,
             FormToolkit toolkit) {
-        Composite attrSectionClient = createSection(parent, toolkit,
+        Composite attrSectionClient = ViewUtil.createSection(parent, toolkit,
                 Messages.MBeanInfoView_attrSectionTitle,
                 Messages.MBeanInfoView_attrSectionDesc,
                 ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE
@@ -162,84 +145,25 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
                 this);
         attrSection.setClient(attrSectionClient);
 
-        createAttributeDetailsSection(attrSectionClient, toolkit);
+        attrDetails = new AttributeDetailsSection(attrSectionClient, toolkit);
+
         return attrSectionClient;
-    }
-
-    private void createAttributeDetailsSection(Composite parent,
-            FormToolkit toolkit) {
-        Composite attrDetailsSectionClient = createSection(parent, toolkit,
-                Messages.details, null, ExpandableComposite.SHORT_TITLE_BAR
-                        | ExpandableComposite.EXPANDED);
-        attrDetailsSection = (Section) attrDetailsSectionClient.getParent();
-        attrDetailsSection.addExpansionListener(expansionAdapter);
-
-        toolkit.createLabel(attrDetailsSectionClient, Messages.name);
-        attrNameLabel = toolkit.createLabel(attrDetailsSectionClient, ""); //$NON-NLS-1$
-        attrNameLabel.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        attrNameLabel.setFont(bold);
-
-        toolkit.createLabel(attrDetailsSectionClient, Messages.value);
-        attrValueText = toolkit.createText(attrDetailsSectionClient,
-                "", SWT.MULTI //$NON-NLS-1$
-                        | SWT.WRAP | SWT.READ_ONLY);
-        attrValueText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        attrValueText.setFont(bold);
-
-        toolkit.createLabel(attrDetailsSectionClient, Messages.type);
-        attrTypeLabel = toolkit.createLabel(attrDetailsSectionClient, ""); //$NON-NLS-1$
-        attrTypeLabel.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        attrTypeLabel.setFont(bold);
-        toolkit.createLabel(attrDetailsSectionClient, Messages.description);
-        attrDescText = toolkit.createText(attrDetailsSectionClient,
-                "", SWT.MULTI //$NON-NLS-1$
-                        | SWT.WRAP | SWT.READ_ONLY);
-        attrDescText.setFont(bold);
-        attrDescText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        attrReadableCheckbox = toolkit.createButton(attrDetailsSectionClient,
-                Messages.readable, SWT.CHECK);
-        TableWrapData twdata = new TableWrapData(TableWrapData.FILL_GRAB);
-        twdata.colspan = 2;
-        attrReadableCheckbox.setLayoutData(twdata);
-        attrWritableCheckbox = toolkit.createButton(attrDetailsSectionClient,
-                Messages.writable, SWT.CHECK);
-        twdata = new TableWrapData(TableWrapData.FILL_GRAB);
-        twdata.colspan = 2;
-        attrWritableCheckbox.setLayoutData(twdata);
-
     }
 
     private Composite createOperationsSection(Composite parent,
             FormToolkit toolkit) {
-        Composite opSectionClient = createSection(parent, toolkit,
+        Composite opSectionClient = ViewUtil.createSection(parent, toolkit,
                 Messages.MBeanInfoView_opSectionTitle,
                 Messages.MBeanInfoView_opSectionDesct,
                 ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE
                         | Section.DESCRIPTION);
         opSection = (Section) opSectionClient.getParent();
         opSection.addExpansionListener(expansionAdapter);
-        
+
         opTable = new MBeanOperationsTable(opSectionClient, toolkit);
         opSection.setClient(opSectionClient);
 
         return opSectionClient;
-    }
-
-    private static Composite createSection(Composite parent, FormToolkit toolkit,
-            String title, String description, int flags) {
-        Section section = toolkit.createSection(parent, flags);
-        section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        if (title != null)
-            section.setText(title);
-        if (description != null)
-            section.setDescription(description);
-        section.setEnabled(false);
-        Composite sectionClient = toolkit.createComposite(section);
-        TableWrapLayout twlayout = new TableWrapLayout();
-        twlayout.numColumns = 2;
-        sectionClient.setLayout(twlayout);
-        section.setClient(sectionClient);
-        return sectionClient;
     }
 
     private void updateMBeanInfoArea(boolean forceExpand) {
@@ -290,38 +214,6 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
             opTable.setInput(selectedMBeanInfo);
     }
 
-    private void updateDetailsAttributesArea(MBeanAttributeInfoWrapper wrapper) {
-        Assert.isNotNull(wrapper);
-
-        attrDetailsSection.setExpanded(true);
-
-        MBeanAttributeInfo attrInfo = wrapper.getMBeanAttributeInfo();
-        attrNameLabel.setText(attrInfo.getName());
-
-        String attrValue = ""; //$NON-NLS-1$
-        try {
-            MBeanServerConnection mbsc = wrapper.getMBeanServerConnection();
-            ObjectName on = wrapper.getObjectName();
-            Object obj = mbsc.getAttribute(on, attrInfo.getName());
-            attrValue = StringUtils.toString(obj, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            attrValue = Messages.MBeanAttributesTable_unvailable;
-        }
-        if (attrValue.equals(Messages.MBeanAttributesTable_unvailable)) {
-            attrValueText.setForeground(form.getDisplay().getSystemColor(
-                    SWT.COLOR_RED));
-        } else {
-            attrValueText.setForeground(attrNameLabel.getForeground());
-        }
-        attrValueText.setText(attrValue);
-
-        attrTypeLabel.setText(StringUtils.toString(attrInfo.getType()));
-        attrDescText.setText(attrInfo.getDescription());
-        attrReadableCheckbox.setSelection(attrInfo.isReadable());
-        attrWritableCheckbox.setSelection(attrInfo.isWritable());
-    }
-
     @Override
     public void dispose() {
         bold.dispose();
@@ -349,7 +241,7 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
                 updateMBeanInfoArea(true);
                 updateAttributesArea(true);
                 updateOperationsArea(true);
-                attrDetailsSection.setExpanded(false);
+                attrDetails.update(null);
                 form.reflow(true);
             }
         }
@@ -357,7 +249,7 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
             if (obj instanceof MBeanAttributeInfoWrapper) {
                 MBeanAttributeInfoWrapper wrapper = (MBeanAttributeInfoWrapper) obj;
                 if (wrapper.getMBeanInfoWrapper() == selectedMBeanInfo) {
-                    updateDetailsAttributesArea(wrapper);
+                    attrDetails.update(wrapper);
                     form.reflow(true);
                 }
             }

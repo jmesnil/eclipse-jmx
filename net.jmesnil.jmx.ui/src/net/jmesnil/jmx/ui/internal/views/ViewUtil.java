@@ -28,6 +28,8 @@ import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 class ViewUtil {
 
@@ -66,6 +68,23 @@ class ViewUtil {
 
     static MBeanOperationInvocationView getMBeanOperationInvocationView() {
         return (MBeanOperationInvocationView) getView(MBeanOperationInvocationView.ID);
+    }
+
+    static Composite createSection(Composite parent, FormToolkit toolkit,
+            String title, String description, int flags) {
+        Section section = toolkit.createSection(parent, flags);
+        section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        if (title != null)
+            section.setText(title);
+        if (description != null)
+            section.setDescription(description);
+        section.setEnabled(false);
+        Composite sectionClient = toolkit.createComposite(section);
+        TableWrapLayout twlayout = new TableWrapLayout();
+        twlayout.numColumns = 2;
+        sectionClient.setLayout(twlayout);
+        section.setClient(sectionClient);
+        return sectionClient;
     }
 
 }
