@@ -319,6 +319,7 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
         attrTypeLabel.setText(StringUtils.toString(attrInfo.getType()));
         attrDescText.setText(attrInfo.getDescription());
         attrReadableCheckbox.setSelection(attrInfo.isReadable());
+        attrWritableCheckbox.setSelection(attrInfo.isWritable());
     }
 
     @Override
