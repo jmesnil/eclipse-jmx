@@ -90,6 +90,8 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
 
     private Text attrValueText;
 
+    private ExpansionAdapter expansionAdapter;
+
     public MBeanInfoView() {
     }
 
@@ -103,6 +105,13 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
         form.setText(Messages.MBeanInfoView_summary);
         form.getBody().setLayout(new TableWrapLayout());
 
+        expansionAdapter = new ExpansionAdapter() {
+          @Override
+          public void expansionStateChanged(ExpansionEvent e) {
+            form.reflow(true);
+          }
+        };
+      
         createInfoSection(form.getBody(), toolkit);
         createAttributesSection(form.getBody(), toolkit);
         createOperationsSection(form.getBody(), toolkit);
@@ -117,6 +126,7 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
                 ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE
                         | Section.DESCRIPTION);
         infoSection = (Section) infoSectionClient.getParent();
+        infoSection.addExpansionListener(expansionAdapter);
 
         toolkit.createLabel(infoSectionClient, Messages.name);
         nameLabel = toolkit.createLabel(infoSectionClient, ""); //$NON-NLS-1$
@@ -147,6 +157,7 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
                 ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE
                         | Section.DESCRIPTION);
         attrSection = (Section) attrSectionClient.getParent();
+        attrSection.addExpansionListener(expansionAdapter);
         attributesTable = new MBeanAttributesTable(attrSectionClient, toolkit,
                 this);
         attrSection.setClient(attrSectionClient);
@@ -161,6 +172,7 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
                 Messages.details, null, ExpandableComposite.SHORT_TITLE_BAR
                         | ExpandableComposite.EXPANDED);
         attrDetailsSection = (Section) attrDetailsSectionClient.getParent();
+        attrDetailsSection.addExpansionListener(expansionAdapter);
 
         toolkit.createLabel(attrDetailsSectionClient, Messages.name);
         attrNameLabel = toolkit.createLabel(attrDetailsSectionClient, ""); //$NON-NLS-1$
@@ -205,22 +217,18 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
                 ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE
                         | Section.DESCRIPTION);
         opSection = (Section) opSectionClient.getParent();
+        opSection.addExpansionListener(expansionAdapter);
+        
         opTable = new MBeanOperationsTable(opSectionClient, toolkit);
         opSection.setClient(opSectionClient);
 
         return opSectionClient;
     }
 
-    private Composite createSection(Composite parent, FormToolkit toolkit,
+    private static Composite createSection(Composite parent, FormToolkit toolkit,
             String title, String description, int flags) {
         Section section = toolkit.createSection(parent, flags);
         section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        section.addExpansionListener(new ExpansionAdapter() {
-            @Override
-            public void expansionStateChanged(ExpansionEvent e) {
-                form.reflow(true);
-            }
-        });
         if (title != null)
             section.setText(title);
         if (description != null)
