@@ -99,6 +99,7 @@ public class AttributeDetailsSection {
         }
 
         MBeanAttributeInfo attrInfo = wrapper.getMBeanAttributeInfo();
+        boolean writable = attrInfo.isWritable();
         attrNameLabel.setText(attrInfo.getName());
 
         String attrValue = ""; //$NON-NLS-1$
@@ -115,14 +116,23 @@ public class AttributeDetailsSection {
             attrValueText.setForeground(attrDetailsSection.getDisplay()
                     .getSystemColor(SWT.COLOR_RED));
         } else {
-            attrValueText.setForeground(attrNameLabel.getForeground());
+            if (writable) {
+                attrValueText.setEditable(true);
+                attrValueText.setForeground(attrDetailsSection.getDisplay()
+                    .getSystemColor(SWT.COLOR_BLUE));
+            } else {
+                attrValueText.setEditable(false);
+                attrValueText.setForeground(attrNameLabel.getForeground());  
+            }
         }
         attrValueText.setText(attrValue);
 
         attrTypeLabel.setText(StringUtils.toString(attrInfo.getType()));
         attrDescText.setText(attrInfo.getDescription());
         attrReadableCheckbox.setSelection(attrInfo.isReadable());
-        attrWritableCheckbox.setSelection(attrInfo.isWritable());
+        attrWritableCheckbox.setSelection(writable);
     }
+    
+
 
 }
