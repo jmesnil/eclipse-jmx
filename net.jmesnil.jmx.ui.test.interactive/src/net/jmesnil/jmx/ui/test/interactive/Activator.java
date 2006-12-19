@@ -49,6 +49,8 @@ public class Activator extends AbstractUIPlugin implements IStartup {
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         mbs.registerMBean(new ArrayType(), ObjectName
                 .getInstance("test:type=ArrayType"));
+        mbs.registerMBean(new WritableAttributes(), ObjectName
+            .getInstance("test:type=WritableAttributes"));
     }
 
     @Override
@@ -56,6 +58,7 @@ public class Activator extends AbstractUIPlugin implements IStartup {
         plugin = null;
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         mbs.unregisterMBean(ObjectName.getInstance("test:type=ArrayType"));
+        mbs.unregisterMBean(ObjectName.getInstance("test:type=WritableAttributes"));
         super.stop(context);
     }
 
