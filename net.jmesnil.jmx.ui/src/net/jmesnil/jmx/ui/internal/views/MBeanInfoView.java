@@ -180,7 +180,7 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
         descText.setText(selectedMBeanInfo.getMBeanInfo().getDescription());
     }
 
-    private void updateAttributesArea(boolean forceExpand) {
+    void updateAttributesArea(boolean forceExpand) {
         boolean enabled = selectedMBeanInfo != null
                 && selectedMBeanInfo.getMBeanInfo() != null
                 && (selectedMBeanInfo.getMBeanInfo().getAttributes().length > 0);

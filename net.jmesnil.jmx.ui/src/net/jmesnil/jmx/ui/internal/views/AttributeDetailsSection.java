@@ -1,19 +1,24 @@
 package net.jmesnil.jmx.ui.internal.views;
 
+import javax.management.Attribute;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
 import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
+import net.jmesnil.jmx.ui.internal.MBeanUtils;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -36,6 +41,8 @@ public class AttributeDetailsSection {
 
     private Button attrWritableCheckbox;
 
+    private MBeanAttributeInfoWrapper selectedWrapper;
+
     public AttributeDetailsSection(Composite parent, FormToolkit toolkit) {
         FontData fd[] = parent.getFont().getFontData();
         Font bold = new Font(parent.getDisplay(), fd[0].getName(),
@@ -55,10 +62,33 @@ public class AttributeDetailsSection {
 
         toolkit.createLabel(attrDetailsSectionClient, Messages.value);
         attrValueText = toolkit.createText(attrDetailsSectionClient,
-                "", SWT.MULTI //$NON-NLS-1$
-                        | SWT.WRAP | SWT.READ_ONLY);
+                "", SWT.SINGLE //$NON-NLS-1$
+                        | SWT.WRAP);
         attrValueText.setFont(bold);
         attrValueText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        attrValueText.addListener(SWT.DefaultSelection, new Listener() {
+            public void handleEvent(Event event) {
+                MBeanServerConnection mbsc = selectedWrapper
+                        .getMBeanServerConnection();
+                String attrName = selectedWrapper.getMBeanAttributeInfo()
+                        .getName();
+                String type = selectedWrapper.getMBeanAttributeInfo().getType();
+                try {
+                    Object value = MBeanUtils.getValue(attrValueText.getText(),
+                            type);
+                    Attribute attr = new Attribute(attrName, value);
+                    mbsc.setAttribute(selectedWrapper.getObjectName(), attr);
+                    attrDetailsSection.layout(true);
+                    MBeanInfoView mbeanInfoView = (MBeanInfoView) ViewUtil
+                            .getView(MBeanInfoView.ID);
+                    mbeanInfoView.updateAttributesArea(true);
+                } catch (Exception e) {
+                    MessageDialog.openError(attrDetailsSection.getShell(),
+                            Messages.AttributeDetailsSection_errorTitle, e
+                                    .getLocalizedMessage());
+                }
+            }
+        });
 
         toolkit.createLabel(attrDetailsSectionClient, Messages.type);
         attrTypeLabel = toolkit.createLabel(attrDetailsSectionClient, ""); //$NON-NLS-1$
@@ -98,6 +128,7 @@ public class AttributeDetailsSection {
             attrDetailsSection.setExpanded(true);
         }
 
+        this.selectedWrapper = wrapper;
         MBeanAttributeInfo attrInfo = wrapper.getMBeanAttributeInfo();
         boolean writable = attrInfo.isWritable();
         attrNameLabel.setText(attrInfo.getName());
@@ -119,10 +150,10 @@ public class AttributeDetailsSection {
             if (writable) {
                 attrValueText.setEditable(true);
                 attrValueText.setForeground(attrDetailsSection.getDisplay()
-                    .getSystemColor(SWT.COLOR_BLUE));
+                        .getSystemColor(SWT.COLOR_BLUE));
             } else {
                 attrValueText.setEditable(false);
-                attrValueText.setForeground(attrNameLabel.getForeground());  
+                attrValueText.setForeground(attrNameLabel.getForeground());
             }
         }
         attrValueText.setText(attrValue);
@@ -132,7 +163,5 @@ public class AttributeDetailsSection {
         attrReadableCheckbox.setSelection(attrInfo.isReadable());
         attrWritableCheckbox.setSelection(writable);
     }
-    
-
 
 }

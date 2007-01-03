@@ -21,6 +21,8 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "net.jmesnil.jmx.ui.internal.messages"; //$NON-NLS-1$
 
+    public static String AttributeDetailsSection_errorTitle;
+
     public static String className;
 
     public static String ConnectionSelectionDialog_error;

@@ -73,8 +73,8 @@ public class MBeanUtils {
         return ret;
     }
 
-    public static Object getValue(String valueStr,
-        String type) throws ClassNotFoundException {
+    public static Object getValue(String valueStr, String type)
+            throws ClassNotFoundException {
         if (valueStr == null || type == null) {
             return null;
         }
@@ -83,31 +83,32 @@ public class MBeanUtils {
         if (type.equals("short")) //$NON-NLS-1$
             return new Short(valueStr);
         if (type.equals("java.lang.Short")) //$NON-NLS-1$
-            return  new Short(valueStr);
+            return new Short(valueStr);
         if (type.equals("int")) //$NON-NLS-1$
-            return  new Integer(valueStr);
+            return new Integer(valueStr);
         if (type.equals("java.lang.Integer")) //$NON-NLS-1$
-            return  new Integer(valueStr);
+            return new Integer(valueStr);
         if (type.equals("long")) //$NON-NLS-1$
-            return  new Long(valueStr);
+            return new Long(valueStr);
         if (type.equals("java.lang.Long")) //$NON-NLS-1$
-            return  new Long(valueStr);
+            return new Long(valueStr);
         if (type.equals("float")) //$NON-NLS-1$
-            return  new Float(valueStr);
+            return new Float(valueStr);
         if (type.equals("java.lang.Float")) //$NON-NLS-1$
-            return  new Float(valueStr);
+            return new Float(valueStr);
         if (type.equals("double")) //$NON-NLS-1$
-            return  new Double(valueStr);
+            return new Double(valueStr);
         if (type.equals("java.lang.Double")) //$NON-NLS-1$
-            return  new Double(valueStr);
+            return new Double(valueStr);
         if (type.equals("char")) //$NON-NLS-1$
-            return  new Character(valueStr.charAt(0));
+            return new Character(valueStr.charAt(0));
         if (type.equals("boolean")) //$NON-NLS-1$
-            return  new Boolean(valueStr);
+            return new Boolean(valueStr);
         if (MBeanUtils.class.getClassLoader().loadClass("java.lang.Number") //$NON-NLS-1$
-            .isAssignableFrom(MBeanUtils.class.getClassLoader().loadClass(type)))
+                .isAssignableFrom(
+                        MBeanUtils.class.getClassLoader().loadClass(type)))
             return createNumber(valueStr);
-        
+
         return valueStr;
     }
 
