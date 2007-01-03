@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/net.jmesnil.jmx_0.1.0.200701032051.jar" id="net.jmesnil.jmx" version="0.1.0.200701032051"/>
+   <feature url="features/net.jmesnil.jmx_0.1.0.200701032051.jar" id="net.jmesnil.jmx" version="0.1.0.200701032051">
+      <category name="JMX Console"/>
+   </feature>
    <category-def name="JMX Console" label="net.jmesnil.jmx">
       <description>
          eclipse-jmx is a JMX plugin-in for Eclipse IDE which is used to manage Java applications through JMX and its RMI Connector.
