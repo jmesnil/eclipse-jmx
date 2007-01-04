@@ -140,7 +140,7 @@ public class MBeanOperationInvocationView extends ViewPart implements
             toolkit.createLabel(c, desc);
         }
         // composite for method signature [ return type | method button | ( |
-        // Composite(1..n parameters) |Ê) ]
+        // Composite(1..n parameters) |ï¿½) ]
         Composite c = toolkit.createComposite(invocationComposite, SWT.NONE);
         c.setLayout(new GridLayout(5, false));
         // return type
@@ -232,10 +232,15 @@ public class MBeanOperationInvocationView extends ViewPart implements
                         Messages.MBeanOperationInvocationView_result,
                         "" + result); //$NON-NLS-1$
             } catch (Exception e) {
-                e.printStackTrace();
-                MessageDialog.openError(null,
-                        Messages.MBeanOperationInvocationView_error, e
-                                .getMessage());
+                String message = e.getLocalizedMessage();
+                // if the exception has a cause, it is likely more interesting
+                // since it may be the exception thrown by the mbean implementation
+                // rather than the exception thrown by the mbean server connection
+                if (e.getCause() != null) {
+                    message = e.getCause().getLocalizedMessage();
+                }
+                MessageDialog.openError(managedForm.getForm().getShell(),
+                        Messages.MBeanOperationInvocationView_error, message);
             }
         }
     }
