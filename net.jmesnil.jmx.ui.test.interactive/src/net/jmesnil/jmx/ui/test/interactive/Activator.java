@@ -17,9 +17,13 @@
 package net.jmesnil.jmx.ui.test.interactive;
 
 import java.lang.management.ManagementFactory;
+import java.rmi.registry.LocateRegistry;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import javax.management.remote.JMXConnectorServer;
+import javax.management.remote.JMXConnectorServerFactory;
+import javax.management.remote.JMXServiceURL;
 
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -36,6 +40,8 @@ public class Activator extends AbstractUIPlugin implements IStartup {
     // The shared instance
     private static Activator plugin;
 
+    private JMXConnectorServer cs;
+
     /**
      * The constructor
      */
@@ -51,6 +57,17 @@ public class Activator extends AbstractUIPlugin implements IStartup {
                 .getInstance("test:type=ArrayType"));
         mbs.registerMBean(new WritableAttributes(), ObjectName
             .getInstance("test:type=WritableAttributes"));
+        try {
+            System.setProperty("java.rmi.server.randomIDs", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+            LocateRegistry.createRegistry(3000);
+            JMXServiceURL url = new JMXServiceURL(
+                  "service:jmx:rmi:///jndi/rmi://:3000/jmxrmi"); //$NON-NLS-1$
+            cs = JMXConnectorServerFactory
+                  .newJMXConnectorServer(url, null, mbs);
+            cs.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -59,6 +76,7 @@ public class Activator extends AbstractUIPlugin implements IStartup {
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         mbs.unregisterMBean(ObjectName.getInstance("test:type=ArrayType"));
         mbs.unregisterMBean(ObjectName.getInstance("test:type=WritableAttributes"));
+        cs.stop();
         super.stop(context);
     }
 

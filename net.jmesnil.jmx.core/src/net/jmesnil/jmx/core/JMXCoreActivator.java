@@ -17,15 +17,10 @@
 package net.jmesnil.jmx.core;
 
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.rmi.registry.LocateRegistry;
 
-import javax.management.MBeanServer;
 import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
-import javax.management.remote.JMXConnectorServer;
-import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
 
 import net.jmesnil.jmx.resources.MBeanServerConnectionWrapper;
@@ -45,8 +40,6 @@ public class JMXCoreActivator extends Plugin {
     // The shared instance
     private static JMXCoreActivator plugin;
 
-    private JMXConnectorServer cs;
-
     public JMXCoreActivator() {
     }
 
@@ -54,25 +47,11 @@ public class JMXCoreActivator extends Plugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
-        try {
-            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-            System.setProperty("java.rmi.server.randomIDs", "true"); //$NON-NLS-1$ //$NON-NLS-2$
-            LocateRegistry.createRegistry(3000);
-            JMXServiceURL url = new JMXServiceURL(
-                    "service:jmx:rmi:///jndi/rmi://:3000/jmxrmi"); //$NON-NLS-1$
-            cs = JMXConnectorServerFactory
-                    .newJMXConnectorServer(url, null, mbs);
-            cs.start();
-        } catch (Exception e) {
-            // FIXME Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     @Override
     public void stop(BundleContext context) throws Exception {
         plugin = null;
-        cs.stop();
         super.stop(context);
     }
 
