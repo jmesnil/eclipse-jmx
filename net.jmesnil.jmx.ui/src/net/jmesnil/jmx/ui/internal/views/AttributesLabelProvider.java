@@ -46,8 +46,8 @@ class AttributesLabelProvider extends LabelProvider implements
                 ObjectName on = wrapper.getObjectName();
                 Object obj = mbsc.getAttribute(on, attrInfo.getName());
                 return StringUtils.toString(obj, false);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Throwable t) {
+                t.printStackTrace();
                 return Messages.MBeanAttributesTable_unvailable;
             }
         }
