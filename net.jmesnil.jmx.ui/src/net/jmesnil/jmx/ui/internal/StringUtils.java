@@ -40,7 +40,7 @@ public class StringUtils {
         int length = Array.getLength(arrayObj);
         for (int i = 0; i < length; i++) {
             if (i > 0) {
-                buff.append('\n');
+                buff.append(", ");
             }
 
             element = Array.get(arrayObj, i);
