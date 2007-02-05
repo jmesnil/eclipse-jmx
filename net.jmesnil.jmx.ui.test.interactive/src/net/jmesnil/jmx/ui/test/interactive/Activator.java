@@ -54,9 +54,11 @@ public class Activator extends AbstractUIPlugin implements IStartup {
         super.start(context);
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         mbs.registerMBean(new ArrayType(), ObjectName
-                .getInstance("test:type=ArrayType"));
+                .getInstance("net.jmesnil.test:type=ArrayType"));
         mbs.registerMBean(new WritableAttributes(), ObjectName
-            .getInstance("test:type=WritableAttributes"));
+            .getInstance("net.jmesnil.test:type=WritableAttributes"));
+        mbs.registerMBean(new ComplexType(), ObjectName
+            .getInstance("net.jmesnil.test:type=ComplexType"));
         try {
             System.setProperty("java.rmi.server.randomIDs", "true"); //$NON-NLS-1$ //$NON-NLS-2$
             LocateRegistry.createRegistry(3000);
@@ -74,8 +76,7 @@ public class Activator extends AbstractUIPlugin implements IStartup {
     public void stop(BundleContext context) throws Exception {
         plugin = null;
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        mbs.unregisterMBean(ObjectName.getInstance("test:type=ArrayType"));
-        mbs.unregisterMBean(ObjectName.getInstance("test:type=WritableAttributes"));
+        mbs.unregisterMBean(ObjectName.getInstance("net.jmesnil.test:*"));
         cs.stop();
         super.stop(context);
     }
