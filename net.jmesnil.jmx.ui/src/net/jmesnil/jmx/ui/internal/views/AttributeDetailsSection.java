@@ -16,6 +16,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -24,8 +25,34 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 public class AttributeDetailsSection {
+
+    private final class ValueSelectionListener implements Listener
+  {
+    public void handleEvent(Event event) {
+        MBeanServerConnection mbsc = selectedWrapper
+                .getMBeanServerConnection();
+        String attrName = selectedWrapper.getMBeanAttributeInfo()
+                .getName();
+        String type = selectedWrapper.getMBeanAttributeInfo().getType();
+        try {
+            Object value = MBeanUtils.getValue(attrValueText.getText(),
+                    type);
+            Attribute attr = new Attribute(attrName, value);
+            mbsc.setAttribute(selectedWrapper.getObjectName(), attr);
+            attrDetailsSection.layout(true);
+            MBeanInfoView mbeanInfoView = (MBeanInfoView) ViewUtil
+                    .getView(MBeanInfoView.ID);
+            mbeanInfoView.updateAttributesArea(true);
+        } catch (Exception e) {
+            MessageDialog.openError(attrDetailsSection.getShell(),
+                    Messages.AttributeDetailsSection_errorTitle, e
+                            .getLocalizedMessage());
+        }
+    }
+  }
 
     private Section attrDetailsSection;
 
@@ -43,7 +70,16 @@ public class AttributeDetailsSection {
 
     private MBeanAttributeInfoWrapper selectedWrapper;
 
+    private Listener listener;
+
+    private Composite valueComposite;
+
+    private FormToolkit toolkit;
+
     public AttributeDetailsSection(Composite parent, FormToolkit toolkit) {
+        this.toolkit = toolkit;
+        listener = new ValueSelectionListener();
+      
         FontData fd[] = parent.getFont().getFontData();
         Font bold = new Font(parent.getDisplay(), fd[0].getName(),
                 fd[0].height, SWT.BOLD);
@@ -61,34 +97,9 @@ public class AttributeDetailsSection {
         attrNameLabel.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
         toolkit.createLabel(attrDetailsSectionClient, Messages.value);
-        attrValueText = toolkit.createText(attrDetailsSectionClient,
-                "", SWT.SINGLE //$NON-NLS-1$
-                        | SWT.WRAP);
-        attrValueText.setFont(bold);
-        attrValueText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        attrValueText.addListener(SWT.DefaultSelection, new Listener() {
-            public void handleEvent(Event event) {
-                MBeanServerConnection mbsc = selectedWrapper
-                        .getMBeanServerConnection();
-                String attrName = selectedWrapper.getMBeanAttributeInfo()
-                        .getName();
-                String type = selectedWrapper.getMBeanAttributeInfo().getType();
-                try {
-                    Object value = MBeanUtils.getValue(attrValueText.getText(),
-                            type);
-                    Attribute attr = new Attribute(attrName, value);
-                    mbsc.setAttribute(selectedWrapper.getObjectName(), attr);
-                    attrDetailsSection.layout(true);
-                    MBeanInfoView mbeanInfoView = (MBeanInfoView) ViewUtil
-                            .getView(MBeanInfoView.ID);
-                    mbeanInfoView.updateAttributesArea(true);
-                } catch (Exception e) {
-                    MessageDialog.openError(attrDetailsSection.getShell(),
-                            Messages.AttributeDetailsSection_errorTitle, e
-                                    .getLocalizedMessage());
-                }
-            }
-        });
+        valueComposite = toolkit.createComposite(attrDetailsSectionClient);
+        valueComposite.setLayoutData(new TableWrapData(TableWrapData.FILL));
+        valueComposite.setLayout(new TableWrapLayout());
 
         toolkit.createLabel(attrDetailsSectionClient, Messages.type);
         attrTypeLabel = toolkit.createLabel(attrDetailsSectionClient, ""); //$NON-NLS-1$
@@ -133,6 +144,15 @@ public class AttributeDetailsSection {
         boolean writable = attrInfo.isWritable();
         attrNameLabel.setText(attrInfo.getName());
 
+        if (valueComposite != null && !valueComposite.isDisposed()) {
+            Control[] childs = valueComposite.getChildren();
+            if (childs.length > 0) {
+                for (int i = 0; i < childs.length; i++) {
+                    childs[i].dispose();
+                }
+            }
+        }
+
         String attrValue = ""; //$NON-NLS-1$
         try {
             MBeanServerConnection mbsc = wrapper.getMBeanServerConnection();
@@ -143,6 +163,11 @@ public class AttributeDetailsSection {
             e.printStackTrace();
             attrValue = Messages.MBeanAttributesTable_unvailable;
         }
+        attrValueText = toolkit.createText(valueComposite,
+            "", SWT.SINGLE | SWT.WRAP); //$NON-NLS-1$
+        attrValueText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        attrValueText.addListener(SWT.DefaultSelection, listener);
+
         if (attrValue.equals(Messages.MBeanAttributesTable_unvailable)) {
             attrValueText.setForeground(attrDetailsSection.getDisplay()
                     .getSystemColor(SWT.COLOR_RED));
@@ -162,6 +187,8 @@ public class AttributeDetailsSection {
         attrDescText.setText(attrInfo.getDescription());
         attrReadableCheckbox.setSelection(attrInfo.isReadable());
         attrWritableCheckbox.setSelection(writable);
+        
+        valueComposite.pack(true);
     }
 
 }
