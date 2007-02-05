@@ -12,7 +12,7 @@ public class StringUtils {
         if (obj == null) {
             return NULL;
         }
-        if (!isArray(obj.toString())) {
+        if (!obj.getClass().isArray()) {
             return obj.toString();
         }
         if (detailed) {
