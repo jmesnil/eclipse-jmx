@@ -76,7 +76,9 @@ public class Activator extends AbstractUIPlugin implements IStartup {
     public void stop(BundleContext context) throws Exception {
         plugin = null;
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        mbs.unregisterMBean(ObjectName.getInstance("net.jmesnil.test:*"));
+        mbs.unregisterMBean(ObjectName.getInstance("net.jmesnil.test:type=ArrayType"));
+        mbs.unregisterMBean(ObjectName.getInstance("net.jmesnil.test:type=WritableAttributes"));
+        mbs.unregisterMBean(ObjectName.getInstance("net.jmesnil.test:type=ComplexType"));
         cs.stop();
         super.stop(context);
     }
