@@ -49,7 +49,7 @@ public class Messages extends NLS {
 
     public static String impact;
 
-    public static String MBeanAttributesTable_unvailable;
+    public static String unavailable;
 
     public static String MBeanInfoView_attrSectionDesc;
 

@@ -48,7 +48,7 @@ class AttributesLabelProvider extends LabelProvider implements
                 return StringUtils.toString(obj, false);
             } catch (Throwable t) {
                 t.printStackTrace();
-                return Messages.MBeanAttributesTable_unvailable;
+                return Messages.unavailable;
             }
         }
         return getText(element);

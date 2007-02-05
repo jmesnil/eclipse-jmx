@@ -53,14 +53,14 @@ public class AttributeControlFactory {
         try {
             attrValue = StringUtils.toString(value, true);
         } catch (Exception e) {
-            attrValue = Messages.MBeanAttributesTable_unvailable;
+            attrValue = Messages.unavailable;
         }
 
         final Text attrValueText = toolkit.createText(parent,
                 "", SWT.SINGLE | SWT.WRAP); //$NON-NLS-1$
         attrValueText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
-        if (attrValue.equals(Messages.MBeanAttributesTable_unvailable)) {
+        if (attrValue.equals(Messages.unavailable)) {
             attrValueText.setForeground(parent.getDisplay().getSystemColor(
                     SWT.COLOR_RED));
         } else {
