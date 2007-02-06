@@ -51,7 +51,7 @@ public class AttributeControlFactory {
     public static Control createControl(final Composite parent,
 	    FormToolkit toolkit, final MBeanAttributeInfo attrInfo,
 	    Object value, final IWritableAttributeHandler handler) {
-	if (value != null && value.getClass().equals(Boolean.class)) {
+	if (value != null && value instanceof Boolean) {
 	    return createBooleanControl(parent, toolkit, attrInfo, value,
 		    handler);
 	}
