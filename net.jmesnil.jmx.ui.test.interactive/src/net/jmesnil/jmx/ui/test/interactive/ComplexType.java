@@ -56,7 +56,6 @@ public class ComplexType extends StandardMBean implements ComplexTypeMBean
   public Properties getSystemProperties()
   {
     Properties props = System.getProperties();
-    props.list(System.out);
     return props;
   }
 
