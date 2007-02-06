@@ -124,6 +124,7 @@ public class AttributeDetailsSection {
         if (wrapper == null) {
             attrDetailsSection.setEnabled(false);
             attrDetailsSection.setExpanded(false);
+            return;
         } else {
             attrDetailsSection.setEnabled(true);
             attrDetailsSection.setExpanded(true);
