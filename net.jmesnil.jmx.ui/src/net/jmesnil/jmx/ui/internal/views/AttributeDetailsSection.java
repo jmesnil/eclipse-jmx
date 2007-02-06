@@ -89,11 +89,6 @@ public class AttributeDetailsSection {
         attrNameLabel.setFont(bold);
         attrNameLabel.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
-        toolkit.createLabel(attrDetailsSectionClient, Messages.value);
-        valueComposite = toolkit.createComposite(attrDetailsSectionClient);
-        valueComposite.setLayoutData(new TableWrapData(TableWrapData.FILL));
-        valueComposite.setLayout(new TableWrapLayout());
-
         toolkit.createLabel(attrDetailsSectionClient, Messages.type);
         attrTypeLabel = toolkit.createLabel(attrDetailsSectionClient, ""); //$NON-NLS-1$
         attrTypeLabel.setFont(bold);
@@ -110,17 +105,17 @@ public class AttributeDetailsSection {
                 Messages.readable, SWT.CHECK);
         attrReadableCheckbox.setEnabled(false);
         attrReadableCheckbox.setFont(bold);
-        TableWrapData twdata = new TableWrapData(TableWrapData.FILL_GRAB);
-        twdata.colspan = 2;
-        attrReadableCheckbox.setLayoutData(twdata);
-
+        attrReadableCheckbox.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
         attrWritableCheckbox = toolkit.createButton(attrDetailsSectionClient,
                 Messages.writable, SWT.CHECK);
         attrWritableCheckbox.setEnabled(false);
         attrWritableCheckbox.setFont(bold);
-        twdata = new TableWrapData(TableWrapData.FILL_GRAB);
-        twdata.colspan = 2;
-        attrWritableCheckbox.setLayoutData(twdata);
+        attrWritableCheckbox.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+
+        toolkit.createLabel(attrDetailsSectionClient, Messages.value);
+        valueComposite = toolkit.createComposite(attrDetailsSectionClient);
+        valueComposite.setLayoutData(new TableWrapData(TableWrapData.FILL));
+        valueComposite.setLayout(new TableWrapLayout());
     }
 
     public void update(MBeanAttributeInfoWrapper wrapper) {
