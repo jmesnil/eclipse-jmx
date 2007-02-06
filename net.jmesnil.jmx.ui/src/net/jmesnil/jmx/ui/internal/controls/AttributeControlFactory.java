@@ -1,6 +1,6 @@
 /**
  * Eclipse JMX Console
- * Copyright (C) 200è Jeff Mesnil
+ * Copyright (C) 200ÔøΩ Jeff Mesnil
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,89 +37,89 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 public class AttributeControlFactory {
 
     public static Control createControl(final Composite parent,
-            FormToolkit toolkit, final MBeanAttributeInfo attrInfo,
-            Object value, final UpdatableAttributeHandler handler) {
-        if (value.getClass().equals(Boolean.class)) {
-            return createCombo(parent, toolkit, attrInfo, value, handler);
-        } else {
-            return createText(parent, toolkit, attrInfo, value, handler);
-        }
+	    FormToolkit toolkit, final MBeanAttributeInfo attrInfo,
+	    Object value, final UpdatableAttributeHandler handler) {
+	if (value.getClass().equals(Boolean.class)) {
+	    return createBooleanControl(parent, toolkit, attrInfo, value,
+		    handler);
+	} else {
+	    return createText(parent, toolkit, attrInfo, value, handler);
+	}
     }
 
-    private static Control createText(final Composite parent, FormToolkit toolkit,
-            final MBeanAttributeInfo attrInfo, Object value,
-            final UpdatableAttributeHandler handler) {
-        String attrValue = ""; //$NON-NLS-1$
-        try {
-            attrValue = StringUtils.toString(value, true);
-        } catch (Exception e) {
-            attrValue = Messages.unavailable;
-        }
+    private static Control createText(final Composite parent,
+	    FormToolkit toolkit, final MBeanAttributeInfo attrInfo,
+	    Object value, final UpdatableAttributeHandler handler) {
+	String attrValue = ""; //$NON-NLS-1$
+	try {
+	    attrValue = StringUtils.toString(value, true);
+	} catch (Exception e) {
+	    attrValue = Messages.unavailable;
+	}
 
-        final Text attrValueText = toolkit.createText(parent,
-                "", SWT.SINGLE | SWT.WRAP); //$NON-NLS-1$
-        attrValueText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+	final Text text = toolkit.createText(parent, attrValue, SWT.SINGLE
+		| SWT.WRAP);
+	text.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
-        if (attrValue.equals(Messages.unavailable)) {
-            attrValueText.setForeground(parent.getDisplay().getSystemColor(
-                    SWT.COLOR_RED));
-        } else {
-            if (attrInfo.isWritable()) {
-                attrValueText.setEditable(true);
-                attrValueText.setForeground(parent.getDisplay().getSystemColor(
-                        SWT.COLOR_BLUE));
-                attrValueText.addListener(SWT.DefaultSelection, new Listener() {
-                    public void handleEvent(Event event) {
-                        try {
-                            Object newValue = MBeanUtils.getValue(attrValueText
-                                    .getText(), attrInfo.getType());
-                            handler.update(newValue);
-                        } catch (Exception e) {
-                            MessageDialog
-                                    .openError(
-                                            parent.getShell(),
-                                            Messages.AttributeDetailsSection_errorTitle,
-                                            e.getLocalizedMessage());
-                        }
-                    }
-                });
-            } else {
-                attrValueText.setEditable(false);
-                attrValueText.setForeground(parent.getDisplay().getSystemColor(
-                        SWT.COLOR_BLACK));
-            }
-        }
-        attrValueText.setText(attrValue);
-        return attrValueText;
+	if (attrValue.equals(Messages.unavailable)) {
+	    text.setForeground(parent.getDisplay()
+		    .getSystemColor(SWT.COLOR_RED));
+	    return text;
+	}
+	if (!attrInfo.isWritable()) {
+	    text.setEditable(false);
+	    text.setForeground(parent.getDisplay().getSystemColor(
+		    SWT.COLOR_BLACK));
+	    return text;
+	}
+
+	text.setEditable(true);
+	text.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
+	text.addListener(SWT.DefaultSelection, new Listener() {
+	    public void handleEvent(Event event) {
+		try {
+		    Object newValue = MBeanUtils.getValue(text.getText(),
+			    attrInfo.getType());
+		    handler.update(newValue);
+		} catch (Exception e) {
+		    MessageDialog.openError(parent.getShell(),
+			    Messages.AttributeDetailsSection_errorTitle, e
+				    .getLocalizedMessage());
+		}
+	    }
+	});
+	return text;
     }
 
-    private static Control createCombo(final Composite parent,
-            FormToolkit toolkit, MBeanAttributeInfo attrInfo, Object value,
-            final UpdatableAttributeHandler handler) {
-        final Combo combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
-        combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-        toolkit.paintBordersFor(combo);
-        combo.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        if (!attrInfo.isWritable()) {
-            combo.add(value.toString());
-            combo.select(0);
-        } else {
-            combo.setForeground(parent.getDisplay().getSystemColor(
-                    SWT.COLOR_BLUE));
-            combo.setItems(new String[] { Boolean.TRUE.toString(),
-                    Boolean.FALSE.toString() });
-            if (((Boolean) value).booleanValue()) {
-                combo.select(0);
-            } else {
-                combo.select(1);
-            }
-            combo.addListener(SWT.Selection, new Listener() {
-                public void handleEvent(Event event) {
-                    Boolean newValue = Boolean.valueOf(combo.getText());
-                    handler.update(newValue);
-                }
-            });
-        }
-        return combo;
+    private static Control createBooleanControl(final Composite parent,
+	    FormToolkit toolkit, MBeanAttributeInfo attrInfo, Object value,
+	    final UpdatableAttributeHandler handler) {
+	boolean booleanValue = ((Boolean) value).booleanValue();
+	if (!attrInfo.isWritable()) {
+	    Text text = toolkit.createText(parent, Boolean
+		    .toString(booleanValue), SWT.SINGLE);
+	    text.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+	    return text;
+	}
+
+	final Combo combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
+	combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+	toolkit.paintBordersFor(combo);
+	combo.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+	combo.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
+	combo.setItems(new String[] { Boolean.TRUE.toString(),
+		Boolean.FALSE.toString() });
+	if (booleanValue) {
+	    combo.select(0);
+	} else {
+	    combo.select(1);
+	}
+	combo.addListener(SWT.Selection, new Listener() {
+	    public void handleEvent(Event event) {
+		Boolean newValue = Boolean.valueOf(combo.getText());
+		handler.update(newValue);
+	    }
+	});
+	return combo;
     }
 }
