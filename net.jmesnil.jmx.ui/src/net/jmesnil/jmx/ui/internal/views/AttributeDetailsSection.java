@@ -3,18 +3,14 @@ package net.jmesnil.jmx.ui.internal.views;
 import javax.management.Attribute;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
 
 import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
-import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.IWritableAttributeHandler;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 import net.jmesnil.jmx.ui.internal.controls.AttributeControlFactory;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -141,20 +137,9 @@ public class AttributeDetailsSection {
         attrReadableCheckbox.setSelection(attrInfo.isReadable());
         attrWritableCheckbox.setSelection(writable);
 
-        Object value = null;
-        try {
-            MBeanServerConnection mbsc = wrapper.getMBeanServerConnection();
-            ObjectName on = wrapper.getObjectName();
-            value = mbsc.getAttribute(on, attrInfo.getName());
-        } catch (Exception e) {
-            JMXUIActivator.log(IStatus.ERROR, NLS.bind(
-			Messages.MBeanAttributeValue_Warning,
-			attrInfo.getName()), e);
-        }
-
         disposeChildren(valueComposite);
         Control attrControl = AttributeControlFactory.createControl(valueComposite, toolkit,
-                attrInfo, value, updateAttributeHandler);
+                wrapper, updateAttributeHandler);
         attrControl.pack(true);
         valueComposite.layout(true, true);
     }

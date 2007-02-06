@@ -17,6 +17,7 @@
 package net.jmesnil.jmx.resources;
 
 import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanServerConnection;
 
 public class MBeanAttributeInfoWrapper extends MBeanFeatureInfoWrapper {
 
@@ -37,5 +38,10 @@ public class MBeanAttributeInfoWrapper extends MBeanFeatureInfoWrapper {
 
     public MBeanInfoWrapper getMBeanInfoWrapper() {
         return mbeanInfoWrapper;
+    }
+    
+    public Object getValue() throws Exception {
+           MBeanServerConnection mbsc = getMBeanServerConnection();
+        return mbsc.getAttribute(getObjectName(),  info.getName());
     }
 }

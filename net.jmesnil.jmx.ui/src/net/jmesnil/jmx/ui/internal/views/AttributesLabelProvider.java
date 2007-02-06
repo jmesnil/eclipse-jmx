@@ -18,8 +18,6 @@
 package net.jmesnil.jmx.ui.internal.views;
 
 import javax.management.MBeanAttributeInfo;
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
 
 import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
@@ -45,10 +43,7 @@ class AttributesLabelProvider extends LabelProvider implements
             return attrInfo.getName();
         case 1:
             try {
-                MBeanServerConnection mbsc = wrapper.getMBeanServerConnection();
-                ObjectName on = wrapper.getObjectName();
-                Object obj = mbsc.getAttribute(on, attrInfo.getName());
-                return StringUtils.toString(obj, false);
+                return StringUtils.toString(wrapper.getValue(), false);
             } catch (Throwable t) {
                 JMXUIActivator.log(IStatus.ERROR, NLS.bind(
 			Messages.MBeanAttributeValue_Warning,
