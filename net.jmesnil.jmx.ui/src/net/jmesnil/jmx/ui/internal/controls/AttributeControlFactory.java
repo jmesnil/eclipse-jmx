@@ -20,9 +20,11 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javax.management.MBeanAttributeInfo;
 import javax.management.openmbean.CompositeData;
+import javax.management.openmbean.TabularData;
 
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.IWritableAttributeHandler;
@@ -60,6 +62,10 @@ public class AttributeControlFactory {
 	}
 	if (value != null && value instanceof CompositeData) {
 	    return createCompositeDataControl(parent, toolkit, attrInfo, (CompositeData)value);
+	}
+	if (value != null && value instanceof TabularData) {
+	    return createTabularDataControl(parent, toolkit, attrInfo,
+		    (TabularData) value);
 	}
 	if (value != null && value instanceof Collection) {
 	    return createCollectionControl(parent, toolkit, attrInfo, (Collection)value);
@@ -171,7 +177,7 @@ public class AttributeControlFactory {
 	    item.setText(StringUtils.toString(element, false));
 	}
     }
-    
+
     private static Control createCollectionControl(final Composite parent,
 	    FormToolkit toolkit, MBeanAttributeInfo attrInfo, Collection collection) {
 	final Table table = toolkit.createTable(parent, SWT.BORDER
@@ -190,7 +196,7 @@ public class AttributeControlFactory {
 	}
 	return table;
     }
-    
+
     private static Control createMapControl(final Composite parent,
 	    FormToolkit toolkit, MBeanAttributeInfo attrInfo, Map map) {
 	final Table table = toolkit.createTable(parent, SWT.BORDER
@@ -214,7 +220,7 @@ public class AttributeControlFactory {
 	}
 	return table;
     }
-    
+
     private static Control createCompositeDataControl(final Composite parent,
 	    FormToolkit toolkit, MBeanAttributeInfo attrInfo, CompositeData data) {
 	final Table table = toolkit.createTable(parent, SWT.BORDER
@@ -222,7 +228,7 @@ public class AttributeControlFactory {
 	toolkit.paintBordersFor(table);
 	table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 	table.setHeaderVisible(true);
-	table.setLinesVisible(true);	
+	table.setLinesVisible(true);
 	TableColumn keyColumn = new TableColumn(table, SWT.NONE);
 	keyColumn.setText(Messages.key);
 	keyColumn.setWidth(150);
@@ -235,6 +241,39 @@ public class AttributeControlFactory {
 	    TableItem item = new TableItem(table, SWT.NONE);
 	    item.setText(0, key);
 	    item.setText(1, StringUtils.toString(data.get(key), false));
+	}
+	return table;
+    }
+
+    private static Control createTabularDataControl(final Composite parent,
+	    FormToolkit toolkit, MBeanAttributeInfo attrInfo, TabularData data) {
+	final Table table = toolkit.createTable(parent, SWT.RESIZE | SWT.SINGLE
+		| SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
+	toolkit.paintBordersFor(parent);
+	table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+	table.setHeaderVisible(true);
+	table.setLinesVisible(true);
+	Set keySet = data.getTabularType().getRowType().keySet();
+	Iterator keyIter = keySet.iterator();
+	while (keyIter.hasNext()) {
+	    String key = (String) keyIter.next();
+	    TableColumn column = new TableColumn(table, SWT.LEFT);
+	    column.setText(key);
+	    column.setWidth(150);
+	    column.setMoveable(true);
+	    column.setResizable(true);
+	}
+	Iterator valueIter = data.values().iterator();
+	while (valueIter.hasNext()) {
+	    CompositeData rowData = (CompositeData) valueIter.next();
+	    TableItem item = new TableItem(table, SWT.NONE);
+	    keyIter = keySet.iterator();
+	    int i = 0;
+	    while (keyIter.hasNext()) {
+		String key = (String) keyIter.next();
+		item.setText(i, StringUtils.toString(rowData.get(key), false));
+		i++;
+	    }
 	}
 	return table;
     }
