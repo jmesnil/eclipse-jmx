@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.management.MBeanAttributeInfo;
+import javax.management.openmbean.CompositeData;
 
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.IWritableAttributeHandler;
@@ -56,6 +57,9 @@ public class AttributeControlFactory {
 	}
 	if (value != null && value.getClass().isArray()) {
 	    return createArrayControl(parent, toolkit, attrInfo, value);
+	}
+	if (value != null && value instanceof CompositeData) {
+	    return createCompositeDataControl(parent, toolkit, attrInfo, (CompositeData)value);
 	}
 	if (value != null && value instanceof Collection) {
 	    return createCollectionControl(parent, toolkit, attrInfo, (Collection)value);
@@ -207,6 +211,30 @@ public class AttributeControlFactory {
 	    TableItem item = new TableItem(table, SWT.NONE);
 	    item.setText(0, StringUtils.toString(entry.getKey(), false));
 	    item.setText(1, StringUtils.toString(entry.getValue(), false));
+	}
+	return table;
+    }
+    
+    private static Control createCompositeDataControl(final Composite parent,
+	    FormToolkit toolkit, MBeanAttributeInfo attrInfo, CompositeData data) {
+	final Table table = toolkit.createTable(parent, SWT.BORDER
+		| SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
+	toolkit.paintBordersFor(table);
+	table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+	table.setHeaderVisible(true);
+	table.setLinesVisible(true);	
+	TableColumn keyColumn = new TableColumn(table, SWT.NONE);
+	keyColumn.setText(Messages.key);
+	keyColumn.setWidth(150);
+	TableColumn valueColumn = new TableColumn(table, SWT.NONE);
+	valueColumn.setText(Messages.value);
+	valueColumn.setWidth(150);
+	Iterator iter = data.getCompositeType().keySet().iterator();
+	while (iter.hasNext()) {
+	    String key = (String) iter.next();
+	    TableItem item = new TableItem(table, SWT.NONE);
+	    item.setText(0, key);
+	    item.setText(1, StringUtils.toString(data.get(key), false));
 	}
 	return table;
     }
