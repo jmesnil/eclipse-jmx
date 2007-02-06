@@ -16,6 +16,6 @@
  */
 package net.jmesnil.jmx.ui.internal;
 
-public interface UpdatableAttributeHandler {
-    void update(Object newValue);
+public interface IWritableAttributeHandler {
+    void write(Object newValue);
 }

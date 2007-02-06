@@ -21,7 +21,7 @@ import javax.management.MBeanAttributeInfo;
 import net.jmesnil.jmx.ui.internal.MBeanUtils;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
-import net.jmesnil.jmx.ui.internal.UpdatableAttributeHandler;
+import net.jmesnil.jmx.ui.internal.IWritableAttributeHandler;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -38,7 +38,7 @@ public class AttributeControlFactory {
 
     public static Control createControl(final Composite parent,
 	    FormToolkit toolkit, final MBeanAttributeInfo attrInfo,
-	    Object value, final UpdatableAttributeHandler handler) {
+	    Object value, final IWritableAttributeHandler handler) {
 	if (value.getClass().equals(Boolean.class)) {
 	    return createBooleanControl(parent, toolkit, attrInfo, value,
 		    handler);
@@ -49,7 +49,7 @@ public class AttributeControlFactory {
 
     private static Control createText(final Composite parent,
 	    FormToolkit toolkit, final MBeanAttributeInfo attrInfo,
-	    Object value, final UpdatableAttributeHandler handler) {
+	    Object value, final IWritableAttributeHandler handler) {
 	String attrValue = ""; //$NON-NLS-1$
 	try {
 	    attrValue = StringUtils.toString(value, true);
@@ -80,7 +80,7 @@ public class AttributeControlFactory {
 		try {
 		    Object newValue = MBeanUtils.getValue(text.getText(),
 			    attrInfo.getType());
-		    handler.update(newValue);
+		    handler.write(newValue);
 		} catch (Exception e) {
 		    MessageDialog.openError(parent.getShell(),
 			    Messages.AttributeDetailsSection_errorTitle, e
@@ -93,7 +93,7 @@ public class AttributeControlFactory {
 
     private static Control createBooleanControl(final Composite parent,
 	    FormToolkit toolkit, MBeanAttributeInfo attrInfo, Object value,
-	    final UpdatableAttributeHandler handler) {
+	    final IWritableAttributeHandler handler) {
 	boolean booleanValue = ((Boolean) value).booleanValue();
 	if (!attrInfo.isWritable()) {
 	    Text text = toolkit.createText(parent, Boolean
@@ -117,7 +117,7 @@ public class AttributeControlFactory {
 	combo.addListener(SWT.Selection, new Listener() {
 	    public void handleEvent(Event event) {
 		Boolean newValue = Boolean.valueOf(combo.getText());
-		handler.update(newValue);
+		handler.write(newValue);
 	    }
 	});
 	return combo;

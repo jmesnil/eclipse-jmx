@@ -8,7 +8,7 @@ import javax.management.ObjectName;
 import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
-import net.jmesnil.jmx.ui.internal.UpdatableAttributeHandler;
+import net.jmesnil.jmx.ui.internal.IWritableAttributeHandler;
 import net.jmesnil.jmx.ui.internal.controls.AttributeControlFactory;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -46,8 +46,8 @@ public class AttributeDetailsSection {
 
     private FormToolkit toolkit;
 
-    private final UpdatableAttributeHandler updateAttributeHandler = new UpdatableAttributeHandler() {
-        public void update(Object newValue) {
+    private final IWritableAttributeHandler updateAttributeHandler = new IWritableAttributeHandler() {
+        public void write(Object newValue) {
             try {
                 MBeanServerConnection mbsc = selectedWrapper
                         .getMBeanServerConnection();
