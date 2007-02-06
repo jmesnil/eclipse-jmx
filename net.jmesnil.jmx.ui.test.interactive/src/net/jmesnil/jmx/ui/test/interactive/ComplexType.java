@@ -19,6 +19,7 @@ package net.jmesnil.jmx.ui.test.interactive;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -35,10 +36,14 @@ public class ComplexType extends StandardMBean implements ComplexTypeMBean
   
   public Map getMap()
   {
-    return getSystemProperties();
+    Map<String, String> map = new HashMap<String, String>();
+    map.put("first key", "first value");
+    map.put("second key", "second value");
+    map.put("third key", "third value");
+    return map;
   }
   
-  public Collection getCollection()
+  public Collection<String> getCollection()
   {
     Collection<String> coll = new ArrayList<String>();
     coll.add("first");
