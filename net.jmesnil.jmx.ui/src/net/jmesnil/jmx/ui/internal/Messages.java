@@ -51,6 +51,8 @@ public class Messages extends NLS {
 
     public static String unavailable;
 
+    public static String MBeanAttributeValue_Warning;
+
     public static String MBeanInfoView_attrSectionDesc;
 
     public static String MBeanInfoView_attrSectionTitle;
@@ -80,6 +82,8 @@ public class Messages extends NLS {
     public static String MBeanServerConnectDialog_advancedTab;
 
     public static String MBeanServerConnectDialog_simpleTab;
+    
+    public static String MBeanView_mbeanCountError;
 
     public static String name;
 

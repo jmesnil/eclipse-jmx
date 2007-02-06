@@ -24,9 +24,12 @@ import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
+import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.Messages;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
@@ -103,8 +106,10 @@ public class MBeanAttributeInfoPropertySourceAdapter implements IPropertySource 
                 }
                 return obj;
             } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+        	JMXUIActivator.log(IStatus.WARNING, NLS.bind(
+			Messages.MBeanAttributeValue_Warning,
+			attrInfo.getName()), e);
+		return null;
             }
         }
         return null;

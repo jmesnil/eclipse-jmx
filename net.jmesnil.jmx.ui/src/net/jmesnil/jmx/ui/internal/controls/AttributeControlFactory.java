@@ -18,12 +18,15 @@ package net.jmesnil.jmx.ui.internal.controls;
 
 import javax.management.MBeanAttributeInfo;
 
+import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.MBeanUtils;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 import net.jmesnil.jmx.ui.internal.IWritableAttributeHandler;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -54,6 +57,9 @@ public class AttributeControlFactory {
 	try {
 	    attrValue = StringUtils.toString(value, true);
 	} catch (Exception e) {
+	    JMXUIActivator.log(IStatus.ERROR, NLS.bind(
+		    Messages.MBeanAttributeValue_Warning, attrInfo.getName()),
+		    e);
 	    attrValue = Messages.unavailable;
 	}
 

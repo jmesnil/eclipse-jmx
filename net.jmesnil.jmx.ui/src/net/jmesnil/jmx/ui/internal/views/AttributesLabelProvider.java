@@ -22,11 +22,14 @@ import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
 import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
+import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 
 class AttributesLabelProvider extends LabelProvider implements
@@ -47,7 +50,9 @@ class AttributesLabelProvider extends LabelProvider implements
                 Object obj = mbsc.getAttribute(on, attrInfo.getName());
                 return StringUtils.toString(obj, false);
             } catch (Throwable t) {
-                t.printStackTrace();
+                JMXUIActivator.log(IStatus.ERROR, NLS.bind(
+			Messages.MBeanAttributeValue_Warning,
+			attrInfo.getName()), t);
                 return Messages.unavailable;
             }
         }

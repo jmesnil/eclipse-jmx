@@ -31,9 +31,12 @@ import net.jmesnil.jmx.resources.MBeanFeatureInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanOperationInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanServerConnectionWrapper;
+import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.MBeanUtils;
+import net.jmesnil.jmx.ui.internal.Messages;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -92,7 +95,8 @@ public class MBeanView extends ViewPart {
                     return (wrapper.getMBeanServerConnection().getMBeanCount()
                             .intValue() > 0);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    JMXUIActivator.log(IStatus.ERROR,
+			    Messages.MBeanView_mbeanCountError, e);
                 }
             }
             if (parent instanceof MBeanInfoWrapper) {
