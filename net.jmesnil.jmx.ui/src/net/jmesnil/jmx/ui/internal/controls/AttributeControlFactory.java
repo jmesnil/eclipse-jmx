@@ -16,13 +16,15 @@
  */
 package net.jmesnil.jmx.ui.internal.controls;
 
+import java.lang.reflect.Array;
+
 import javax.management.MBeanAttributeInfo;
 
 import net.jmesnil.jmx.ui.JMXUIActivator;
+import net.jmesnil.jmx.ui.internal.IWritableAttributeHandler;
 import net.jmesnil.jmx.ui.internal.MBeanUtils;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
-import net.jmesnil.jmx.ui.internal.IWritableAttributeHandler;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -33,6 +35,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
@@ -45,9 +50,11 @@ public class AttributeControlFactory {
 	if (value != null && value.getClass().equals(Boolean.class)) {
 	    return createBooleanControl(parent, toolkit, attrInfo, value,
 		    handler);
-	} else {
-	    return createText(parent, toolkit, attrInfo, value, handler);
 	}
+	if (value != null && value.getClass().isArray()) {
+	    return createArrayControl(parent, toolkit, attrInfo, value);
+	}
+	return createText(parent, toolkit, attrInfo, value, handler);
     }
 
     private static Control createText(final Composite parent,
@@ -127,5 +134,28 @@ public class AttributeControlFactory {
 	    }
 	});
 	return combo;
+    }
+
+    private static Control createArrayControl(final Composite parent,
+	    FormToolkit toolkit, MBeanAttributeInfo attrInfo, Object arrayObj) {
+	final Table table = toolkit.createTable(parent, SWT.BORDER
+		| SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
+	toolkit.paintBordersFor(table);
+	table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+	TableColumn columnName = new TableColumn(table, SWT.NONE);
+	columnName.setText(Messages.name);
+	columnName.setWidth(150);
+	table.setLinesVisible(true);
+	populateTableItems(table, arrayObj);
+	return table;
+    }
+
+    private static void populateTableItems(Table table, Object arrayObj) {
+	int length = Array.getLength(arrayObj);
+	for (int i = 0; i < length; i++) {
+	    Object element = Array.get(arrayObj, i);
+	    TableItem item = new TableItem(table, SWT.NONE);
+	    item.setText(StringUtils.toString(element, false));
+	}
     }
 }
