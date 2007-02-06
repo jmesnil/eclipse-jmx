@@ -1,6 +1,6 @@
 /**
  * Eclipse JMX Console
- * Copyright (C) 200� Jeff Mesnil
+ * Copyright (C) 2007 Jeff Mesnil
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class AttributeControlFactory {
     public static Control createControl(final Composite parent,
 	    FormToolkit toolkit, final MBeanAttributeInfo attrInfo,
 	    Object value, final IWritableAttributeHandler handler) {
-	if (value.getClass().equals(Boolean.class)) {
+	if (value != null && value.getClass().equals(Boolean.class)) {
 	    return createBooleanControl(parent, toolkit, attrInfo, value,
 		    handler);
 	} else {
