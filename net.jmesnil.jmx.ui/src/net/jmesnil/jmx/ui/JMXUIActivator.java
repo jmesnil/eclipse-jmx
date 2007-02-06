@@ -22,7 +22,9 @@ import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanOperationInfoWrapper;
 import net.jmesnil.jmx.ui.internal.adapters.JMXAdapterFactory;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -79,6 +81,17 @@ public class JMXUIActivator extends AbstractUIPlugin {
      */
     public static ImageDescriptor getImageDescriptor(String path) {
         return imageDescriptorFromPlugin(PLUGIN_ID, path);
+    }
+    
+    public static void log(IStatus status) {
+	getDefault().getLog().log(status);
+    }
+
+    /**
+     * Log the given exception along with the provided message and severity indicator
+     */
+    public static void log(int severity, String message, Throwable e) {
+	log(new Status(severity, PLUGIN_ID, 0, message, e));
     }
 
     private void registerAdapters() {
