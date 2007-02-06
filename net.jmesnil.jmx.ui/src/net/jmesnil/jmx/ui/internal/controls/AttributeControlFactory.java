@@ -17,6 +17,9 @@
 package net.jmesnil.jmx.ui.internal.controls;
 
 import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.management.MBeanAttributeInfo;
 
@@ -53,6 +56,12 @@ public class AttributeControlFactory {
 	}
 	if (value != null && value.getClass().isArray()) {
 	    return createArrayControl(parent, toolkit, attrInfo, value);
+	}
+	if (value != null && value instanceof Collection) {
+	    return createCollectionControl(parent, toolkit, attrInfo, (Collection)value);
+	}
+	if (value != null && value instanceof Map) {
+	    return createMapControl(parent, toolkit, attrInfo, (Map)value);
 	}
 	return createText(parent, toolkit, attrInfo, value, handler);
     }
@@ -158,4 +167,48 @@ public class AttributeControlFactory {
 	    item.setText(StringUtils.toString(element, false));
 	}
     }
+    
+    private static Control createCollectionControl(final Composite parent,
+	    FormToolkit toolkit, MBeanAttributeInfo attrInfo, Collection collection) {
+	final Table table = toolkit.createTable(parent, SWT.BORDER
+		| SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
+	toolkit.paintBordersFor(table);
+	table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+	TableColumn columnName = new TableColumn(table, SWT.NONE);
+	columnName.setText(Messages.name);
+	columnName.setWidth(150);
+	table.setLinesVisible(true);
+	Iterator iter = collection.iterator();
+	while (iter.hasNext()) {
+	    Object element = (Object) iter.next();
+	    TableItem item = new TableItem(table, SWT.NONE);
+	    item.setText(StringUtils.toString(element, false));
+	}
+	return table;
+    }
+    
+    private static Control createMapControl(final Composite parent,
+	    FormToolkit toolkit, MBeanAttributeInfo attrInfo, Map map) {
+	final Table table = toolkit.createTable(parent, SWT.BORDER
+		| SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
+	toolkit.paintBordersFor(table);
+	table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+	TableColumn keyColumn = new TableColumn(table, SWT.NONE);
+	keyColumn.setText(Messages.key);
+	keyColumn.setWidth(150);
+	TableColumn valueColumn = new TableColumn(table, SWT.NONE);
+	valueColumn.setText(Messages.value);
+	valueColumn.setWidth(150);
+	table.setHeaderVisible(true);
+	table.setLinesVisible(true);
+	Iterator iter = map.entrySet().iterator();
+	while (iter.hasNext()) {
+	    Map.Entry entry = (Map.Entry) iter.next();
+	    TableItem item = new TableItem(table, SWT.NONE);
+	    item.setText(0, StringUtils.toString(entry.getKey(), false));
+	    item.setText(1, StringUtils.toString(entry.getValue(), false));
+	}
+	return table;
+    }
+
 }
