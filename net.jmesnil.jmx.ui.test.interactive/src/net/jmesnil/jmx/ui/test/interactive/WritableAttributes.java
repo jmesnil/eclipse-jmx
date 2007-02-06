@@ -16,7 +16,8 @@ public class WritableAttributes extends StandardMBean
   private long longValue = 0;
   private float floatValue = 0;
   private double doubleValue = 0;
-
+  private String stringWithNewlines = "first line\nsecond line\nthird line"; //$NON-NLS-1$
+  
   public WritableAttributes() throws NotCompliantMBeanException {
     super(WritableAttributesMBean.class);
   }
@@ -99,5 +100,15 @@ public class WritableAttributes extends StandardMBean
   public void setDouble(double value)
   {
     this.doubleValue = value;
+  }
+  
+  public String getStringWithNewlines()
+  {
+    return stringWithNewlines;
+  }
+  
+  public void setStringWithNewlines(String value)
+  {
+    this.stringWithNewlines = value;
   }
 }

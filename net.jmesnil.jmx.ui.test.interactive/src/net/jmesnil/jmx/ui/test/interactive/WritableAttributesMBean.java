@@ -24,4 +24,7 @@ public interface WritableAttributesMBean {
 
     double getDouble();
     void setDouble(double value);
+    
+    String getStringWithNewlines();
+    void setStringWithNewlines(String value);
 }
