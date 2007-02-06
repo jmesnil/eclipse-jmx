@@ -24,10 +24,12 @@ import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
 import net.jmesnil.jmx.resources.MBeanOperationInfoWrapper;
+import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.MBeanUtils;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -232,7 +234,8 @@ public class MBeanOperationInvocationView extends ViewPart implements
                         Messages.MBeanOperationInvocationView_result,
                         "" + result); //$NON-NLS-1$
             } catch (Exception e) {
-                String message = e.getLocalizedMessage();
+                JMXUIActivator.log(IStatus.ERROR, e.getCause().getMessage(), e);
+        	String message = e.getLocalizedMessage();
                 // if the exception has a cause, it is likely more interesting
                 // since it may be the exception thrown by the mbean implementation
                 // rather than the exception thrown by the mbean server connection
