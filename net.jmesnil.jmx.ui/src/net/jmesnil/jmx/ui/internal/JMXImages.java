@@ -62,6 +62,12 @@ public class JMXImages {
     public static final String IMG_OBJS_LIBRARY = NAME_PREFIX
             + "library_obj.gif"; //$NON-NLS-1$
 
+    public static final String IMG_OBJS_READ_WRITE = NAME_PREFIX + "readwrite_obj.gif"; //$NON-NLS-1$
+
+    public static final String IMG_OBJS_READ = NAME_PREFIX + "read_obj.gif"; //$NON-NLS-1$
+
+    public static final String IMG_OBJS_WRITE = NAME_PREFIX + "write_obj.gif"; //$NON-NLS-1$
+
     public static final ImageDescriptor DESC_MISC_PUBLIC = createManagedFromKey(
             T_OBJ, IMG_MISC_PUBLIC);
 
@@ -76,6 +82,15 @@ public class JMXImages {
 
     public static final ImageDescriptor DESC_OBJS_LIBRARY = createManagedFromKey(
             T_OBJ, IMG_OBJS_LIBRARY);
+
+    public static final ImageDescriptor DESC_OBJS_READ_WRITE = createManagedFromKey(
+            T_OBJ, IMG_OBJS_READ_WRITE);
+
+    public static final ImageDescriptor DESC_OBJS_READ = createManagedFromKey(
+            T_OBJ, IMG_OBJS_READ);
+
+    public static final ImageDescriptor DESC_OBJS_WRITE = createManagedFromKey(
+            T_OBJ, IMG_OBJS_WRITE);
 
     public static Image get(String key) {
         return getImageRegistry().get(key);

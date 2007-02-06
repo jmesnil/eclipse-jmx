@@ -6,6 +6,7 @@ import javax.management.MBeanServerConnection;
 
 import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.ui.internal.IWritableAttributeHandler;
+import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 import net.jmesnil.jmx.ui.internal.controls.AttributeControlFactory;
@@ -14,7 +15,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -35,9 +35,7 @@ public class AttributeDetailsSection {
 
     private Text attrDescText;
 
-    private Button attrReadableCheckbox;
-
-    private Button attrWritableCheckbox;
+    private Label attrPermissionLabel;
 
     private MBeanAttributeInfoWrapper selectedWrapper;
 
@@ -70,8 +68,8 @@ public class AttributeDetailsSection {
         this.toolkit = toolkit;
 
         FontData fd[] = parent.getFont().getFontData();
-        Font bold = new Font(parent.getDisplay(), fd[0].getName(),
-                fd[0].getHeight(), SWT.BOLD);
+        Font bold = new Font(parent.getDisplay(), fd[0].getName(), fd[0]
+                .getHeight(), SWT.BOLD);
 
         Composite attrDetailsSectionClient = ViewUtil.createSection(parent,
                 toolkit, Messages.details, null,
@@ -97,16 +95,10 @@ public class AttributeDetailsSection {
         attrDescText.setFont(bold);
         attrDescText.setLayoutData(newLayoutData());
 
-        attrReadableCheckbox = toolkit.createButton(attrDetailsSectionClient,
-                Messages.readable, SWT.CHECK);
-        attrReadableCheckbox.setEnabled(false);
-        attrReadableCheckbox.setFont(bold);
-        attrReadableCheckbox.setLayoutData(newLayoutData());
-        attrWritableCheckbox = toolkit.createButton(attrDetailsSectionClient,
-                Messages.writable, SWT.CHECK);
-        attrWritableCheckbox.setEnabled(false);
-        attrWritableCheckbox.setFont(bold);
-        attrWritableCheckbox.setLayoutData(newLayoutData());
+        toolkit.createLabel(attrDetailsSectionClient, "Permission");
+        attrPermissionLabel = toolkit.createLabel(attrDetailsSectionClient, "");
+        attrPermissionLabel.setLayoutData(newLayoutData());
+        attrPermissionLabel.setFont(bold);
 
         toolkit.createLabel(attrDetailsSectionClient, Messages.value);
         valueComposite = toolkit.createComposite(attrDetailsSectionClient);
@@ -115,7 +107,7 @@ public class AttributeDetailsSection {
     }
 
     private TableWrapData newLayoutData() {
-	    return new TableWrapData(TableWrapData.FILL_GRAB);
+        return new TableWrapData(TableWrapData.FILL_GRAB);
     }
 
     public void update(MBeanAttributeInfoWrapper wrapper) {
@@ -130,16 +122,29 @@ public class AttributeDetailsSection {
 
         this.selectedWrapper = wrapper;
         MBeanAttributeInfo attrInfo = wrapper.getMBeanAttributeInfo();
-        boolean writable = attrInfo.isWritable();
         attrNameLabel.setText(attrInfo.getName());
         attrTypeLabel.setText(StringUtils.toString(attrInfo.getType()));
         attrDescText.setText(attrInfo.getDescription());
-        attrReadableCheckbox.setSelection(attrInfo.isReadable());
-        attrWritableCheckbox.setSelection(writable);
 
+        boolean writable = attrInfo.isWritable();
+        boolean readable = attrInfo.isReadable();
+
+        if (readable && writable) {
+            attrPermissionLabel.setImage(JMXImages.get(JMXImages.IMG_OBJS_READ_WRITE));
+            attrPermissionLabel.setToolTipText(Messages.readWrite);
+        } else if (readable && !writable) {
+            attrPermissionLabel.setImage(JMXImages.get(JMXImages.IMG_OBJS_READ));
+            attrPermissionLabel.setToolTipText(Messages.readOnly);
+        } else if (writable && !readable){
+            attrPermissionLabel.setImage(JMXImages.get(JMXImages.IMG_OBJS_WRITE));
+            attrPermissionLabel.setToolTipText(Messages.writeOnly);
+        } else {
+            attrPermissionLabel.setImage(null);
+        }
+        
         disposeChildren(valueComposite);
-        Control attrControl = AttributeControlFactory.createControl(valueComposite, toolkit,
-                wrapper, updateAttributeHandler);
+        Control attrControl = AttributeControlFactory.createControl(
+                valueComposite, toolkit, wrapper, updateAttributeHandler);
         attrControl.pack(true);
         valueComposite.layout(true, true);
     }

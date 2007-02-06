@@ -94,6 +94,10 @@ public class Messages extends NLS {
     public static String parameters;
 
     public static String readable;
+    
+    public static String readOnly;
+
+    public static String readWrite;
 
     public static String returnType;
 
@@ -102,6 +106,9 @@ public class Messages extends NLS {
     public static String value;
 
     public static String writable;
+
+    public static String writeOnly;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
