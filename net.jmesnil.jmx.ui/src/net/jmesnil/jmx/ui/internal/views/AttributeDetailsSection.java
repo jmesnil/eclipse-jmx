@@ -71,7 +71,7 @@ public class AttributeDetailsSection {
 
         FontData fd[] = parent.getFont().getFontData();
         Font bold = new Font(parent.getDisplay(), fd[0].getName(),
-                fd[0].height, SWT.BOLD);
+                fd[0].getHeight(), SWT.BOLD);
 
         Composite attrDetailsSectionClient = ViewUtil.createSection(parent,
                 toolkit, Messages.details, null,

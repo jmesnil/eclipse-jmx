@@ -81,8 +81,8 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
     @Override
     public void createPartControl(Composite parent) {
         FontData fd[] = parent.getFont().getFontData();
-        bold = new Font(parent.getDisplay(), fd[0].getName(), fd[0].height,
-                SWT.BOLD);
+        bold = new Font(parent.getDisplay(), fd[0].getName(),
+                fd[0].getHeight(), SWT.BOLD);
         FormToolkit toolkit = new FormToolkit(parent.getDisplay());
         form = toolkit.createScrolledForm(parent);
         form.setText(Messages.MBeanInfoView_summary);
@@ -179,7 +179,7 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
         javaClassLabel.setText(selectedMBeanInfo.getMBeanInfo().getClassName());
         String description = selectedMBeanInfo.getMBeanInfo().getDescription();
         if (description != null) {
-            descText.setText(description);            
+            descText.setText(description);
         }
     }
 

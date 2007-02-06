@@ -112,6 +112,7 @@ public class MBeanView extends ViewPart {
 
     protected class ViewLabelProvider extends LabelProvider {
 
+        @SuppressWarnings("unchecked")
         @Override
         public String getText(Object obj) {
             if (obj instanceof MBeanOperationInfoWrapper) {

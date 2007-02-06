@@ -54,6 +54,7 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 
 public class AttributeControlFactory {
 
+    @SuppressWarnings("unchecked")
     public static Control createControl(final Composite parent,
             FormToolkit toolkit, final MBeanAttributeInfoWrapper wrapper,
             final IWritableAttributeHandler handler) {
@@ -213,6 +214,7 @@ public class AttributeControlFactory {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static Control createCollectionControl(final Composite parent,
             FormToolkit toolkit, MBeanAttributeInfo attrInfo,
             Collection collection) {
@@ -233,6 +235,7 @@ public class AttributeControlFactory {
         return table;
     }
 
+    @SuppressWarnings("unchecked")
     private static Control createMapControl(final Composite parent,
             FormToolkit toolkit, MBeanAttributeInfo attrInfo, Map map) {
         final Table table = toolkit.createTable(parent, SWT.BORDER
@@ -257,6 +260,7 @@ public class AttributeControlFactory {
         return table;
     }
 
+    @SuppressWarnings("unchecked")
     private static Control createCompositeDataControl(final Composite parent,
             FormToolkit toolkit, MBeanAttributeInfo attrInfo, CompositeData data) {
         final Table table = toolkit.createTable(parent, SWT.BORDER
@@ -281,6 +285,7 @@ public class AttributeControlFactory {
         return table;
     }
 
+    @SuppressWarnings("unchecked")
     private static Control createTabularDataControl(final Composite parent,
             FormToolkit toolkit, MBeanAttributeInfo attrInfo, TabularData data) {
         final Table table = toolkit.createTable(parent, SWT.RESIZE | SWT.SINGLE
