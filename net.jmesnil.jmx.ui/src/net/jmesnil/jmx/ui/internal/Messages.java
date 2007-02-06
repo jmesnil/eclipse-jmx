@@ -47,6 +47,8 @@ public class Messages extends NLS {
 
     public static String general;
 
+    public static String key;
+
     public static String impact;
 
     public static String unavailable;
