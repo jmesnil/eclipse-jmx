@@ -87,35 +87,39 @@ public class AttributeDetailsSection {
         toolkit.createLabel(attrDetailsSectionClient, Messages.name);
         attrNameLabel = toolkit.createLabel(attrDetailsSectionClient, ""); //$NON-NLS-1$
         attrNameLabel.setFont(bold);
-        attrNameLabel.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        attrNameLabel.setLayoutData(newLayoutData());
 
         toolkit.createLabel(attrDetailsSectionClient, Messages.type);
         attrTypeLabel = toolkit.createLabel(attrDetailsSectionClient, ""); //$NON-NLS-1$
         attrTypeLabel.setFont(bold);
-        attrTypeLabel.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        attrTypeLabel.setLayoutData(newLayoutData());
 
         toolkit.createLabel(attrDetailsSectionClient, Messages.description);
         attrDescText = toolkit.createText(attrDetailsSectionClient,
                 "", SWT.MULTI //$NON-NLS-1$
                         | SWT.WRAP | SWT.READ_ONLY);
         attrDescText.setFont(bold);
-        attrDescText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        attrDescText.setLayoutData(newLayoutData());
 
         attrReadableCheckbox = toolkit.createButton(attrDetailsSectionClient,
                 Messages.readable, SWT.CHECK);
         attrReadableCheckbox.setEnabled(false);
         attrReadableCheckbox.setFont(bold);
-        attrReadableCheckbox.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        attrReadableCheckbox.setLayoutData(newLayoutData());
         attrWritableCheckbox = toolkit.createButton(attrDetailsSectionClient,
                 Messages.writable, SWT.CHECK);
         attrWritableCheckbox.setEnabled(false);
         attrWritableCheckbox.setFont(bold);
-        attrWritableCheckbox.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        attrWritableCheckbox.setLayoutData(newLayoutData());
 
         toolkit.createLabel(attrDetailsSectionClient, Messages.value);
         valueComposite = toolkit.createComposite(attrDetailsSectionClient);
-        valueComposite.setLayoutData(new TableWrapData(TableWrapData.FILL));
+        valueComposite.setLayoutData(newLayoutData());
         valueComposite.setLayout(new TableWrapLayout());
+    }
+
+    private TableWrapData newLayoutData() {
+	    return new TableWrapData(TableWrapData.FILL_GRAB);
     }
 
     public void update(MBeanAttributeInfoWrapper wrapper) {
