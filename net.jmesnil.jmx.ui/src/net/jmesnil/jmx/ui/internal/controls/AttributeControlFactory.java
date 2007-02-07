@@ -64,11 +64,11 @@ public class AttributeControlFactory {
         String errorMessage = null;
         try {
             value = wrapper.getValue();
-        } catch (Exception e) {
+        } catch (Throwable t) {
             JMXUIActivator.log(IStatus.ERROR, NLS.bind(
                     Messages.MBeanAttributeValue_Warning, attrInfo.getName()),
-                    e);
-            errorMessage = e.getCause().getMessage();
+                    t);
+            errorMessage = t.getCause().getMessage();
         }
 
         if (value != null && value instanceof Boolean) {
