@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %BundleName
+Bundle-SymbolicName: net.jmesnil.jmx.monkey.doms;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.eclipsemonkey,
+ org.mozilla.rhino
+Eclipse-LazyStart: true
+Export-Package: net.jmesnil.jmx.monkey.doms
+Bundle-Vendor: %BundleProvider
