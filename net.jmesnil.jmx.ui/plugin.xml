@@ -46,8 +46,8 @@
             targetID="net.jmesnil.jmx.ui.internal.views.MBeanView">
          <action
                class="net.jmesnil.jmx.ui.internal.actions.MBeanServerConnectAction"
-               disabledIcon="icons/full/dlc16/attachAgent.gif"
-               icon="icons/full/clc16/attachAgent.gif"
+               disabledIcon="icons/full/dlcl16/attachAgent.gif"
+               icon="icons/full/elcl16/attachAgent.gif"
                id="net.jmesnil.jmx.ui.internal.actions.MBeanServerConnectAction"
                label="%ConnectAction.label"
                menubarPath="connect"
@@ -57,8 +57,8 @@
          </action>
          <action
                class="net.jmesnil.jmx.ui.internal.actions.MBeanServerDisconnectAction"
-               disabledIcon="icons/full/dlc16/detachAgent.gif"
-               icon="icons/full/clc16/detachAgent.gif"
+               disabledIcon="icons/full/dlcl16/detachAgent.gif"
+               icon="icons/full/elcl16/detachAgent.gif"
                id="net.jmesnil.jmx.ui.internal.actions.MBeanServerDisconnectAction"
                label="%DisconnectAction.label"
                menubarPath="connect"
