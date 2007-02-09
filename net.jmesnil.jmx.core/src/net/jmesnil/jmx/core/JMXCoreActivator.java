@@ -17,6 +17,8 @@
 package net.jmesnil.jmx.core;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;
@@ -64,10 +66,20 @@ public class JMXCoreActivator extends Plugin {
         return plugin;
     }
 
-    public MBeanServerConnectionWrapper connect(String url) throws IOException {
+    @SuppressWarnings("unchecked")
+    public MBeanServerConnectionWrapper connect(String url, String userName,
+            String password) throws IOException {
         Assert.isNotNull(url);
+        Assert.isNotNull(userName);
+        Assert.isNotNull(password);
+        Map env = new HashMap();
+        if (userName.length() > 0) {
+            String[] credentials = new String[] { userName, password };
+            env.put(JMXConnector.CREDENTIALS, credentials);
+        }
+
         JMXServiceURL jmxurl = new JMXServiceURL(url);
-        JMXConnector connector = JMXConnectorFactory.connect(jmxurl);
+        JMXConnector connector = JMXConnectorFactory.connect(jmxurl, env);
         MBeanServerConnection mbsc = connector.getMBeanServerConnection();
         MBeanServerConnectionWrapper wrapper = new MBeanServerConnectionWrapper(
                 mbsc);

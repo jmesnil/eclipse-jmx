@@ -51,7 +51,7 @@ public class JMXCoreActivatorTestCase extends TestCase {
     public void testConnectToNullURL() throws Exception {
         JMXCoreActivator activator = JMXCoreActivator.getDefault();
         try {
-            activator.connect(null);
+            activator.connect(null, null, null);
             fail("should not connect to null URL"); //$NON-NLS-1$
         } catch (Exception e) {
         }
@@ -60,7 +60,7 @@ public class JMXCoreActivatorTestCase extends TestCase {
     public void testConnectToBadURL() throws Exception {
         JMXCoreActivator activator = JMXCoreActivator.getDefault();
         try {
-            activator.connect("service:whatever"); //$NON-NLS-1$
+            activator.connect("service:whatever", null, null); //$NON-NLS-1$
             fail("should not connect to bad URL"); //$NON-NLS-1$
         } catch (Exception e) {
         }
@@ -68,7 +68,7 @@ public class JMXCoreActivatorTestCase extends TestCase {
 
     public void testConnectToURL() throws Exception {
         JMXCoreActivator activator = JMXCoreActivator.getDefault();
-        MBeanServerConnectionWrapper wrapper = activator.connect(correctURL);
+        MBeanServerConnectionWrapper wrapper = activator.connect(correctURL, null, null);
         assertNotNull(wrapper);
         assertNotNull(wrapper.getMBeanServerConnection());
     }
