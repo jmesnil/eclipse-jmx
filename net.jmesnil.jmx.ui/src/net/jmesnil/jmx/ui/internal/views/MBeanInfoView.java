@@ -26,6 +26,7 @@ import javax.management.MBeanOperationInfo;
 import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.internal.tree.ObjectNameNode;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -235,18 +236,23 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
         Object obj = ((IStructuredSelection) selection).getFirstElement();
         String id = part.getSite().getId();
         if (MBeanView.ID.equals(id)) {
-            if (obj instanceof MBeanInfoWrapper) {
-                MBeanInfoWrapper wrapper = (MBeanInfoWrapper) obj;
-                if (wrapper == selectedMBeanInfo) {
-                    return;
-                }
-                selectedMBeanInfo = wrapper;
-                updateMBeanInfoArea(true);
-                updateAttributesArea(true);
-                updateOperationsArea(true);
-                attrDetails.update(null);
-                form.reflow(true);
+            MBeanInfoWrapper mbeanInfo = null;
+            if (obj instanceof ObjectNameNode) {
+                ObjectNameNode node = (ObjectNameNode) obj;
+                mbeanInfo = node.getMbeanInfoWrapper();
             }
+            if (obj instanceof MBeanInfoWrapper) {
+                mbeanInfo = (MBeanInfoWrapper) obj;
+            }
+            if (mbeanInfo == null || mbeanInfo == selectedMBeanInfo) {
+                return;
+            }
+            selectedMBeanInfo = mbeanInfo;
+            updateMBeanInfoArea(true);
+            updateAttributesArea(true);
+            updateOperationsArea(true);
+            attrDetails.update(null);
+            form.reflow(true);
         }
         if (MBeanInfoView.ID.equals(id)) {
             if (obj instanceof MBeanAttributeInfoWrapper) {

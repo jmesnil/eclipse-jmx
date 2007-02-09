@@ -39,32 +39,4 @@
             name="JMX">
       </perspective>
    </extension>
-   <extension
-         point="org.eclipse.ui.viewActions">
-      <viewContribution
-            id="net.jmesnil.jmx.ui.internal.views.MBeanViewContribution"
-            targetID="net.jmesnil.jmx.ui.internal.views.MBeanView">
-         <action
-               class="net.jmesnil.jmx.ui.internal.actions.MBeanServerConnectAction"
-               disabledIcon="icons/full/dlcl16/attachAgent.gif"
-               icon="icons/full/elcl16/attachAgent.gif"
-               id="net.jmesnil.jmx.ui.internal.actions.MBeanServerConnectAction"
-               label="%ConnectAction.label"
-               menubarPath="connect"
-               state="true"
-               style="push"
-               toolbarPath="connect">
-         </action>
-         <action
-               class="net.jmesnil.jmx.ui.internal.actions.MBeanServerDisconnectAction"
-               disabledIcon="icons/full/dlcl16/detachAgent.gif"
-               icon="icons/full/elcl16/detachAgent.gif"
-               id="net.jmesnil.jmx.ui.internal.actions.MBeanServerDisconnectAction"
-               label="%DisconnectAction.label"
-               menubarPath="connect"
-               state="true"
-               style="push">
-         </action>
-      </viewContribution>
-   </extension>
 </plugin>

@@ -18,25 +18,25 @@ package net.jmesnil.jmx.ui.internal.actions;
 
 import net.jmesnil.jmx.core.JMXCoreActivator;
 import net.jmesnil.jmx.resources.MBeanServerConnectionWrapper;
+import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.views.MBeanView;
 
-import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
 
-public class MBeanServerConnectAction implements IViewActionDelegate {
+public class MBeanServerConnectAction extends Action {
 
     private MBeanView view;
 
-    public void init(IViewPart view) {
-        this.view = (MBeanView) view;
+    public MBeanServerConnectAction(MBeanView view) {
+        super(Messages.MBeanServerConnectAction_text, AS_PUSH_BUTTON);
+        this.view = view;
+        JMXImages.setLocalImageDescriptors(this, "attachAgent.gif"); //$NON-NLS-1$
     }
 
-    public void run(IAction action) {
+    public void run() {
         MBeanServerConnectDialog dialog = new MBeanServerConnectDialog(view
                 .getViewSite().getShell());
         if (dialog.open() != Window.OK) {
@@ -54,8 +54,4 @@ public class MBeanServerConnectAction implements IViewActionDelegate {
                     Messages.MBeanServerConnectAction_error, e.getMessage());
         }
     }
-
-    public void selectionChanged(IAction action, ISelection selection) {
-    }
-
 }

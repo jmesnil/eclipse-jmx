@@ -51,6 +51,16 @@ public class Messages extends NLS {
 
     public static String impact;
 
+    public static String LayoutActionGroup_flat;
+
+    public static String LayoutActionGroup_hierarchical;
+
+    public static String LayoutActionGroup_menu;
+
+    public static String MBeanServerConnectAction_text;
+
+    public static String MBeanServerDisconnectAction_text;
+
     public static String unavailable;
 
     public static String MBeanAttributeValue_Warning;
