@@ -176,7 +176,8 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
         if (!enabled)
             return;
 
-        nameLabel.setText(selectedMBeanInfo.getObjectName().getCanonicalName());
+        nameLabel.setText(selectedMBeanInfo.getObjectName().getDomain() + ':'
+                + selectedMBeanInfo.getObjectName().getKeyPropertyListString());
         javaClassLabel.setText(selectedMBeanInfo.getMBeanInfo().getClassName());
         String description = selectedMBeanInfo.getMBeanInfo().getDescription();
         if (description != null) {
