@@ -232,9 +232,6 @@ public class MBeanOperationInvocationView extends ViewPart implements
                     result = Messages.MBeanOperationInvocationView_success;
                 }
                 InvocationResultDialog.open(managedForm.getForm().getShell(), result);
-//                MessageDialog.openInformation(managedForm.getForm().getShell(),
-//                        Messages.MBeanOperationInvocationView_result,
-//                        "" + result); //$NON-NLS-1$
             } catch (Exception e) {
                 JMXUIActivator.log(IStatus.ERROR, e.getCause().getMessage(), e);
                 String message = e.getLocalizedMessage();

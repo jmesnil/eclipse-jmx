@@ -87,8 +87,6 @@ public class Messages extends NLS {
 
     public static String MBeanOperationInvocationView_invocationTitle;
 
-    public static String MBeanOperationInvocationView_result;
-
     public static String MBeanOperationInvocationView_success;
 
     public static String MBeanServerConnectAction_error;
