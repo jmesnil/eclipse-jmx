@@ -68,6 +68,7 @@ public class AttributeControlFactory {
             FormToolkit toolkit, final MBeanAttributeInfoWrapper wrapper,
             final IWritableAttributeHandler handler) {
         MBeanAttributeInfo attrInfo = wrapper.getMBeanAttributeInfo();
+        boolean writable = attrInfo.isWritable();
 
         Object value = null;
         String errorMessage = null;
@@ -81,26 +82,25 @@ public class AttributeControlFactory {
         }
 
         if (value != null && value instanceof Boolean) {
-            return createBooleanControl(parent, toolkit, attrInfo, value,
+            return createBooleanControl(parent, toolkit, writable, value,
                     handler);
         }
         if (value != null && value.getClass().isArray()) {
-            return createArrayControl(parent, toolkit, attrInfo, value);
+            return createArrayControl(parent, toolkit, value);
         }
         if (value != null && value instanceof CompositeData) {
-            return createCompositeDataControl(parent, toolkit, attrInfo,
+            return createCompositeDataControl(parent, toolkit,
                     (CompositeData) value);
         }
         if (value != null && value instanceof TabularData) {
-            return createTabularDataControl(parent, toolkit, attrInfo,
+            return createTabularDataControl(parent, toolkit,
                     (TabularData) value);
         }
         if (value != null && value instanceof Collection) {
-            return createCollectionControl(parent, toolkit, attrInfo,
-                    (Collection) value);
+            return createCollectionControl(parent, toolkit, (Collection) value);
         }
         if (value != null && value instanceof Map) {
-            return createMapControl(parent, toolkit, attrInfo, (Map) value);
+            return createMapControl(parent, toolkit, (Map) value);
         }
         return createText(parent, toolkit, attrInfo, value, errorMessage,
                 handler);
@@ -168,10 +168,10 @@ public class AttributeControlFactory {
     }
 
     private static Control createBooleanControl(final Composite parent,
-            FormToolkit toolkit, MBeanAttributeInfo attrInfo, Object value,
+            FormToolkit toolkit, boolean writable, Object value,
             final IWritableAttributeHandler handler) {
         boolean booleanValue = ((Boolean) value).booleanValue();
-        if (!attrInfo.isWritable()) {
+        if (!writable) {
             Text text = toolkit.createText(parent, Boolean
                     .toString(booleanValue), SWT.SINGLE);
             text.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
@@ -200,7 +200,7 @@ public class AttributeControlFactory {
     }
 
     private static Control createArrayControl(final Composite parent,
-            FormToolkit toolkit, MBeanAttributeInfo attrInfo, Object arrayObj) {
+            FormToolkit toolkit, Object arrayObj) {
         final Table table = toolkit.createTable(parent, SWT.BORDER
                 | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
         toolkit.paintBordersFor(table);
@@ -235,10 +235,9 @@ public class AttributeControlFactory {
         }
     }
 
-    @SuppressWarnings("unchecked") //$NON-NLS-1$
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
     private static Control createCollectionControl(final Composite parent,
-            FormToolkit toolkit, MBeanAttributeInfo attrInfo,
-            Collection collection) {
+            FormToolkit toolkit, Collection collection) {
         final Table table = toolkit.createTable(parent, SWT.BORDER
                 | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
         toolkit.paintBordersFor(table);
@@ -256,9 +255,9 @@ public class AttributeControlFactory {
         return table;
     }
 
-    @SuppressWarnings("unchecked") //$NON-NLS-1$
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
     private static Control createMapControl(final Composite parent,
-            FormToolkit toolkit, MBeanAttributeInfo attrInfo, Map map) {
+            FormToolkit toolkit, Map map) {
         final Table table = toolkit.createTable(parent, SWT.BORDER
                 | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
         toolkit.paintBordersFor(table);
@@ -281,9 +280,9 @@ public class AttributeControlFactory {
         return table;
     }
 
-    @SuppressWarnings("unchecked") //$NON-NLS-1$
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
     private static Control createCompositeDataControl(final Composite parent,
-            FormToolkit toolkit, MBeanAttributeInfo attrInfo, CompositeData data) {
+            FormToolkit toolkit, CompositeData data) {
         final Table table = toolkit.createTable(parent, SWT.BORDER
                 | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
         toolkit.paintBordersFor(table);
@@ -306,9 +305,9 @@ public class AttributeControlFactory {
         return table;
     }
 
-    @SuppressWarnings("unchecked") //$NON-NLS-1$
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
     private static Control createTabularDataControl(final Composite parent,
-            FormToolkit toolkit, MBeanAttributeInfo attrInfo, TabularData data) {
+            FormToolkit toolkit, TabularData data) {
         final Table table = toolkit.createTable(parent, SWT.RESIZE | SWT.SINGLE
                 | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
         toolkit.paintBordersFor(parent);
