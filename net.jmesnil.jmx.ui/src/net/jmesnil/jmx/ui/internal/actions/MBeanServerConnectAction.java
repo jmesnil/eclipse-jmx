@@ -20,7 +20,7 @@ import net.jmesnil.jmx.core.JMXCoreActivator;
 import net.jmesnil.jmx.resources.MBeanServerConnectionWrapper;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
-import net.jmesnil.jmx.ui.internal.views.MBeanView;
+import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -28,9 +28,9 @@ import org.eclipse.jface.window.Window;
 
 public class MBeanServerConnectAction extends Action {
 
-    private MBeanView view;
+    private MBeanExplorer view;
 
-    public MBeanServerConnectAction(MBeanView view) {
+    public MBeanServerConnectAction(MBeanExplorer view) {
         super(Messages.MBeanServerConnectAction_text, AS_PUSH_BUTTON);
         this.view = view;
         JMXImages.setLocalImageDescriptors(this, "attachAgent.gif"); //$NON-NLS-1$

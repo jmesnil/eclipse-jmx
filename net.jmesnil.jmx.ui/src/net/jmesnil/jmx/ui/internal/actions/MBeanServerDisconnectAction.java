@@ -18,15 +18,15 @@ package net.jmesnil.jmx.ui.internal.actions;
 
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
-import net.jmesnil.jmx.ui.internal.views.MBeanView;
+import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
 
 import org.eclipse.jface.action.Action;
 
 public class MBeanServerDisconnectAction extends Action {
 
-    private MBeanView view;
+    private MBeanExplorer view;
 
-    public MBeanServerDisconnectAction(MBeanView view) {
+    public MBeanServerDisconnectAction(MBeanExplorer view) {
         super(Messages.MBeanServerDisconnectAction_text, AS_PUSH_BUTTON);
         this.view = view;
         JMXImages.setLocalImageDescriptors(this, "detachAgent.gif"); //$NON-NLS-1$

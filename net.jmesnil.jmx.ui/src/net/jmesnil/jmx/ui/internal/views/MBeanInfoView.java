@@ -27,6 +27,7 @@ import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.tree.ObjectNameNode;
+import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -236,7 +237,7 @@ public class MBeanInfoView extends ViewPart implements ISelectionListener {
 
         Object obj = ((IStructuredSelection) selection).getFirstElement();
         String id = part.getSite().getId();
-        if (MBeanView.ID.equals(id)) {
+        if (MBeanExplorer.ID.equals(id)) {
             MBeanInfoWrapper mbeanInfo = null;
             if (obj instanceof ObjectNameNode) {
                 ObjectNameNode node = (ObjectNameNode) obj;

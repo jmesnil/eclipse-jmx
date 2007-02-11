@@ -18,7 +18,7 @@ package net.jmesnil.jmx.ui.internal.perspectives;
 
 import net.jmesnil.jmx.ui.internal.views.MBeanInfoView;
 import net.jmesnil.jmx.ui.internal.views.MBeanOperationInvocationView;
-import net.jmesnil.jmx.ui.internal.views.MBeanView;
+import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -42,7 +42,7 @@ public class JMXPerspective implements IPerspectiveFactory {
     private void addViews() {
         IFolderLayout left = factory.createFolder("left", //$NON-NLS-1$
                 IPageLayout.LEFT, 0.25f, factory.getEditorArea());
-        left.addView(MBeanView.ID);
+        left.addView(MBeanExplorer.ID);
         IFolderLayout right = factory.createFolder("right", IPageLayout.RIGHT, //$NON-NLS-1$
                 0.75f, factory.getEditorArea());
         IFolderLayout topRight = factory.createFolder("topRight", //$NON-NLS-1$
@@ -53,7 +53,7 @@ public class JMXPerspective implements IPerspectiveFactory {
     }
 
     private void addViewShortcuts() {
-        factory.addShowViewShortcut(MBeanView.ID);
+        factory.addShowViewShortcut(MBeanExplorer.ID);
         factory.addShowViewShortcut(MBeanInfoView.ID);
         factory.addShowViewShortcut(MBeanOperationInvocationView.ID);
         factory.addShowViewShortcut("org.eclipse.ui.views.PropertySheet"); //$NON-NLS-1$

@@ -16,7 +16,7 @@
  * 
  *  Code was inspired from org.eclipse.equinox.client source, (c) 2006 IBM 
  */
-package net.jmesnil.jmx.ui.internal.views;
+package net.jmesnil.jmx.ui.internal.views.explorer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,9 +56,9 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-public class MBeanView extends ViewPart {
+public class MBeanExplorer extends ViewPart {
 
-    public static final String ID = "net.jmesnil.jmx.ui.internal.views.MBeanView"; //$NON-NLS-1$
+    public static final String ID = "net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer"; //$NON-NLS-1$
 
     private TreeViewer viewer;
 
@@ -196,7 +196,7 @@ public class MBeanView extends ViewPart {
     /**
      * The constructor.
      */
-    public MBeanView() {
+    public MBeanExplorer() {
     }
 
     /**

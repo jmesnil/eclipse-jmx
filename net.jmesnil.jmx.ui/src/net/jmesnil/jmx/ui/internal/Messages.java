@@ -97,8 +97,6 @@ public class Messages extends NLS {
 
     public static String MBeanServerConnectDialog_simpleTab;
     
-    public static String MBeanView_mbeanCountError;
-
     public static String name;
 
     public static String objectName;

@@ -9,11 +9,11 @@
             id="net.jmesnil.jmx.ui.views">
       </category>
       <view
-            name="%MBeanView.name"
+            name="%MBeanExplorer.name"
             icon="icons/sample.gif"
             category="net.jmesnil.jmx.ui.views"
-            class="net.jmesnil.jmx.ui.internal.views.MBeanView"
-            id="net.jmesnil.jmx.ui.internal.views.MBeanView">
+            class="net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer"
+            id="net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer">
       </view>
       <view
             name="%MBeanInfoView.name"

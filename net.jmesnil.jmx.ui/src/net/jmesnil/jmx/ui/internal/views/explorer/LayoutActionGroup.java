@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package net.jmesnil.jmx.ui.internal.views;
+package net.jmesnil.jmx.ui.internal.views.explorer;
 
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
@@ -36,7 +36,7 @@ public class LayoutActionGroup extends ActionGroup {
     private IAction flatLayoutAction = null;
     private IAction[] actions;
 
-    private MBeanView view;
+    private MBeanExplorer view;
 
     private class LayoutAction extends Action implements IAction {
 
@@ -54,7 +54,7 @@ public class LayoutActionGroup extends ActionGroup {
         }
     }
 
-    public LayoutActionGroup(MBeanView view) {
+    public LayoutActionGroup(MBeanExplorer view) {
         this.view = view;
     }
 
