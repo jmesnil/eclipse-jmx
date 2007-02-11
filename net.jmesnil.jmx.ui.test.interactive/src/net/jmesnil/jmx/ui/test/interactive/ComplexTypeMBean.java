@@ -21,12 +21,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
 
-public interface ComplexTypeMBean
-{
-  Map getMap();
-  
-  Collection getCollection();
-  
-  Properties getSystemProperties();
+public interface ComplexTypeMBean {
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
+    Map getMap();
+
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
+    Collection getCollection();
+
+    Properties getSystemProperties();
 
 }

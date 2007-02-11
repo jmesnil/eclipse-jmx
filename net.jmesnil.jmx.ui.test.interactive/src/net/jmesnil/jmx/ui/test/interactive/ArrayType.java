@@ -58,7 +58,7 @@ public class ArrayType extends StandardMBean implements ArrayTypeMBean {
     }
 
     public String[] getStrings() {
-        return new String[] { "zero", "one", "two", "three" };
+        return new String[] { "zero", "one", "two", "three" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
 
     public Object[] getObjects() {

@@ -35,7 +35,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin implements IStartup {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "net.jmesnil.jmx.ui.test.interactive";
+    public static final String PLUGIN_ID = "net.jmesnil.jmx.ui.test.interactive"; //$NON-NLS-1$
 
     // The shared instance
     private static Activator plugin;
@@ -54,18 +54,18 @@ public class Activator extends AbstractUIPlugin implements IStartup {
         super.start(context);
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         mbs.registerMBean(new ArrayType(), ObjectName
-                .getInstance("net.jmesnil.test:type=ArrayType"));
+                .getInstance("net.jmesnil.test:type=ArrayType")); //$NON-NLS-1$
         mbs.registerMBean(new WritableAttributes(), ObjectName
-            .getInstance("net.jmesnil.test:type=WritableAttributes"));
+                .getInstance("net.jmesnil.test:type=WritableAttributes")); //$NON-NLS-1$
         mbs.registerMBean(new ComplexType(), ObjectName
-            .getInstance("net.jmesnil.test:type=ComplexType"));
+                .getInstance("net.jmesnil.test:type=ComplexType")); //$NON-NLS-1$
         try {
             System.setProperty("java.rmi.server.randomIDs", "true"); //$NON-NLS-1$ //$NON-NLS-2$
             LocateRegistry.createRegistry(3000);
             JMXServiceURL url = new JMXServiceURL(
-                  "service:jmx:rmi:///jndi/rmi://:3000/jmxrmi"); //$NON-NLS-1$
+                    "service:jmx:rmi:///jndi/rmi://:3000/jmxrmi"); //$NON-NLS-1$
             cs = JMXConnectorServerFactory
-                  .newJMXConnectorServer(url, null, mbs);
+                    .newJMXConnectorServer(url, null, mbs);
             cs.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,9 +76,12 @@ public class Activator extends AbstractUIPlugin implements IStartup {
     public void stop(BundleContext context) throws Exception {
         plugin = null;
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        mbs.unregisterMBean(ObjectName.getInstance("net.jmesnil.test:type=ArrayType"));
-        mbs.unregisterMBean(ObjectName.getInstance("net.jmesnil.test:type=WritableAttributes"));
-        mbs.unregisterMBean(ObjectName.getInstance("net.jmesnil.test:type=ComplexType"));
+        mbs.unregisterMBean(ObjectName
+                .getInstance("net.jmesnil.test:type=ArrayType")); //$NON-NLS-1$
+        mbs.unregisterMBean(ObjectName
+                .getInstance("net.jmesnil.test:type=WritableAttributes")); //$NON-NLS-1$
+        mbs.unregisterMBean(ObjectName
+                .getInstance("net.jmesnil.test:type=ComplexType")); //$NON-NLS-1$
         cs.stop();
         super.stop(context);
     }
