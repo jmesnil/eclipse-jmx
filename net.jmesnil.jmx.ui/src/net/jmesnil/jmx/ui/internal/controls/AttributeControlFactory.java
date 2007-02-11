@@ -22,11 +22,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import javax.management.MBeanAttributeInfo;
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.TabularData;
 
-import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.IWritableAttributeHandler;
 import net.jmesnil.jmx.ui.internal.MBeanUtils;
@@ -36,9 +34,6 @@ import net.jmesnil.jmx.ui.internal.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.DecoratedField;
-import org.eclipse.jface.fieldassist.FieldDecoration;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -65,22 +60,8 @@ public class AttributeControlFactory {
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
     public static Control createControl(final Composite parent,
-            FormToolkit toolkit, final MBeanAttributeInfoWrapper wrapper,
-            final IWritableAttributeHandler handler) {
-        MBeanAttributeInfo attrInfo = wrapper.getMBeanAttributeInfo();
-        boolean writable = attrInfo.isWritable();
-
-        Object value = null;
-        String errorMessage = null;
-        try {
-            value = wrapper.getValue();
-        } catch (Throwable t) {
-            JMXUIActivator.log(IStatus.ERROR, NLS.bind(
-                    Messages.MBeanAttributeValue_Warning, attrInfo.getName()),
-                    t);
-            errorMessage = t.getCause().getMessage();
-        }
-
+            FormToolkit toolkit, boolean writable, final String type,
+            final Object value, final IWritableAttributeHandler handler) {
         if (value != null && value instanceof Boolean) {
             return createBooleanControl(parent, toolkit, writable, value,
                     handler);
@@ -102,14 +83,12 @@ public class AttributeControlFactory {
         if (value != null && value instanceof Map) {
             return createMapControl(parent, toolkit, (Map) value);
         }
-        return createText(parent, toolkit, attrInfo, value, errorMessage,
-                handler);
+        return createText(parent, toolkit, writable, type, value, handler);
     }
 
     private static Control createText(final Composite parent,
-            FormToolkit toolkit, final MBeanAttributeInfo attrInfo,
-            Object value, String errorMessage,
-            final IWritableAttributeHandler handler) {
+            FormToolkit toolkit, final boolean writable, final String type,
+            final Object value, final IWritableAttributeHandler handler) {
 
         DecoratedField field = new DecoratedField(parent, SWT.MULTI | SWT.WRAP,
                 new ToolkitTextControlCreator(toolkit));
@@ -117,54 +96,44 @@ public class AttributeControlFactory {
                 new TableWrapData(TableWrapData.FILL_GRAB));
         final Text text = (Text) field.getControl();
 
-        if (errorMessage != null) {
-            FieldDecorationRegistry registry = FieldDecorationRegistry
-                    .getDefault();
-            FieldDecoration errorDecoration = registry
-                    .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
-            errorDecoration.setDescription(errorMessage);
-            field.addFieldDecoration(errorDecoration, SWT.LEFT | SWT.BOTTOM,
-                    false);
-            text.setText(Messages.unavailable);
-            text.setForeground(parent.getDisplay()
-                    .getSystemColor(SWT.COLOR_RED));
-            return text;
-        }
-
         String attrValue = ""; //$NON-NLS-1$
         try {
             attrValue = StringUtils.toString(value, true);
         } catch (Exception e) {
-            JMXUIActivator.log(IStatus.ERROR, NLS.bind(
-                    Messages.MBeanAttributeValue_Warning, attrInfo.getName()),
-                    e);
+            JMXUIActivator.log(IStatus.ERROR,
+                    Messages.MBeanAttributeValue_Warning, e);
             attrValue = Messages.unavailable;
         }
         text.setText(attrValue);
 
-        if (!attrInfo.isWritable()) {
+        if (!writable) {
             text.setEditable(false);
             text.setForeground(parent.getDisplay().getSystemColor(
                     SWT.COLOR_BLACK));
             return text;
-        }
-
-        text.setEditable(true);
-        text.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
-        text.addListener(SWT.DefaultSelection, new Listener() {
-            public void handleEvent(Event event) {
-                try {
-                    Object newValue = MBeanUtils.getValue(text.getText(),
-                            attrInfo.getType());
-                    handler.write(newValue);
-                } catch (Exception e) {
-                    MessageDialog.openError(parent.getShell(),
-                            Messages.AttributeDetailsSection_errorTitle, e
-                                    .getLocalizedMessage());
-                }
+        } else {
+            text.setEditable(true);
+            text.setForeground(parent.getDisplay().getSystemColor(
+                    SWT.COLOR_BLUE));
+            if (handler != null) {
+                text.addListener(SWT.DefaultSelection, new Listener() {
+                    public void handleEvent(Event event) {
+                        try {
+                            Object newValue = MBeanUtils.getValue(text
+                                    .getText(), type);
+                            handler.write(newValue);
+                        } catch (Exception e) {
+                            MessageDialog
+                                    .openError(
+                                            parent.getShell(),
+                                            Messages.AttributeDetailsSection_errorTitle,
+                                            e.getLocalizedMessage());
+                        }
+                    }
+                });
             }
-        });
-        return text;
+            return text;
+        }
     }
 
     private static Control createBooleanControl(final Composite parent,
@@ -190,12 +159,14 @@ public class AttributeControlFactory {
         } else {
             combo.select(1);
         }
-        combo.addListener(SWT.Selection, new Listener() {
-            public void handleEvent(Event event) {
-                Boolean newValue = Boolean.valueOf(combo.getText());
-                handler.write(newValue);
-            }
-        });
+        if (handler != null) {
+            combo.addListener(SWT.Selection, new Listener() {
+                public void handleEvent(Event event) {
+                    Boolean newValue = Boolean.valueOf(combo.getText());
+                    handler.write(newValue);
+                }
+            });
+        }
         return combo;
     }
 

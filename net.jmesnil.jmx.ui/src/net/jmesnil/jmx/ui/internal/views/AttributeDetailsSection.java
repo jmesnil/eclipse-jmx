@@ -5,13 +5,16 @@ import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServerConnection;
 
 import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
+import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.IWritableAttributeHandler;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 import net.jmesnil.jmx.ui.internal.controls.AttributeControlFactory;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -122,8 +125,9 @@ public class AttributeDetailsSection {
 
         this.selectedWrapper = wrapper;
         MBeanAttributeInfo attrInfo = wrapper.getMBeanAttributeInfo();
+        String type = attrInfo.getType();
         attrNameLabel.setText(attrInfo.getName());
-        attrTypeLabel.setText(StringUtils.toString(attrInfo.getType()));
+        attrTypeLabel.setText(StringUtils.toString(type));
         attrDescText.setText(attrInfo.getDescription());
 
         boolean writable = attrInfo.isWritable();
@@ -143,8 +147,20 @@ public class AttributeDetailsSection {
         }
         
         disposeChildren(valueComposite);
-        Control attrControl = AttributeControlFactory.createControl(
-                valueComposite, toolkit, wrapper, updateAttributeHandler);
+        
+        Control attrControl;
+        try {
+            attrControl = AttributeControlFactory.createControl(
+                    valueComposite, toolkit, writable, type, wrapper.getValue(), updateAttributeHandler);
+        } catch (Throwable t) {
+            JMXUIActivator.log(IStatus.ERROR, NLS.bind(
+                    Messages.MBeanAttributeValue_Warning, attrInfo.getName()),
+                    t);
+            // FIXME should not be presented as a regular attribute but should be displayed
+            // with a dedicated control (similar to ErrorDialog control)
+            attrControl = AttributeControlFactory.createControl(
+                    valueComposite, toolkit, false, t.getClass().getName(), t, updateAttributeHandler);
+        }
         attrControl.pack(true);
         valueComposite.layout(true, true);
     }
