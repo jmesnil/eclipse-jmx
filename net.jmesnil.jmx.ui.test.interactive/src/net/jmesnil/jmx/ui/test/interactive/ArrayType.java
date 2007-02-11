@@ -94,6 +94,10 @@ public class ArrayType extends StandardMBean implements ArrayTypeMBean {
         return getFloats();
     }
 
+    public int[] intsOp() {
+        return getInts();
+    }
+
     public int[] intsOp(int[] i) {
         return getInts();
     }

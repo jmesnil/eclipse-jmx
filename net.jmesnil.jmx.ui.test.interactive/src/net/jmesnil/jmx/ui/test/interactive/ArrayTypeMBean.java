@@ -50,6 +50,7 @@ public interface ArrayTypeMBean {
 
     short[] shortsOp(short[] s);
 
+    int[] intsOp();
     int[] intsOp(int[] i);
 
     long[] longsOp(long[] l);
