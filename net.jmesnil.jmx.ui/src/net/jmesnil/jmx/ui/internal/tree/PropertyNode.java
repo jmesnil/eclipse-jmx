@@ -38,7 +38,7 @@ public class PropertyNode extends Node {
 	
 	@Override
 	public String toString() {
-		return "PropertyNode[" + key + "=" + value + "]";
+		return "PropertyNode[" + key + "=" + value + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	public int compareTo(Object o) {

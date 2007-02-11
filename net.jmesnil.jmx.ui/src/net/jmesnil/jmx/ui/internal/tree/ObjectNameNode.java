@@ -22,8 +22,10 @@ import javax.management.ObjectName;
 
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
+import net.jmesnil.jmx.ui.internal.Messages;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.osgi.util.NLS;
 
 public class ObjectNameNode extends PropertyNode {
 
@@ -39,9 +41,8 @@ public class ObjectNameNode extends PropertyNode {
         try {
             this.wrapper = new MBeanInfoWrapper(on, mbsc.getMBeanInfo(on), mbsc);
         } catch (Exception e) {
-            JMXUIActivator.log(IStatus.ERROR,
-                    "Error when retrieving MBeanInfo for "
-                            + on.getCanonicalName(), e);
+            JMXUIActivator.log(IStatus.ERROR, NLS.bind(
+                    Messages.ObjectNameNode_error, on.getCanonicalName()), e);
         }
     }
 
@@ -52,7 +53,7 @@ public class ObjectNameNode extends PropertyNode {
     public MBeanInfoWrapper getMbeanInfoWrapper() {
         return wrapper;
     }
-    
+
     @Override
     public String toString() {
         return "ObjectNameNode[on=" + on.getKeyPropertyListString() + "]"; //$NON-NLS-1$ //$NON-NLS-2$

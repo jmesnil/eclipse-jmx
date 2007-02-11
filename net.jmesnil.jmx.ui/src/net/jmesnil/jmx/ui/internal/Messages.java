@@ -23,6 +23,8 @@ public class Messages extends NLS {
 
     public static String AttributeDetailsSection_errorTitle;
 
+    public static String AttributeDetailsSection_permission;
+
     public static String className;
 
     public static String CollapseAllAction_text;
@@ -49,6 +51,8 @@ public class Messages extends NLS {
 
     public static String general;
 
+    public static String InvocationResultDialog_title;
+
     public static String key;
 
     public static String impact;
@@ -61,7 +65,13 @@ public class Messages extends NLS {
 
     public static String MBeanServerConnectAction_text;
 
+    public static String MBeanServerConnectDialog_password;
+
+    public static String MBeanServerConnectDialog_userName;
+
     public static String MBeanServerDisconnectAction_text;
+
+    public static String ObjectNameNode_error;
 
     public static String unavailable;
 

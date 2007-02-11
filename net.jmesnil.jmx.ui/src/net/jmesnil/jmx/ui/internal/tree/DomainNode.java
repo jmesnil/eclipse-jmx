@@ -32,7 +32,7 @@ public class DomainNode extends Node {
 
     @Override
     public String toString() {
-        return "DomainNode[domain=" + domain + "]";
+        return "DomainNode[domain=" + domain + "]"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     @Override

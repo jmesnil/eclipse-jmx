@@ -95,8 +95,8 @@ public class AttributeDetailsSection {
         attrDescText.setFont(bold);
         attrDescText.setLayoutData(newLayoutData());
 
-        toolkit.createLabel(attrDetailsSectionClient, "Permission");
-        attrPermissionLabel = toolkit.createLabel(attrDetailsSectionClient, "");
+        toolkit.createLabel(attrDetailsSectionClient, Messages.AttributeDetailsSection_permission);
+        attrPermissionLabel = toolkit.createLabel(attrDetailsSectionClient, ""); //$NON-NLS-1$
         attrPermissionLabel.setLayoutData(newLayoutData());
         attrPermissionLabel.setFont(bold);
 

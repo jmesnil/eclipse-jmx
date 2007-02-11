@@ -24,13 +24,13 @@ public class NodeBuilder {
 
     public static void addToList(Node root, ObjectName on) {
         Node node = buildDomainNode(root, on.getDomain());
-        node = buildObjectNameNode(node, "on", on.getKeyPropertyListString(), on);
+        node = buildObjectNameNode(node, "on", on.getKeyPropertyListString(), on); //$NON-NLS-1$
     }
 
     public static void addToTree(Node root, ObjectName on) {
         Node node = buildDomainNode(root, on.getDomain());
         String keyPropertyListString = on.getKeyPropertyListString();
-        String[] properties = keyPropertyListString.split(",");
+        String[] properties = keyPropertyListString.split(","); //$NON-NLS-1$
         for (int i = 0; i < properties.length; i++) {
             String property = properties[i];
             String key = property.substring(0, property.indexOf('='));

@@ -235,7 +235,7 @@ public class AttributeControlFactory {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     private static Control createCollectionControl(final Composite parent,
             FormToolkit toolkit, MBeanAttributeInfo attrInfo,
             Collection collection) {
@@ -256,7 +256,7 @@ public class AttributeControlFactory {
         return table;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     private static Control createMapControl(final Composite parent,
             FormToolkit toolkit, MBeanAttributeInfo attrInfo, Map map) {
         final Table table = toolkit.createTable(parent, SWT.BORDER
@@ -281,7 +281,7 @@ public class AttributeControlFactory {
         return table;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     private static Control createCompositeDataControl(final Composite parent,
             FormToolkit toolkit, MBeanAttributeInfo attrInfo, CompositeData data) {
         final Table table = toolkit.createTable(parent, SWT.BORDER
@@ -306,7 +306,7 @@ public class AttributeControlFactory {
         return table;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     private static Control createTabularDataControl(final Composite parent,
             FormToolkit toolkit, MBeanAttributeInfo attrInfo, TabularData data) {
         final Table table = toolkit.createTable(parent, SWT.RESIZE | SWT.SINGLE

@@ -114,7 +114,7 @@ public class MBeanServerConnectDialog extends SelectionDialog {
         portText.setLayoutData(data);
         // 5 user name label
         label = new Label(fieldComposite, SWT.CENTER);
-        label.setText("User Name");
+        label.setText(Messages.MBeanServerConnectDialog_userName);
         // 6 user name text entry
         userNameText = new Text(fieldComposite, SWT.BORDER);
         userNameText.setText(""); //$NON-NLS-1$
@@ -123,7 +123,7 @@ public class MBeanServerConnectDialog extends SelectionDialog {
         userNameText.setLayoutData(data);
         // 7 password label
         label = new Label(fieldComposite, SWT.CENTER);
-        label.setText("Password");
+        label.setText(Messages.MBeanServerConnectDialog_password);
         // 8 user name text entry
         passwordText = new Text(fieldComposite, SWT.BORDER | SWT.PASSWORD);
         passwordText.setText(""); //$NON-NLS-1$
@@ -154,7 +154,7 @@ public class MBeanServerConnectDialog extends SelectionDialog {
         urlText.setLayoutData(data);
         // 3 user name label
         label = new Label(fieldComposite, SWT.CENTER);
-        label.setText("User Name");
+        label.setText(Messages.MBeanServerConnectDialog_userName);
         // 4 user name text entry
         advancedUserNameText = new Text(fieldComposite, SWT.BORDER);
         advancedUserNameText.setText(""); //$NON-NLS-1$
@@ -163,7 +163,7 @@ public class MBeanServerConnectDialog extends SelectionDialog {
         advancedUserNameText.setLayoutData(data);
         // 5 password label
         label = new Label(fieldComposite, SWT.CENTER);
-        label.setText("Password");
+        label.setText(Messages.MBeanServerConnectDialog_password);
         // 6 user name text entry
         advancedPasswordText = new Text(fieldComposite, SWT.BORDER
                 | SWT.PASSWORD);

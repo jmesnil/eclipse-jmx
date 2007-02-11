@@ -30,7 +30,7 @@ public class Root extends Node {
 
     @Override
     public String toString() {
-        return "Root";
+        return "Root"; //$NON-NLS-1$
     }
 
     public int compareTo(Object o) {

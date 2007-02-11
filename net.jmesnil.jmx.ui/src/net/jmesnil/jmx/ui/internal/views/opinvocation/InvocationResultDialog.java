@@ -16,6 +16,7 @@
  */
 package net.jmesnil.jmx.ui.internal.views.opinvocation;
 
+import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.controls.AttributeControlFactory;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -39,7 +40,7 @@ public class InvocationResultDialog extends Dialog {
     @Override
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
-        shell.setText("Operation Invocation");
+        shell.setText(Messages.InvocationResultDialog_title);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class InvocationResultDialog extends Dialog {
                 composite, result);
         if (resultControl == null) {
             Label label = new Label(composite, SWT.NONE);
-            label.setText("" + result);
+            label.setText("" + result); //$NON-NLS-1$
         }
         return composite;
     }

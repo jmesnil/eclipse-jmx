@@ -40,7 +40,7 @@ public class StringUtils {
         int length = Array.getLength(arrayObj);
         for (int i = 0; i < length; i++) {
             if (i > 0) {
-                buff.append(", ");
+                buff.append(", "); //$NON-NLS-1$
             }
 
             element = Array.get(arrayObj, i);
@@ -61,7 +61,7 @@ public class StringUtils {
      * this function is be called recursively to display multi-dimensional
      * arrays, e.g. int[][]
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     public static String toString(String type, boolean detailed) {
         Assert.isNotNull(type);
         Assert.isLegal(type.length() > 0);

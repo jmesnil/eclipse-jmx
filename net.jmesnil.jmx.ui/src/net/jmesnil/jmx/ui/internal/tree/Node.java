@@ -21,19 +21,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") //$NON-NLS-1$
 public abstract class Node implements Comparable {
 
 	Node parent;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
     List children = new ArrayList();
 
 	Node(Node parent) {
 		this.parent = parent;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	Node addChildren(Node node) {
 		if (!children.contains(node)) {
 			children.add(node);
@@ -44,7 +44,7 @@ public abstract class Node implements Comparable {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	public Node[] getChildren() {
 		return (Node[]) children.toArray(new Node[children.size()]);
 	}
