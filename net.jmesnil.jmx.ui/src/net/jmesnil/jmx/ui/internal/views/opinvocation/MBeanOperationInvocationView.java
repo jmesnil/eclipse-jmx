@@ -229,15 +229,23 @@ public class MBeanOperationInvocationView extends ViewPart implements
                 }
                 if ("void".equals(opInfoWrapper.getMBeanOperationInfo() //$NON-NLS-1$
                         .getReturnType())) {
-                    result = Messages.MBeanOperationInvocationView_success;
+                    MessageDialog.openInformation(managedForm.getForm()
+                            .getShell(),
+                            Messages.MBeanOperationInvocationView_result,
+                            Messages.MBeanOperationInvocationView_success);
+                    return;
+                } else {
+                    InvocationResultDialog.open(managedForm.getForm()
+                            .getShell(), result);
                 }
-                InvocationResultDialog.open(managedForm.getForm().getShell(), result);
             } catch (Exception e) {
                 JMXUIActivator.log(IStatus.ERROR, e.getCause().getMessage(), e);
                 String message = e.getLocalizedMessage();
                 // if the exception has a cause, it is likely more interesting
-                // since it may be the exception thrown by the mbean implementation
-                // rather than the exception thrown by the mbean server connection
+                // since it may be the exception thrown by the mbean
+                // implementation
+                // rather than the exception thrown by the mbean server
+                // connection
                 if (e.getCause() != null) {
                     message = e.getCause().getLocalizedMessage();
                 }
