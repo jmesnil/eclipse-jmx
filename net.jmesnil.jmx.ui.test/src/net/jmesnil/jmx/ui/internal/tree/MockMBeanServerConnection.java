@@ -40,20 +40,19 @@ import javax.management.ObjectName;
 import javax.management.QueryExp;
 import javax.management.ReflectionException;
 
-final class MockMBeanServerConnection implements
-        MBeanServerConnection {
+final class MockMBeanServerConnection implements MBeanServerConnection {
     public void addNotificationListener(ObjectName name,
             NotificationListener listener, NotificationFilter filter,
             Object handback) throws InstanceNotFoundException, IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
-    public void addNotificationListener(ObjectName name,
-            ObjectName listener, NotificationFilter filter, Object handback)
+    public void addNotificationListener(ObjectName name, ObjectName listener,
+            NotificationFilter filter, Object handback)
             throws InstanceNotFoundException, IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     public ObjectInstance createMBean(String className, ObjectName name)
@@ -74,10 +73,9 @@ final class MockMBeanServerConnection implements
     }
 
     public ObjectInstance createMBean(String className, ObjectName name,
-            Object[] params, String[] signature)
-            throws ReflectionException, InstanceAlreadyExistsException,
-            MBeanRegistrationException, MBeanException,
-            NotCompliantMBeanException, IOException {
+            Object[] params, String[] signature) throws ReflectionException,
+            InstanceAlreadyExistsException, MBeanRegistrationException,
+            MBeanException, NotCompliantMBeanException, IOException {
         // TODO Auto-generated method stub
         return null;
     }
@@ -86,8 +84,7 @@ final class MockMBeanServerConnection implements
             ObjectName loaderName, Object[] params, String[] signature)
             throws ReflectionException, InstanceAlreadyExistsException,
             MBeanRegistrationException, MBeanException,
-            NotCompliantMBeanException, InstanceNotFoundException,
-            IOException {
+            NotCompliantMBeanException, InstanceNotFoundException, IOException {
         // TODO Auto-generated method stub
         return null;
     }
@@ -100,8 +97,7 @@ final class MockMBeanServerConnection implements
     }
 
     public AttributeList getAttributes(ObjectName name, String[] attributes)
-            throws InstanceNotFoundException, ReflectionException,
-            IOException {
+            throws InstanceNotFoundException, ReflectionException, IOException {
         // TODO Auto-generated method stub
         return null;
     }
@@ -153,33 +149,30 @@ final class MockMBeanServerConnection implements
         return false;
     }
 
-    @SuppressWarnings("unchecked")
-    public Set queryMBeans(ObjectName name, QueryExp query)
-            throws IOException {
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
+    public Set queryMBeans(ObjectName name, QueryExp query) throws IOException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    public Set queryNames(ObjectName name, QueryExp query)
-            throws IOException {
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
+    public Set queryNames(ObjectName name, QueryExp query) throws IOException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public void removeNotificationListener(ObjectName name,
-            ObjectName listener) throws InstanceNotFoundException,
-            ListenerNotFoundException, IOException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void removeNotificationListener(ObjectName name,
-            NotificationListener listener)
+    public void removeNotificationListener(ObjectName name, ObjectName listener)
             throws InstanceNotFoundException, ListenerNotFoundException,
             IOException {
         // TODO Auto-generated method stub
-        
+
+    }
+
+    public void removeNotificationListener(ObjectName name,
+            NotificationListener listener) throws InstanceNotFoundException,
+            ListenerNotFoundException, IOException {
+        // TODO Auto-generated method stub
+
     }
 
     public void removeNotificationListener(ObjectName name,
@@ -187,7 +180,7 @@ final class MockMBeanServerConnection implements
             throws InstanceNotFoundException, ListenerNotFoundException,
             IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     public void removeNotificationListener(ObjectName name,
@@ -195,7 +188,7 @@ final class MockMBeanServerConnection implements
             Object handback) throws InstanceNotFoundException,
             ListenerNotFoundException, IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
     public void setAttribute(ObjectName name, Attribute attribute)
@@ -203,12 +196,11 @@ final class MockMBeanServerConnection implements
             InvalidAttributeValueException, MBeanException,
             ReflectionException, IOException {
         // TODO Auto-generated method stub
-        
+
     }
 
-    public AttributeList setAttributes(ObjectName name,
-            AttributeList attributes) throws InstanceNotFoundException,
-            ReflectionException, IOException {
+    public AttributeList setAttributes(ObjectName name, AttributeList attributes)
+            throws InstanceNotFoundException, ReflectionException, IOException {
         // TODO Auto-generated method stub
         return null;
     }
@@ -217,6 +209,6 @@ final class MockMBeanServerConnection implements
             throws InstanceNotFoundException, MBeanRegistrationException,
             IOException {
         // TODO Auto-generated method stub
-        
+
     }
 }

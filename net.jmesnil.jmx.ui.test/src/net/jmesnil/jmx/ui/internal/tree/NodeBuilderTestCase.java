@@ -39,7 +39,7 @@ public class NodeBuilderTestCase extends TestCase {
     }
 
     public void testOneObjectName() throws Exception {
-        ObjectName on = new ObjectName("test:type=Test,name=Test1");
+        ObjectName on = new ObjectName("test:type=Test,name=Test1"); //$NON-NLS-1$
 
         Node root = NodeBuilder.createRoot(mockConn);
         NodeBuilder.addToTree(root, on);
@@ -48,14 +48,14 @@ public class NodeBuilderTestCase extends TestCase {
         assertEquals(1, children.length);
         assertTrue(children[0] instanceof DomainNode);
         DomainNode domainNode = (DomainNode) children[0];
-        assertEquals("test", domainNode.getDomain());
+        assertEquals("test", domainNode.getDomain()); //$NON-NLS-1$
 
         children = domainNode.getChildren();
         assertEquals(1, children.length);
         assertTrue(children[0] instanceof PropertyNode);
         PropertyNode typeNode = (PropertyNode) children[0];
-        assertEquals("type", typeNode.getKey());
-        assertEquals("Test", typeNode.getValue());
+        assertEquals("type", typeNode.getKey()); //$NON-NLS-1$
+        assertEquals("Test", typeNode.getValue()); //$NON-NLS-1$
 
         children = typeNode.getChildren();
         assertEquals(1, children.length);
@@ -65,8 +65,8 @@ public class NodeBuilderTestCase extends TestCase {
     }
 
     public void testTwoObjectNames() throws Exception {
-        ObjectName on = new ObjectName("test:type=Test,name=Test1");
-        ObjectName on2 = new ObjectName("test:type=Test,name=Test2");
+        ObjectName on = new ObjectName("test:type=Test,name=Test1"); //$NON-NLS-1$
+        ObjectName on2 = new ObjectName("test:type=Test,name=Test2"); //$NON-NLS-1$
 
         Node root = NodeBuilder.createRoot(mockConn);
         NodeBuilder.addToTree(root, on);
@@ -76,14 +76,14 @@ public class NodeBuilderTestCase extends TestCase {
         assertEquals(1, children.length);
         assertTrue(children[0] instanceof DomainNode);
         DomainNode domainNode = (DomainNode) children[0];
-        assertEquals("test", domainNode.getDomain());
+        assertEquals("test", domainNode.getDomain()); //$NON-NLS-1$
 
         children = domainNode.getChildren();
         assertEquals(1, children.length);
         assertTrue(children[0] instanceof PropertyNode);
         PropertyNode typeNode = (PropertyNode) children[0];
-        assertEquals("type", typeNode.getKey());
-        assertEquals("Test", typeNode.getValue());
+        assertEquals("type", typeNode.getKey()); //$NON-NLS-1$
+        assertEquals("Test", typeNode.getValue()); //$NON-NLS-1$
 
         children = typeNode.getChildren();
         assertEquals(2, children.length);
@@ -96,8 +96,8 @@ public class NodeBuilderTestCase extends TestCase {
     }
 
     public void testTwoDifferentDomains() throws Exception {
-        ObjectName on = new ObjectName("test:type=Test,name=Test1");
-        ObjectName other = new ObjectName("other:type=Test,name=Test2");
+        ObjectName on = new ObjectName("test:type=Test,name=Test1"); //$NON-NLS-1$
+        ObjectName other = new ObjectName("other:type=Test,name=Test2"); //$NON-NLS-1$
 
         Node root = NodeBuilder.createRoot(mockConn);
         NodeBuilder.addToTree(root, on);
@@ -110,16 +110,16 @@ public class NodeBuilderTestCase extends TestCase {
         DomainNode domainNode1 = (DomainNode) children[0];
         DomainNode domainNode2 = (DomainNode) children[1];
         // domains are sorted by lexical order
-        assertEquals("other", domainNode1.getDomain());
-        assertEquals("test", domainNode2.getDomain());
+        assertEquals("other", domainNode1.getDomain()); //$NON-NLS-1$
+        assertEquals("test", domainNode2.getDomain()); //$NON-NLS-1$
     }
 
     public void testHierarchy() throws Exception {
-        ObjectName on = new ObjectName("test:type=Test,name=Test1");
-        ObjectName on2 = new ObjectName("test:type=Test,name=Test2");
-        ObjectName on3 = new ObjectName("test:type=AnotherTest,name=Test1");
-        ObjectName on4 = new ObjectName("test:type=AnotherTest,name=Test2");
-        ObjectName on5 = new ObjectName("other:type=Test,name=Test1");
+        ObjectName on = new ObjectName("test:type=Test,name=Test1"); //$NON-NLS-1$
+        ObjectName on2 = new ObjectName("test:type=Test,name=Test2"); //$NON-NLS-1$
+        ObjectName on3 = new ObjectName("test:type=AnotherTest,name=Test1"); //$NON-NLS-1$
+        ObjectName on4 = new ObjectName("test:type=AnotherTest,name=Test2"); //$NON-NLS-1$
+        ObjectName on5 = new ObjectName("other:type=Test,name=Test1"); //$NON-NLS-1$
 
         Node root = NodeBuilder.createRoot(mockConn);
         NodeBuilder.addToTree(root, on);

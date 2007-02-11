@@ -5,27 +5,27 @@ import junit.framework.TestCase;
 public class MBeanUtilsTestCase extends TestCase {
 
     public void testNullValue() throws Exception {
-        assertNull(MBeanUtils.getValue(null, "whatever"));
-        assertNull(MBeanUtils.getValue("whatever", null));
+        assertNull(MBeanUtils.getValue(null, "whatever")); //$NON-NLS-1$
+        assertNull(MBeanUtils.getValue("whatever", null)); //$NON-NLS-1$
         assertNull(MBeanUtils.getValue(null, null));
     }
 
     public void testNonPrimitiveType() throws Exception {
-        String value = "any value";
-        assertEquals(value, MBeanUtils.getValue(value, "java.util.Vector"));
+        String value = "any value"; //$NON-NLS-1$
+        assertEquals(value, MBeanUtils.getValue(value, "java.util.Vector")); //$NON-NLS-1$
     }
 
     public void testBooleanValue() throws Exception {
-        assertEquals(Boolean.TRUE, MBeanUtils.getValue("true", "boolean"));
-        assertEquals(Boolean.FALSE, MBeanUtils.getValue("false", "boolean"));
-        assertEquals(Boolean.FALSE, MBeanUtils.getValue("whatever", "boolean"));
+        assertEquals(Boolean.TRUE, MBeanUtils.getValue("true", "boolean")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(Boolean.FALSE, MBeanUtils.getValue("false", "boolean")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(Boolean.FALSE, MBeanUtils.getValue("whatever", "boolean")); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public void testByteValue() throws Exception {
-        assertEquals((byte) 0, MBeanUtils.getValue("0", "byte"));
-        assertEquals((byte) 1, MBeanUtils.getValue("1", "byte"));
+        assertEquals((byte) 0, MBeanUtils.getValue("0", "byte")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals((byte) 1, MBeanUtils.getValue("1", "byte")); //$NON-NLS-1$ //$NON-NLS-2$
         try {
-            MBeanUtils.getValue("whatever", "byte");
+            MBeanUtils.getValue("whatever", "byte"); //$NON-NLS-1$ //$NON-NLS-2$
             fail();
         } catch (NumberFormatException e) {
 
@@ -33,15 +33,15 @@ public class MBeanUtilsTestCase extends TestCase {
     }
 
     public void testCharValue() throws Exception {
-        assertEquals('a', MBeanUtils.getValue("a", "char"));
-        assertEquals('o', MBeanUtils.getValue("only take the first char",
-                "char"));
+        assertEquals('a', MBeanUtils.getValue("a", "char")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals('o', MBeanUtils.getValue("only take the first char", //$NON-NLS-1$
+                "char")); //$NON-NLS-1$
     }
 
     public void testShortValue() throws Exception {
-        assertEquals((short) 1, MBeanUtils.getValue("1", "short"));
+        assertEquals((short) 1, MBeanUtils.getValue("1", "short")); //$NON-NLS-1$ //$NON-NLS-2$
         try {
-            MBeanUtils.getValue("not a short", "short");
+            MBeanUtils.getValue("not a short", "short"); //$NON-NLS-1$ //$NON-NLS-2$
             fail();
         } catch (NumberFormatException e) {
 
@@ -49,9 +49,9 @@ public class MBeanUtilsTestCase extends TestCase {
     }
 
     public void testIntValue() throws Exception {
-        assertEquals(1, MBeanUtils.getValue("1", "int"));
+        assertEquals(1, MBeanUtils.getValue("1", "int")); //$NON-NLS-1$ //$NON-NLS-2$
         try {
-            MBeanUtils.getValue("not a int", "int");
+            MBeanUtils.getValue("not a int", "int"); //$NON-NLS-1$ //$NON-NLS-2$
             fail();
         } catch (NumberFormatException e) {
 
@@ -59,9 +59,9 @@ public class MBeanUtilsTestCase extends TestCase {
     }
 
     public void testLongValue() throws Exception {
-        assertEquals((long) 1, MBeanUtils.getValue("1", "long"));
+        assertEquals((long) 1, MBeanUtils.getValue("1", "long")); //$NON-NLS-1$ //$NON-NLS-2$
         try {
-            MBeanUtils.getValue("not a long", "long");
+            MBeanUtils.getValue("not a long", "long"); //$NON-NLS-1$ //$NON-NLS-2$
             fail();
         } catch (NumberFormatException e) {
 
@@ -69,9 +69,9 @@ public class MBeanUtilsTestCase extends TestCase {
     }
 
     public void testFloatValue() throws Exception {
-        assertEquals(1.0f, MBeanUtils.getValue("1", "float"));
+        assertEquals(1.0f, MBeanUtils.getValue("1", "float")); //$NON-NLS-1$ //$NON-NLS-2$
         try {
-            MBeanUtils.getValue("not a float", "float");
+            MBeanUtils.getValue("not a float", "float"); //$NON-NLS-1$ //$NON-NLS-2$
             fail();
         } catch (NumberFormatException e) {
 
@@ -79,9 +79,9 @@ public class MBeanUtilsTestCase extends TestCase {
     }
 
     public void testDoubleValue() throws Exception {
-        assertEquals(1.0, MBeanUtils.getValue("1", "double"));
+        assertEquals(1.0, MBeanUtils.getValue("1", "double")); //$NON-NLS-1$ //$NON-NLS-2$
         try {
-            MBeanUtils.getValue("not a double", "double");
+            MBeanUtils.getValue("not a double", "double"); //$NON-NLS-1$ //$NON-NLS-2$
             fail();
         } catch (NumberFormatException e) {
 
