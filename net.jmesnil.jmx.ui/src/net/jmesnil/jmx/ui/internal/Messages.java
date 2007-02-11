@@ -25,6 +25,8 @@ public class Messages extends NLS {
 
     public static String className;
 
+    public static String CollapseAllAction_text;
+
     public static String ConnectionSelectionDialog_error;
 
     public static String ConnectionSelectionDialog_host;

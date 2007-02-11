@@ -28,6 +28,7 @@ import javax.management.ObjectName;
 import net.jmesnil.jmx.resources.MBeanServerConnectionWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.JMXImages;
+import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.actions.MBeanServerConnectAction;
 import net.jmesnil.jmx.ui.internal.actions.MBeanServerDisconnectAction;
 import net.jmesnil.jmx.ui.internal.tree.DomainNode;
@@ -38,6 +39,7 @@ import net.jmesnil.jmx.ui.internal.tree.PropertyNode;
 import net.jmesnil.jmx.ui.internal.tree.Root;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -62,11 +64,26 @@ public class MBeanView extends ViewPart {
 
     private boolean currentLayoutIsFlat = false;
 
-    private MBeanServerConnectAction connectAction;
+    private Action collapseAllAction;
 
-    private MBeanServerDisconnectAction disconnectAction;
+    private Action connectAction;
+
+    private Action disconnectAction;
 
     private LayoutActionGroup layoutActionGroup;
+
+    private final class CollapseAllAction extends Action {
+
+        public CollapseAllAction() {
+            setText(Messages.CollapseAllAction_text);
+            JMXImages.setLocalImageDescriptors(this, "collapseall.gif"); //$NON-NLS-1$
+        }
+
+        @Override
+        public void run() {
+            viewer.collapseAll();
+        }
+    }
 
     protected class ViewContentProvider implements IStructuredContentProvider,
             ITreeContentProvider {
@@ -137,7 +154,7 @@ public class MBeanView extends ViewPart {
 
     protected class ViewLabelProvider extends LabelProvider {
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")//$NON-NLS-1$
         @Override
         public String getText(Object obj) {
             if (obj instanceof DomainNode) {
@@ -197,6 +214,7 @@ public class MBeanView extends ViewPart {
     }
 
     private void makeActions() {
+        collapseAllAction = new CollapseAllAction();
         connectAction = new MBeanServerConnectAction(this);
         disconnectAction = new MBeanServerDisconnectAction(this);
         layoutActionGroup = new LayoutActionGroup(this);
@@ -216,13 +234,15 @@ public class MBeanView extends ViewPart {
         layoutActionGroup.fillActionBars(actionBars);
 
         actionBars.getToolBarManager().add(connectAction);
+        actionBars.getToolBarManager().add(new Separator());
+        actionBars.getToolBarManager().add(collapseAllAction);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
     public void setMBeanServerConnection(MBeanServerConnectionWrapper connection) {
         try {
             Set beanInfo = connection.getMBeanServerConnection().queryNames(
-                    new ObjectName("*:*"), null);
+                    new ObjectName("*:*"), null); //$NON-NLS-1$
             Node root = NodeBuilder.createRoot(connection
                     .getMBeanServerConnection());
             Iterator iter = beanInfo.iterator();
