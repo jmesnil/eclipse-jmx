@@ -18,6 +18,8 @@
  */
 package net.jmesnil.jmx.ui.internal.views;
 
+import net.jmesnil.jmx.ui.internal.views.opinvocation.MBeanOperationInvocationView;
+
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -31,9 +33,9 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
-class ViewUtil {
+public class ViewUtil {
 
-    static Composite createSection(String sectionTitle, String description,
+    public static Composite createSection(String sectionTitle, String description,
             IManagedForm form, Composite parent, int cols, boolean fillBoth,
             boolean twistie) {
         FormToolkit toolkit = form.getToolkit();
@@ -70,7 +72,7 @@ class ViewUtil {
         return (MBeanOperationInvocationView) getView(MBeanOperationInvocationView.ID);
     }
 
-    static Composite createSection(Composite parent, FormToolkit toolkit,
+    public static Composite createSection(Composite parent, FormToolkit toolkit,
             String title, String description, int flags) {
         Section section = toolkit.createSection(parent, flags);
         section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));

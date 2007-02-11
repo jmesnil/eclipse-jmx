@@ -16,7 +16,7 @@
  * 
  *  Code was inspired from org.eclipse.equinox.client source, (c) 2006 IBM 
  */
-package net.jmesnil.jmx.ui.internal.views;
+package net.jmesnil.jmx.ui.internal.views.opinvocation;
 
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
@@ -28,6 +28,7 @@ import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.MBeanUtils;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
+import net.jmesnil.jmx.ui.internal.views.ViewUtil;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -51,7 +52,7 @@ import org.eclipse.ui.part.ViewPart;
 public class MBeanOperationInvocationView extends ViewPart implements
         ISelectionListener {
 
-    public static final String ID = "net.jmesnil.jmx.ui.internal.views.MBeanOperationInvocationView"; //$NON-NLS-1$
+    public static final String ID = "net.jmesnil.jmx.ui.internal.views.opinvocation.MBeanOperationInvocationView"; //$NON-NLS-1$
 
     private Composite invocationComposite;
 
@@ -230,12 +231,13 @@ public class MBeanOperationInvocationView extends ViewPart implements
                         .getReturnType())) {
                     result = Messages.MBeanOperationInvocationView_success;
                 }
-                MessageDialog.openInformation(managedForm.getForm().getShell(),
-                        Messages.MBeanOperationInvocationView_result,
-                        "" + result); //$NON-NLS-1$
+                InvocationResultDialog.open(managedForm.getForm().getShell(), result);
+//                MessageDialog.openInformation(managedForm.getForm().getShell(),
+//                        Messages.MBeanOperationInvocationView_result,
+//                        "" + result); //$NON-NLS-1$
             } catch (Exception e) {
                 JMXUIActivator.log(IStatus.ERROR, e.getCause().getMessage(), e);
-        	String message = e.getLocalizedMessage();
+                String message = e.getLocalizedMessage();
                 // if the exception has a cause, it is likely more interesting
                 // since it may be the exception thrown by the mbean implementation
                 // rather than the exception thrown by the mbean server connection

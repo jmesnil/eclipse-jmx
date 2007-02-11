@@ -54,7 +54,16 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 
 public class AttributeControlFactory {
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
+    public static Control createControl(final Composite parent,
+            final Object value) {
+        if (value != null && value.getClass().isArray()) {
+            return createArrayControl(parent, value);
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
     public static Control createControl(final Composite parent,
             FormToolkit toolkit, final MBeanAttributeInfoWrapper wrapper,
             final IWritableAttributeHandler handler) {
@@ -114,15 +123,14 @@ public class AttributeControlFactory {
             FieldDecoration errorDecoration = registry
                     .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
             errorDecoration.setDescription(errorMessage);
-            field
-                    .addFieldDecoration(errorDecoration, SWT.LEFT | SWT.BOTTOM,
-                            false);
+            field.addFieldDecoration(errorDecoration, SWT.LEFT | SWT.BOTTOM,
+                    false);
             text.setText(Messages.unavailable);
             text.setForeground(parent.getDisplay()
                     .getSystemColor(SWT.COLOR_RED));
             return text;
         }
-        
+
         String attrValue = ""; //$NON-NLS-1$
         try {
             attrValue = StringUtils.toString(value, true);
@@ -197,12 +205,25 @@ public class AttributeControlFactory {
                 | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
         toolkit.paintBordersFor(table);
         table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        setupArrayControl(table, arrayObj);
+        return table;
+    }
+
+    private static Control createArrayControl(final Composite parent,
+            Object arrayObj) {
+        final Table table = new Table(parent, SWT.BORDER | SWT.READ_ONLY
+                | SWT.H_SCROLL | SWT.V_SCROLL);
+        table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        setupArrayControl(table, arrayObj);
+        return table;
+    }
+
+    private static void setupArrayControl(Table table, Object arrayObj) {
         TableColumn columnName = new TableColumn(table, SWT.NONE);
         columnName.setText(Messages.name);
         columnName.setWidth(150);
         table.setLinesVisible(true);
         populateTableItems(table, arrayObj);
-        return table;
     }
 
     private static void populateTableItems(Table table, Object arrayObj) {

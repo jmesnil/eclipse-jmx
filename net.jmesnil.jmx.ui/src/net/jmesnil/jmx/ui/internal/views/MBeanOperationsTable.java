@@ -26,6 +26,7 @@ import net.jmesnil.jmx.resources.MBeanOperationInfoWrapper;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
+import net.jmesnil.jmx.ui.internal.views.opinvocation.MBeanOperationInvocationView;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;

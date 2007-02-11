@@ -17,8 +17,8 @@
 package net.jmesnil.jmx.ui.internal.perspectives;
 
 import net.jmesnil.jmx.ui.internal.views.MBeanInfoView;
-import net.jmesnil.jmx.ui.internal.views.MBeanOperationInvocationView;
 import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
+import net.jmesnil.jmx.ui.internal.views.opinvocation.MBeanOperationInvocationView;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
