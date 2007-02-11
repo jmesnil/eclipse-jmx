@@ -1,5 +1,8 @@
 package net.jmesnil.jmx.ui.internal.views;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import javax.management.Attribute;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServerConnection;
@@ -98,7 +101,8 @@ public class AttributeDetailsSection {
         attrDescText.setFont(bold);
         attrDescText.setLayoutData(newLayoutData());
 
-        toolkit.createLabel(attrDetailsSectionClient, Messages.AttributeDetailsSection_permission);
+        toolkit.createLabel(attrDetailsSectionClient,
+                Messages.AttributeDetailsSection_permission);
         attrPermissionLabel = toolkit.createLabel(attrDetailsSectionClient, ""); //$NON-NLS-1$
         attrPermissionLabel.setLayoutData(newLayoutData());
         attrPermissionLabel.setFont(bold);
@@ -134,35 +138,48 @@ public class AttributeDetailsSection {
         boolean readable = attrInfo.isReadable();
 
         if (readable && writable) {
-            attrPermissionLabel.setImage(JMXImages.get(JMXImages.IMG_OBJS_READ_WRITE));
+            attrPermissionLabel.setImage(JMXImages
+                    .get(JMXImages.IMG_OBJS_READ_WRITE));
             attrPermissionLabel.setToolTipText(Messages.readWrite);
         } else if (readable && !writable) {
-            attrPermissionLabel.setImage(JMXImages.get(JMXImages.IMG_OBJS_READ));
+            attrPermissionLabel
+                    .setImage(JMXImages.get(JMXImages.IMG_OBJS_READ));
             attrPermissionLabel.setToolTipText(Messages.readOnly);
-        } else if (writable && !readable){
-            attrPermissionLabel.setImage(JMXImages.get(JMXImages.IMG_OBJS_WRITE));
+        } else if (writable && !readable) {
+            attrPermissionLabel.setImage(JMXImages
+                    .get(JMXImages.IMG_OBJS_WRITE));
             attrPermissionLabel.setToolTipText(Messages.writeOnly);
         } else {
             attrPermissionLabel.setImage(null);
         }
-        
+
         disposeChildren(valueComposite);
-        
-        Control attrControl;
+
         try {
-            attrControl = AttributeControlFactory.createControl(
-                    valueComposite, toolkit, writable, type, wrapper.getValue(), updateAttributeHandler);
+            Control attrControl = AttributeControlFactory.createControl(
+                    valueComposite, toolkit, writable, type,
+                    wrapper.getValue(), updateAttributeHandler);
+            attrControl.pack(true);
         } catch (Throwable t) {
             JMXUIActivator.log(IStatus.ERROR, NLS.bind(
                     Messages.MBeanAttributeValue_Warning, attrInfo.getName()),
                     t);
-            // FIXME should not be presented as a regular attribute but should be displayed
-            // with a dedicated control (similar to ErrorDialog control)
-            attrControl = AttributeControlFactory.createControl(
-                    valueComposite, toolkit, false, t.getClass().getName(), t, updateAttributeHandler);
+            Label errorLabel = toolkit.createLabel(valueComposite,
+                    "Unavailable");
+            errorLabel.setForeground(valueComposite.getDisplay()
+                    .getSystemColor(SWT.COLOR_RED));
+            errorLabel
+                    .setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+            Text errorText = toolkit.createText(valueComposite, "", //$NON-NLS-1$
+                    SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+            errorText.setLayoutData(new TableWrapData());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            t.printStackTrace(pw);
+            errorText.setText(sw.toString());
+        } finally {
+            valueComposite.layout(true, true);
         }
-        attrControl.pack(true);
-        valueComposite.layout(true, true);
     }
 
     private void disposeChildren(Composite composite) {
