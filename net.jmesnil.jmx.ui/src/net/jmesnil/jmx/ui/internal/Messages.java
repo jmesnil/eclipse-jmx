@@ -96,7 +96,7 @@ public class Messages extends NLS {
     public static String MBeanServerConnectDialog_advancedTab;
 
     public static String MBeanServerConnectDialog_simpleTab;
-    
+
     public static String name;
 
     public static String objectName;
@@ -104,7 +104,7 @@ public class Messages extends NLS {
     public static String parameters;
 
     public static String readable;
-    
+
     public static String readOnly;
 
     public static String readWrite;

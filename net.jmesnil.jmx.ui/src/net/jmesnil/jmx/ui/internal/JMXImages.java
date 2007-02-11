@@ -63,7 +63,8 @@ public class JMXImages {
     public static final String IMG_OBJS_LIBRARY = NAME_PREFIX
             + "library_obj.gif"; //$NON-NLS-1$
 
-    public static final String IMG_OBJS_READ_WRITE = NAME_PREFIX + "readwrite_obj.gif"; //$NON-NLS-1$
+    public static final String IMG_OBJS_READ_WRITE = NAME_PREFIX
+            + "readwrite_obj.gif"; //$NON-NLS-1$
 
     public static final String IMG_OBJS_READ = NAME_PREFIX + "read_obj.gif"; //$NON-NLS-1$
 
@@ -96,27 +97,22 @@ public class JMXImages {
     public static Image get(String key) {
         return getImageRegistry().get(key);
     }
-    
+
     public static void setLocalImageDescriptors(IAction action, String iconName) {
         setImageDescriptors(action, "lcl16", iconName); //$NON-NLS-1$
     }
-    
-    private static void setImageDescriptors(IAction action, String type, String relPath) {
-        ImageDescriptor id= create("d" + type, relPath, false); //$NON-NLS-1$
+
+    private static void setImageDescriptors(IAction action, String type,
+            String relPath) {
+        ImageDescriptor id = create("d" + type, relPath, false); //$NON-NLS-1$
         if (id != null)
             action.setDisabledImageDescriptor(id);
-    
-        /*
-         * id= create("c" + type, relPath, false); //$NON-NLS-1$
-         * if (id != null)
-         *      action.setHoverImageDescriptor(id);
-         */
-    
-        ImageDescriptor descriptor= create("e" + type, relPath, true); //$NON-NLS-1$
+
+        ImageDescriptor descriptor = create("e" + type, relPath, true); //$NON-NLS-1$
         action.setHoverImageDescriptor(descriptor);
-        action.setImageDescriptor(descriptor); 
+        action.setImageDescriptor(descriptor);
     }
-    
+
     private static ImageRegistry getImageRegistry() {
         if (fgImageRegistry == null) {
             fgImageRegistry = new ImageRegistry();

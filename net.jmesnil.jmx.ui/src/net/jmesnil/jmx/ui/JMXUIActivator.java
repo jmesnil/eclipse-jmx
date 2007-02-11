@@ -82,16 +82,17 @@ public class JMXUIActivator extends AbstractUIPlugin {
     public static ImageDescriptor getImageDescriptor(String path) {
         return imageDescriptorFromPlugin(PLUGIN_ID, path);
     }
-    
+
     public static void log(IStatus status) {
-	getDefault().getLog().log(status);
+        getDefault().getLog().log(status);
     }
 
     /**
-     * Log the given exception along with the provided message and severity indicator
+     * Log the given exception along with the provided message and severity
+     * indicator
      */
     public static void log(int severity, String message, Throwable e) {
-	log(new Status(severity, PLUGIN_ID, 0, message, e));
+        log(new Status(severity, PLUGIN_ID, 0, message, e));
     }
 
     private void registerAdapters() {
