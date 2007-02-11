@@ -66,7 +66,7 @@ public class JMXCoreActivator extends Plugin {
         return plugin;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     public MBeanServerConnectionWrapper connect(String url, String userName,
             String password) throws IOException {
         Assert.isNotNull(url);
