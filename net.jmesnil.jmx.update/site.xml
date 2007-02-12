@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
+   <feature url="features/net.jmesnil.jmx_0.1.0.200702122110.jar" id="net.jmesnil.jmx" version="0.1.0.200702122110">
+      <category name="JMX Console"/>
+   </feature>
    <feature url="features/net.jmesnil.jmx_0.1.0.200702071405.jar" id="net.jmesnil.jmx" version="0.1.0.200702071405">
       <category name="JMX Console"/>
    </feature>
