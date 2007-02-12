@@ -159,6 +159,7 @@ public class AttributeDetailsSection {
             Control attrControl = AttributeControlFactory.createControl(
                     valueComposite, toolkit, writable, type,
                     wrapper.getValue(), updateAttributeHandler);
+            attrControl.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
             attrControl.pack(true);
         } catch (Throwable t) {
             JMXUIActivator.log(IStatus.ERROR, NLS.bind(
