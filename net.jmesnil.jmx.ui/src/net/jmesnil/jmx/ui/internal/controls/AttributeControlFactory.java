@@ -33,7 +33,6 @@ import net.jmesnil.jmx.ui.internal.StringUtils;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.fieldassist.DecoratedField;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -45,57 +44,61 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.TableWrapData;
 
 public class AttributeControlFactory {
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
-    public static Control createControl(final Composite parent,
-            final Object value) {
-        if (value != null && value.getClass().isArray()) {
-            return createArrayControl(parent, value);
-        }
-        return null;
+    public static Control createControl(final Composite parent, final Object value) {
+        return createControl(parent, null, false, value.getClass().getSimpleName(), value, null);
     }
-
+        
     @SuppressWarnings("unchecked")//$NON-NLS-1$
-    public static Control createControl(final Composite parent,
-            FormToolkit toolkit, boolean writable, final String type,
+    public static Control createControl(final Composite parent, FormToolkit toolkit,
+            final boolean writable, final String type,
             final Object value, final IWritableAttributeHandler handler) {
         if (value != null && value instanceof Boolean) {
             return createBooleanControl(parent, toolkit, writable, value,
-                    handler);
+                    null);
         }
         if (value != null && value.getClass().isArray()) {
-            return createArrayControl(parent, toolkit, value);
+            final Table table = createTable(parent, toolkit, false, true);
+            fillArray(table, value);
+            return table;
         }
         if (value != null && value instanceof CompositeData) {
-            return createCompositeDataControl(parent, toolkit,
-                    (CompositeData) value);
+            final Table table = createTable(parent, toolkit, true, true);
+            fillCompositeData(table, (CompositeData) value);
+            return table;
         }
         if (value != null && value instanceof TabularData) {
-            return createTabularDataControl(parent, toolkit,
-                    (TabularData) value);
+            final Table table = createTable(parent, toolkit, true, true);
+            fillTabularData(table, (TabularData) value);
+            return table;
         }
         if (value != null && value instanceof Collection) {
-            return createCollectionControl(parent, toolkit, (Collection) value);
+            final Table table = createTable(parent, toolkit, false, true);
+            fillCollection(table, (Collection) value);
+            return table;
         }
         if (value != null && value instanceof Map) {
-            return createMapControl(parent, toolkit, (Map) value);
+            final Table table = createTable(parent, toolkit, true, true);
+            fillMap(table, (Map) value);
+            return table;
         }
-        return createText(parent, toolkit, writable, type, value, handler);
+        return createText(parent, toolkit, writable, value.getClass().getSimpleName(), value, null);
     }
 
     private static Control createText(final Composite parent,
             FormToolkit toolkit, final boolean writable, final String type,
             final Object value, final IWritableAttributeHandler handler) {
 
-        DecoratedField field = new DecoratedField(parent, SWT.MULTI | SWT.WRAP,
-                new ToolkitTextControlCreator(toolkit));
-        field.getLayoutControl().setLayoutData(
-                new TableWrapData(TableWrapData.FILL_GRAB));
-        final Text text = (Text) field.getControl();
-
+        final Text text;
+        int style = SWT.MULTI | SWT.WRAP;
+        if (toolkit != null) {
+            text = toolkit.createText(parent, "", style); //$NON-NLS-1$
+        } else {
+            text = new Text(parent, style | SWT.BORDER); //$NON-NLS-1$    
+        }
         String attrValue = ""; //$NON-NLS-1$
         try {
             attrValue = StringUtils.toString(value, true);
@@ -141,16 +144,21 @@ public class AttributeControlFactory {
             final IWritableAttributeHandler handler) {
         boolean booleanValue = ((Boolean) value).booleanValue();
         if (!writable) {
-            Text text = toolkit.createText(parent, Boolean
-                    .toString(booleanValue), SWT.SINGLE);
-            text.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-            return text;
+            if (toolkit != null) {
+                return toolkit.createText(parent, Boolean
+                        .toString(booleanValue), SWT.SINGLE);
+            } else {
+                Text text = new Text(parent, SWT.SINGLE);
+                text.setText(Boolean.toString(booleanValue));
+                return text;
+            }
         }
 
         final Combo combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
-        combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-        toolkit.paintBordersFor(combo);
-        combo.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        if (toolkit != null) {
+            combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+            toolkit.paintBordersFor(combo);
+        }
         combo.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
         combo.setItems(new String[] { Boolean.TRUE.toString(),
                 Boolean.FALSE.toString() });
@@ -170,34 +178,28 @@ public class AttributeControlFactory {
         return combo;
     }
 
-    private static Control createArrayControl(final Composite parent,
-            FormToolkit toolkit, Object arrayObj) {
-        final Table table = toolkit.createTable(parent, SWT.BORDER
-                | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
-        toolkit.paintBordersFor(table);
-        table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        setupArrayControl(table, arrayObj);
+    private static Table createTable(Composite parent, FormToolkit toolkit, boolean visibleHeader, boolean visibleLines) {
+        int style = SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL;
+        Table table = null;
+        if (toolkit != null) {
+            table = toolkit.createTable(parent, style);
+            toolkit.paintBordersFor(table);
+        } else {
+            table = new Table(parent, style);
+        }
+        table.setHeaderVisible(visibleHeader);
+        table.setLinesVisible(visibleLines);
         return table;
     }
 
-    private static Control createArrayControl(final Composite parent,
-            Object arrayObj) {
-        final Table table = new Table(parent, SWT.BORDER | SWT.READ_ONLY
-                | SWT.H_SCROLL | SWT.V_SCROLL);
-        table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        setupArrayControl(table, arrayObj);
-        return table;
-    }
-
-    private static void setupArrayControl(Table table, Object arrayObj) {
+    private static void fillArray(Table table, Object arrayObj) {
         TableColumn columnName = new TableColumn(table, SWT.NONE);
         columnName.setText(Messages.name);
         columnName.setWidth(150);
-        table.setLinesVisible(true);
-        populateTableItems(table, arrayObj);
+        fillArrayItems(table, arrayObj);
     }
 
-    private static void populateTableItems(Table table, Object arrayObj) {
+    private static void fillArrayItems(Table table, Object arrayObj) {
         int length = Array.getLength(arrayObj);
         for (int i = 0; i < length; i++) {
             Object element = Array.get(arrayObj, i);
@@ -207,40 +209,26 @@ public class AttributeControlFactory {
     }
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
-    private static Control createCollectionControl(final Composite parent,
-            FormToolkit toolkit, Collection collection) {
-        final Table table = toolkit.createTable(parent, SWT.BORDER
-                | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
-        toolkit.paintBordersFor(table);
-        table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+    private static void fillCollection(final Table table, Collection collection) {
         TableColumn columnName = new TableColumn(table, SWT.NONE);
         columnName.setText(Messages.name);
         columnName.setWidth(150);
-        table.setLinesVisible(true);
         Iterator iter = collection.iterator();
         while (iter.hasNext()) {
             Object element = (Object) iter.next();
             TableItem item = new TableItem(table, SWT.NONE);
             item.setText(StringUtils.toString(element, false));
         }
-        return table;
     }
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
-    private static Control createMapControl(final Composite parent,
-            FormToolkit toolkit, Map map) {
-        final Table table = toolkit.createTable(parent, SWT.BORDER
-                | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
-        toolkit.paintBordersFor(table);
-        table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+    private static void fillMap(final Table table, Map map) {
         TableColumn keyColumn = new TableColumn(table, SWT.NONE);
         keyColumn.setText(Messages.key);
         keyColumn.setWidth(150);
         TableColumn valueColumn = new TableColumn(table, SWT.NONE);
         valueColumn.setText(Messages.value);
         valueColumn.setWidth(150);
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
         Iterator iter = map.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry entry = (Map.Entry) iter.next();
@@ -248,18 +236,11 @@ public class AttributeControlFactory {
             item.setText(0, StringUtils.toString(entry.getKey(), false));
             item.setText(1, StringUtils.toString(entry.getValue(), false));
         }
-        return table;
     }
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
-    private static Control createCompositeDataControl(final Composite parent,
-            FormToolkit toolkit, CompositeData data) {
-        final Table table = toolkit.createTable(parent, SWT.BORDER
-                | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
-        toolkit.paintBordersFor(table);
-        table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
+    private static void fillCompositeData(final Table table,
+            CompositeData data) {
         TableColumn keyColumn = new TableColumn(table, SWT.NONE);
         keyColumn.setText(Messages.key);
         keyColumn.setWidth(150);
@@ -273,18 +254,11 @@ public class AttributeControlFactory {
             item.setText(0, key);
             item.setText(1, StringUtils.toString(data.get(key), false));
         }
-        return table;
     }
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
-    private static Control createTabularDataControl(final Composite parent,
-            FormToolkit toolkit, TabularData data) {
-        final Table table = toolkit.createTable(parent, SWT.RESIZE | SWT.SINGLE
-                | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
-        toolkit.paintBordersFor(parent);
-        table.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
+    private static void fillTabularData(final Table table,
+            TabularData data) {
         Set keySet = data.getTabularType().getRowType().keySet();
         Iterator keyIter = keySet.iterator();
         while (keyIter.hasNext()) {
@@ -307,7 +281,6 @@ public class AttributeControlFactory {
                 i++;
             }
         }
-        return table;
     }
 
 }
