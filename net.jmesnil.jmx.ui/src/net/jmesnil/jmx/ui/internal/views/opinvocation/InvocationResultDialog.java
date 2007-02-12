@@ -21,11 +21,12 @@ import net.jmesnil.jmx.ui.internal.controls.AttributeControlFactory;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 public class InvocationResultDialog extends Dialog {
 
@@ -46,12 +47,14 @@ public class InvocationResultDialog extends Dialog {
     @Override
     protected Control createDialogArea(final Composite parent) {
         Composite composite = (Composite) super.createDialogArea(parent);
-        composite.setLayout(new TableWrapLayout());
+        composite.setLayout(new GridLayout());
         Control resultControl = AttributeControlFactory.createControl(
                 composite, result);
         if (resultControl == null) {
             Label label = new Label(composite, SWT.NONE);
             label.setText("" + result); //$NON-NLS-1$
+        } else {
+            resultControl.setLayoutData(new GridData(GridData.FILL_BOTH));
         }
         return composite;
     }
