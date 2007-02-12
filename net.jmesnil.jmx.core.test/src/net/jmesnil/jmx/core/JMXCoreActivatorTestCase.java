@@ -68,7 +68,7 @@ public class JMXCoreActivatorTestCase extends TestCase {
 
     public void testConnectToURL() throws Exception {
         JMXCoreActivator activator = JMXCoreActivator.getDefault();
-        MBeanServerConnectionWrapper wrapper = activator.connect(correctURL, null, null);
+        MBeanServerConnectionWrapper wrapper = activator.connect(correctURL, "", "");
         assertNotNull(wrapper);
         assertNotNull(wrapper.getMBeanServerConnection());
     }
