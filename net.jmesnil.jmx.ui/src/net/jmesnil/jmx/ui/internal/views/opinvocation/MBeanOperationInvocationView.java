@@ -239,8 +239,11 @@ public class MBeanOperationInvocationView extends ViewPart implements
                             .getShell(), result);
                 }
             } catch (Exception e) {
-                JMXUIActivator.log(IStatus.ERROR, e.getCause().getMessage(), e);
                 String message = e.getLocalizedMessage();
+                if (message == null) {
+                    message = e.getClass().getName();
+                }
+                JMXUIActivator.log(IStatus.ERROR, e.getClass().getName(), e);
                 // if the exception has a cause, it is likely more interesting
                 // since it may be the exception thrown by the mbean
                 // implementation
