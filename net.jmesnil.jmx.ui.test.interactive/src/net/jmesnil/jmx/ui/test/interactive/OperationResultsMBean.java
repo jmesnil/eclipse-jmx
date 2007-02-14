@@ -27,7 +27,9 @@ public interface OperationResultsMBean {
     
     void voidOperation();
     
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     Collection collectionOperation();
 
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     Map mapOperation();
 }

@@ -43,6 +43,7 @@ public class OperationResults extends StandardMBean implements
         // do nothing
     }
     
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     public Collection collectionOperation() {
         Collection<String> coll = new ArrayList<String>();
         coll.add("first"); //$NON-NLS-1$
