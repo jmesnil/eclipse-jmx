@@ -240,6 +240,10 @@ public class MBeanExplorer extends ViewPart {
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
     public void setMBeanServerConnection(MBeanServerConnectionWrapper connection) {
+        if (connection == null) {
+            viewer.setInput(null);
+            return;
+        }
         try {
             Set beanInfo = connection.getMBeanServerConnection().queryNames(
                     new ObjectName("*:*"), null); //$NON-NLS-1$
