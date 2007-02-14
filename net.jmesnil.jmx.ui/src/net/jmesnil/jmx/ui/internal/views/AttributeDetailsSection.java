@@ -166,7 +166,7 @@ public class AttributeDetailsSection {
                     Messages.MBeanAttributeValue_Warning, attrInfo.getName()),
                     t);
             Label errorLabel = toolkit.createLabel(valueComposite,
-                    "Unavailable");
+                    Messages.unavailable);
             errorLabel.setForeground(valueComposite.getDisplay()
                     .getSystemColor(SWT.COLOR_RED));
             errorLabel
