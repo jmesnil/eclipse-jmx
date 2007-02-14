@@ -148,7 +148,7 @@ public class MBeanServerConnectDialog extends SelectionDialog {
         label.setText("JMX URL"); //$NON-NLS-1$
         // 2 URL text entry
         urlText = new Text(fieldComposite, SWT.BORDER);
-        urlText.setText("service:jmx:"); //$NON-NLS-1$
+        urlText.setText("service:jmx:rmi:"); //$NON-NLS-1$
         data = new GridData(GridData.FILL_HORIZONTAL);
         data.widthHint = convertWidthInCharsToPixels(25);
         urlText.setLayoutData(data);
