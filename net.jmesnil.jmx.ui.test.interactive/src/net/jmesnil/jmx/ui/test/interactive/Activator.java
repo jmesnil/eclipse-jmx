@@ -61,6 +61,8 @@ public class Activator extends AbstractUIPlugin implements IStartup {
                 .getInstance("net.jmesnil.test:type=ComplexType")); //$NON-NLS-1$
         mbs.registerMBean(new OperationResults(), ObjectName
                 .getInstance("net.jmesnil.test:type=OperationResults")); //$NON-NLS-1$
+        mbs.registerMBean(new Registration(), ObjectName
+                .getInstance("net.jmesnil.test:type=Registration")); //$NON-NLS-1$
         try {
             System.setProperty("java.rmi.server.randomIDs", "true"); //$NON-NLS-1$ //$NON-NLS-2$
             LocateRegistry.createRegistry(3000);
@@ -86,6 +88,8 @@ public class Activator extends AbstractUIPlugin implements IStartup {
                 .getInstance("net.jmesnil.test:type=ComplexType")); //$NON-NLS-1$
         mbs.unregisterMBean(ObjectName
                 .getInstance("net.jmesnil.test:type=OperationResults")); //$NON-NLS-1$
+        mbs.unregisterMBean(ObjectName
+                .getInstance("net.jmesnil.test:type=Registration")); //$NON-NLS-1$
         cs.stop();
         super.stop(context);
     }
