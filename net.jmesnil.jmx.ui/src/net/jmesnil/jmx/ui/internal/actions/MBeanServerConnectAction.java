@@ -22,8 +22,10 @@ import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 
 public class MBeanServerConnectAction extends Action {
@@ -50,8 +52,11 @@ public class MBeanServerConnectAction extends Action {
                     .getDefault().connect(url, userName, password);
             view.setMBeanServerConnection(connection);
         } catch (Exception e) {
-            MessageDialog.openError(view.getSite().getShell(),
-                    Messages.MBeanServerConnectAction_error, e.getMessage());
+            String message = Messages.MBeanServerConnectAction_connectionFailure;
+            ErrorDialog.openError(view.getSite().getShell(),
+                    Messages.MBeanServerConnectAction_error, message,
+                    new Status(IStatus.ERROR, JMXCoreActivator.PLUGIN_ID,
+                            IStatus.OK, message, e));
         }
     }
 }

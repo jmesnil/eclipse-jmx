@@ -101,6 +101,8 @@ public class Messages extends NLS {
 
     public static String MBeanOperationInvocationView_success;
 
+    public static String MBeanServerConnectAction_connectionFailure;
+
     public static String MBeanServerConnectAction_error;
 
     public static String MBeanServerConnectDialog_advancedTab;
