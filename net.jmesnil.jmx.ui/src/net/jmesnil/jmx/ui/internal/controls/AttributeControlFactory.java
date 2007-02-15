@@ -32,8 +32,11 @@ import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -58,7 +61,7 @@ public class AttributeControlFactory {
             final Object value, final IWritableAttributeHandler handler) {
         if (value != null && value instanceof Boolean) {
             return createBooleanControl(parent, toolkit, writable, value,
-                    null);
+                    handler);
         }
         if (value != null && value.getClass().isArray()) {
             final Table table = createTable(parent, toolkit, false, true);
@@ -85,7 +88,8 @@ public class AttributeControlFactory {
             fillMap(table, (Map) value);
             return table;
         }
-        return createText(parent, toolkit, writable, value.getClass().getSimpleName(), value, null);
+        return createText(parent, toolkit, writable, value.getClass()
+                .getCanonicalName(), value, handler);
     }
 
     private static Control createText(final Composite parent,
@@ -119,18 +123,24 @@ public class AttributeControlFactory {
             text.setForeground(parent.getDisplay().getSystemColor(
                     SWT.COLOR_BLUE));
             if (handler != null) {
-                text.addListener(SWT.DefaultSelection, new Listener() {
-                    public void handleEvent(Event event) {
+                text.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent event) {
+                        if (event.keyCode != SWT.Selection) {
+                            return;
+                        }
                         try {
                             Object newValue = MBeanUtils.getValue(text
                                     .getText(), type);
                             handler.write(newValue);
-                        } catch (Exception e) {
-                            MessageDialog
+                        } catch (Throwable t) {
+                            IStatus errorStatus = new Status(IStatus.ERROR,
+                                    JMXUIActivator.PLUGIN_ID, t.getMessage(), t);
+                            ErrorDialog
                                     .openError(
                                             parent.getShell(),
                                             Messages.AttributeDetailsSection_errorTitle,
-                                            e.getLocalizedMessage());
+                                            t.getMessage(), errorStatus);
                         }
                     }
                 });
