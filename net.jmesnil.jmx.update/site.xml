@@ -3,7 +3,7 @@
    <feature url="features/net.jmesnil.jmx_0.1.1.200702152148.jar" id="net.jmesnil.jmx" version="0.1.1.200702152148">
       <category name="JMX Console"/>
    </feature>
-   <feature url="features/net.jmesnil.jmx_0.1.0.200702122110.jar" id="net.jmesnil.jmx" version="0.1.0.200702122110">
+   <feature url="features/net.jmesnil.jmx_0.1.0.200702122110.jar" id="net.jmesnil.jmx" version="0.1.0">
       <category name="JMX Console"/>
    </feature>
    <category-def name="JMX Console" label="net.jmesnil.jmx">
