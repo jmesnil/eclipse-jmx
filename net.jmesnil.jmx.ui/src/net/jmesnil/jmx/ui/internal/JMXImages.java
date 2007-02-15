@@ -57,6 +57,9 @@ public class JMXImages {
 
     public static final String IMG_OBJS_INTERFACE = NAME_PREFIX + "int_obj.gif"; //$NON-NLS-1$
 
+    public static final String IMG_OBJS_METHOD = NAME_PREFIX
+    + "jmeth_obj.gif"; //$NON-NLS-1$
+
     public static final String IMG_OBJS_PACKAGE = NAME_PREFIX
             + "package_obj.gif"; //$NON-NLS-1$
 
@@ -81,6 +84,9 @@ public class JMXImages {
 
     public static final ImageDescriptor DESC_OBJS_INTERFACE = createManagedFromKey(
             T_OBJ, IMG_OBJS_INTERFACE);
+
+    public static final ImageDescriptor DESC_OBJS_METHOD = createManagedFromKey(
+        T_OBJ, IMG_OBJS_METHOD);
 
     public static final ImageDescriptor DESC_OBJS_LIBRARY = createManagedFromKey(
             T_OBJ, IMG_OBJS_LIBRARY);

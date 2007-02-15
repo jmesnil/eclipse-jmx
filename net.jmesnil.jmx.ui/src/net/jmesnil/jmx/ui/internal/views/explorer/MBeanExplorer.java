@@ -192,7 +192,7 @@ public class MBeanExplorer extends ViewPart {
                 return JMXImages.get(JMXImages.IMG_OBJS_LIBRARY);
             }
             if (obj instanceof ObjectNameNode) {
-                return JMXImages.get(JMXImages.IMG_OBJS_INTERFACE);
+                return JMXImages.get(JMXImages.IMG_OBJS_METHOD);
             }
             if (obj instanceof PropertyNode) {
                 return JMXImages.get(JMXImages.IMG_OBJS_PACKAGE);
