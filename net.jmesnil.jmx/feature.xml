@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="net.jmesnil.jmx"
+      label="%featureName"
+      version="0.1.1.qualifier"
+      provider-name="%featureProvider">
+
+   <description url="http://code.google.com/p/eclipse-jmx/">
+      eclipse-jmx is a JMX console which is used to manage Java applications through JMX and its RMI Connector.
+eclipse-jmx can be run from the Eclipse IDE.
+   </description>
+
+   <copyright>
+      Copyright (c) 2006 Jeff Mesnil, http://jmesnil.net
+   </copyright>
+
+   <license url="http://www.apache.org/licenses/LICENSE-2.0">
+      Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and limitations under the License.
+   </license>
+
+   <url>
+      <discovery label="Project Home Page" url="http://code.google.com/p/eclipse-jmx/"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.ui.forms"/>
+   </requires>
+
+   <plugin
+         id="net.jmesnil.jmx.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.jmesnil.jmx.resources"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.jmesnil.jmx.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
