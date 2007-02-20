@@ -18,6 +18,7 @@ package net.jmesnil.jmx.resources;
 
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
+import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -71,6 +72,17 @@ public class MBeanInfoWrapper {
             opWrappers[i] = new MBeanOperationInfoWrapper(opInfo, on, mbsc);
         }
         return opWrappers;
+    }
+
+    public MBeanNotificationInfoWrapper[] getMBeanNotificationInfoWrappers() {
+        MBeanNotificationInfo[] notifications = info.getNotifications();
+        MBeanNotificationInfoWrapper[] notificationWrappers = new MBeanNotificationInfoWrapper[notifications.length];
+        for (int i = 0; i < notifications.length; i++) {
+            MBeanNotificationInfo opInfo = notifications[i];
+            notificationWrappers[i] = new MBeanNotificationInfoWrapper(opInfo,
+                    on, mbsc);
+        }
+        return notificationWrappers;
     }
 
     public MBeanFeatureInfoWrapper[] getMBeanFeatureInfos() {
