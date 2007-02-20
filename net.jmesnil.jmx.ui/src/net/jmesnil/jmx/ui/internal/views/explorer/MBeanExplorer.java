@@ -48,9 +48,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -220,6 +224,19 @@ public class MBeanExplorer extends ViewPart {
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
         viewer.setContentProvider(new ViewContentProvider());
         viewer.setLabelProvider(new ViewLabelProvider());
+        viewer.addDoubleClickListener(new IDoubleClickListener() {
+            public void doubleClick(DoubleClickEvent event) {
+                ISelection selection = event.getSelection();
+                StructuredSelection structured = (StructuredSelection) selection;
+                Object element = structured.getFirstElement();
+                boolean expanded = viewer.getExpandedState(element);
+                if (expanded) {
+                    viewer.collapseToLevel(element, 1);
+                } else {
+                    viewer.expandToLevel(element, 1);
+                }
+            }
+        });
         getViewSite().setSelectionProvider(viewer);
     }
     
