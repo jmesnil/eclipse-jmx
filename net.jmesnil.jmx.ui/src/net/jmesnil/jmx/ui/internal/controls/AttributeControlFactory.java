@@ -135,7 +135,7 @@ public class AttributeControlFactory {
                             handler.write(newValue);
                         } catch (Throwable t) {
                             IStatus errorStatus = new Status(IStatus.ERROR,
-                                    JMXUIActivator.PLUGIN_ID, t.getMessage(), t);
+                                    JMXUIActivator.PLUGIN_ID, IStatus.OK, t.getMessage(), t);
                             ErrorDialog
                                     .openError(
                                             parent.getShell(),
