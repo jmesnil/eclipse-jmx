@@ -15,12 +15,11 @@ projects = [
   "net.jmesnil.jmx.ui.test.interactive"]
 
 repository = "https://eclipse-jmx.googlecode.com/svn"
-trunk_repository = "#{repository}/trunk"
-tag_repository = "#{repository}/tags/#{tag}"
+tag_url = "#{repository}/tags/#{tag}"
 
 username = "jmesnil"
 
-mkdir_tag_cmd = "svn mkdir --username=#{username} -m '* creating tag #{tag}' #{tag_repository}"
+mkdir_tag_cmd = "svn mkdir --username=#{username} -m '* creating tag #{tag}' #{tag_url}"
 puts mkdir_tag_cmd
 system mkdir_tag_cmd
 
@@ -29,7 +28,7 @@ FileUtils.cd workspace_dir
 
 tag_msg = "'* tagged as #{tag}'"
 projects.each do | project |
-  tag_cmd = "svn copy -m #{tag_msg} #{project} #{tag_repository}/#{project}"
+  tag_cmd = "svn copy -m #{tag_msg} #{project} #{tag_url}/#{project}"
   puts tag_cmd
   system tag_cmd
 end
