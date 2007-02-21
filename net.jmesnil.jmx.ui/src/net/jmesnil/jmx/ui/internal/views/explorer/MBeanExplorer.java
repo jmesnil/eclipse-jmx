@@ -64,6 +64,8 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.ViewPart;
 
 public class MBeanExplorer extends ViewPart {
@@ -113,10 +115,10 @@ public class MBeanExplorer extends ViewPart {
         }
 
         public Object getParent(Object child) {
-            // if (child instanceof Node) {
-            // Node node = (Node) child;
-            // return node.getParent();
-            // }
+            if (child instanceof Node) {
+                Node node = (Node) child;
+                return node.getParent();
+            }
             return null;
         }
 
@@ -221,7 +223,9 @@ public class MBeanExplorer extends ViewPart {
     public void createPartControl(Composite parent) {
         makeActions();
         fillActionBars();
-        viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+        FilteredTree filter = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL
+                | SWT.V_SCROLL, new PatternFilter());
+        viewer = filter.getViewer();
         viewer.setContentProvider(new ViewContentProvider());
         viewer.setLabelProvider(new ViewLabelProvider());
         viewer.addDoubleClickListener(new IDoubleClickListener() {
@@ -239,7 +243,7 @@ public class MBeanExplorer extends ViewPart {
         });
         getViewSite().setSelectionProvider(viewer);
     }
-    
+
     @Override
     public void dispose() {
         removeRegistrationListener();
@@ -295,7 +299,7 @@ public class MBeanExplorer extends ViewPart {
                     Object handback) {
                 if (notifcation instanceof MBeanServerNotification) {
                     try {
-                        MBeanServerConnection mbsc = (MBeanServerConnection)handback;
+                        MBeanServerConnection mbsc = (MBeanServerConnection) handback;
                         final Node root = createObjectNameTree(mbsc);
                         viewer.getControl().getDisplay().syncExec(
                                 new Runnable() {
