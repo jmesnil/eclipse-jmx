@@ -96,11 +96,11 @@ public class AttributeControlFactory {
             final Object value, final IWritableAttributeHandler handler) {
 
         final Text text;
-        int style = SWT.MULTI | SWT.WRAP;
+        int style = SWT.BORDER | SWT.MULTI | SWT.WRAP;
         if (toolkit != null) {
             text = toolkit.createText(parent, "", style); //$NON-NLS-1$
         } else {
-            text = new Text(parent, style | SWT.BORDER); //$NON-NLS-1$    
+            text = new Text(parent, style); //$NON-NLS-1$    
         }
         String attrValue = ""; //$NON-NLS-1$
         try {
