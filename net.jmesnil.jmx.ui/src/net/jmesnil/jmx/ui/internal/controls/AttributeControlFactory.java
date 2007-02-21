@@ -88,8 +88,7 @@ public class AttributeControlFactory {
             fillMap(table, (Map) value);
             return table;
         }
-        return createText(parent, toolkit, writable, value.getClass()
-                .getCanonicalName(), value, handler);
+        return createText(parent, toolkit, writable, type, value, handler);
     }
 
     private static Control createText(final Composite parent,
