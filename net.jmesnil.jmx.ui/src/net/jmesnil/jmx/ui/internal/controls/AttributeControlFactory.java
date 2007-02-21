@@ -95,13 +95,6 @@ public class AttributeControlFactory {
             FormToolkit toolkit, final boolean writable, final String type,
             final Object value, final IWritableAttributeHandler handler) {
 
-        final Text text;
-        int style = SWT.BORDER | SWT.MULTI | SWT.WRAP;
-        if (toolkit != null) {
-            text = toolkit.createText(parent, "", style); //$NON-NLS-1$
-        } else {
-            text = new Text(parent, style); //$NON-NLS-1$    
-        }
         String attrValue = ""; //$NON-NLS-1$
         try {
             attrValue = StringUtils.toString(value, true);
@@ -110,6 +103,16 @@ public class AttributeControlFactory {
                     Messages.MBeanAttributeValue_Warning, e);
             attrValue = Messages.unavailable;
         }
+        
+        int style = SWT.BORDER;
+        // fixed issue #12
+        if (value instanceof Number || value instanceof Character) {
+            style |= SWT.SINGLE;
+        } else {
+            style |= SWT.MULTI | SWT.WRAP;
+        }
+
+        final Text text = createText(parent, toolkit, style);
         text.setText(attrValue);
 
         if (!writable) {
@@ -145,6 +148,14 @@ public class AttributeControlFactory {
                 });
             }
             return text;
+        }
+    }
+
+    private static Text createText(final Composite parent, FormToolkit toolkit, int style) {
+        if (toolkit != null) {
+            return  toolkit.createText(parent, "", style); //$NON-NLS-1$
+        } else {
+            return new Text(parent, style); //$NON-NLS-1$    
         }
     }
 
