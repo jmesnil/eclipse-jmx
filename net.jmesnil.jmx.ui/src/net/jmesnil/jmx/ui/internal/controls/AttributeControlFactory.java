@@ -35,8 +35,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -47,6 +48,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 public class AttributeControlFactory {
 
@@ -54,7 +57,7 @@ public class AttributeControlFactory {
     public static Control createControl(final Composite parent, final Object value) {
         return createControl(parent, null, false, value.getClass().getSimpleName(), value, null);
     }
-        
+
     @SuppressWarnings("unchecked")//$NON-NLS-1$
     public static Control createControl(final Composite parent, FormToolkit toolkit,
             final boolean writable, final String type,
@@ -103,7 +106,7 @@ public class AttributeControlFactory {
                     Messages.MBeanAttributeValue_Warning, e);
             attrValue = Messages.unavailable;
         }
-        
+
         int style = SWT.BORDER;
         // fixed issue #12
         if (value instanceof Number || value instanceof Character) {
@@ -112,32 +115,47 @@ public class AttributeControlFactory {
             style |= SWT.MULTI | SWT.WRAP;
         }
 
-        final Text text = createText(parent, toolkit, style);
-        text.setText(attrValue);
-
         if (!writable) {
+            final Text text = createText(parent, toolkit, style);
+            text.setText(attrValue);
             text.setEditable(false);
             text.setForeground(parent.getDisplay().getSystemColor(
                     SWT.COLOR_BLACK));
             return text;
         } else {
+            Composite comp = toolkit.createComposite(parent);
+            comp.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,
+                    TableWrapData.FILL_GRAB));
+            TableWrapLayout twlayout = new TableWrapLayout();
+            twlayout.numColumns = 2;
+            twlayout.makeColumnsEqualWidth = false;
+            comp.setLayout(twlayout);
+
+            final Text text = createText(comp, toolkit, style);
+            text.setText(attrValue);
             text.setEditable(true);
             text.setForeground(parent.getDisplay().getSystemColor(
                     SWT.COLOR_BLUE));
             if (handler != null) {
-                text.addKeyListener(new KeyAdapter() {
-                    @Override
-                    public void keyPressed(KeyEvent event) {
-                        if (event.keyCode != SWT.Selection) {
-                            return;
-                        }
+                Button updateButton = toolkit.createButton(comp,
+                        Messages.AttributeControlFactory_updateButtonTitle,
+                        SWT.PUSH);
+                updateButton.addSelectionListener(new SelectionListener() {
+
+                    public void widgetDefaultSelected(SelectionEvent event) {
+                        widgetSelected(event);
+                    }
+
+                    public void widgetSelected(SelectionEvent event) {
                         try {
                             Object newValue = MBeanUtils.getValue(text
                                     .getText(), type);
                             handler.write(newValue);
+                            text.setText(newValue.toString());
                         } catch (Throwable t) {
                             IStatus errorStatus = new Status(IStatus.ERROR,
-                                    JMXUIActivator.PLUGIN_ID, IStatus.OK, t.getMessage(), t);
+                                    JMXUIActivator.PLUGIN_ID, IStatus.OK, t
+                                            .getMessage(), t);
                             ErrorDialog
                                     .openError(
                                             parent.getShell(),
@@ -151,9 +169,10 @@ public class AttributeControlFactory {
         }
     }
 
-    private static Text createText(final Composite parent, FormToolkit toolkit, int style) {
+    private static Text createText(final Composite parent, FormToolkit toolkit,
+            int style) {
         if (toolkit != null) {
-            return  toolkit.createText(parent, "", style); //$NON-NLS-1$
+            return toolkit.createText(parent, "", style); //$NON-NLS-1$
         } else {
             return new Text(parent, style); //$NON-NLS-1$    
         }
