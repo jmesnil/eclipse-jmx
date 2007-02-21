@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="net.jmesnil.jmx"
+      id="net.jmesnil.jmx.feature"
       label="%featureName"
       version="0.1.2.qualifier"
       provider-name="%featureProvider">
