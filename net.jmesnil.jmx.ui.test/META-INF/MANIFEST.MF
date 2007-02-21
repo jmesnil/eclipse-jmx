@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JMX UI Test Fragment
+Bundle-SymbolicName: net.jmesnil.jmx.ui.test
+Bundle-Version: 0.1.0.qualifier
+Fragment-Host: net.jmesnil.jmx.ui
+Require-Bundle: org.junit
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Vendor: Jeff Mesnil
