@@ -55,6 +55,7 @@ public class PropertyNode extends Node {
 		int result = 1;
 		result = PRIME * result + ((key == null) ? 0 : key.hashCode());
 		result = PRIME * result + ((value == null) ? 0 : value.hashCode());
+        result = PRIME * result + ((parent == null) ? 0 : parent.hashCode());
 		return result;
 	}
 
@@ -77,6 +78,11 @@ public class PropertyNode extends Node {
 				return false;
 		} else if (!value.equals(other.value))
 			return false;
+        if (parent == null) {
+            if (other.parent != null)
+                return false;
+        } else if (!parent.equals(other.parent))
+            return false;
 		return true;
 	}
 
