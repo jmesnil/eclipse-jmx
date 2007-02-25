@@ -223,8 +223,39 @@ public class MBeanExplorer extends ViewPart {
     public void createPartControl(Composite parent) {
         makeActions();
         fillActionBars();
-        FilteredTree filter = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL
-                | SWT.V_SCROLL, new PatternFilter());
+        PatternFilter patternFilter = new PatternFilter() {
+            protected boolean isLeafMatch(Viewer viewer, Object element) {
+                if (element instanceof PropertyNode) {
+                    PropertyNode propNode = (PropertyNode) element;
+                    return wordMatches(propNode.getKey() + "=" //$NON-NLS-1$
+                            + propNode.getValue());
+                }
+                return super.isLeafMatch(viewer, element);
+            }
+
+            public boolean isElementVisible(Viewer viewer, Object element) {
+                return matchesObjectName((Node) element);
+            }
+
+            private boolean matchesObjectName(Node node) {
+                if (node instanceof ObjectNameNode) {
+                    ObjectNameNode onNode = (ObjectNameNode) node;
+                    return wordMatches(onNode.getObjectName().toString());
+                }
+                boolean hasMatchingChildren = false;
+                Node[] children = node.getChildren();
+                for (int i = 0; i < children.length; i++) {
+                    Node child = children[i];
+                    hasMatchingChildren |= matchesObjectName(child);
+                }
+                return hasMatchingChildren;
+            }
+        };
+        patternFilter.setIncludeLeadingWildcard(true);
+
+        final FilteredTree filter = new FilteredTree(parent, SWT.MULTI
+                | SWT.H_SCROLL | SWT.V_SCROLL, patternFilter);
+
         viewer = filter.getViewer();
         viewer.setContentProvider(new ViewContentProvider());
         viewer.setLabelProvider(new ViewLabelProvider());
