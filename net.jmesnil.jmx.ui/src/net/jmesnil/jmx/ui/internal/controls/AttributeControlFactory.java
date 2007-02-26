@@ -37,6 +37,8 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -48,19 +50,19 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.TableWrapData;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 public class AttributeControlFactory {
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
-    public static Control createControl(final Composite parent, final Object value) {
-        return createControl(parent, null, false, value.getClass().getSimpleName(), value, null);
+    public static Control createControl(final Composite parent,
+            final Object value) {
+        return createControl(parent, null, false, value.getClass()
+                .getSimpleName(), value, null);
     }
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
-    public static Control createControl(final Composite parent, FormToolkit toolkit,
-            final boolean writable, final String type,
+    public static Control createControl(final Composite parent,
+            FormToolkit toolkit, final boolean writable, final String type,
             final Object value, final IWritableAttributeHandler handler) {
         if (value != null && value instanceof Boolean) {
             return createBooleanControl(parent, toolkit, writable, value,
@@ -116,37 +118,34 @@ public class AttributeControlFactory {
         }
 
         if (!writable) {
-            final Text text = createText(parent, toolkit, style);
+            final Text text = createTextControl(parent, toolkit, style);
             text.setText(attrValue);
             text.setEditable(false);
             text.setForeground(parent.getDisplay().getSystemColor(
                     SWT.COLOR_BLACK));
             return text;
         } else {
-            Composite comp = toolkit.createComposite(parent);
-            comp.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,
-                    TableWrapData.FILL_GRAB));
-            TableWrapLayout twlayout = new TableWrapLayout();
-            twlayout.numColumns = 2;
-            twlayout.makeColumnsEqualWidth = false;
-            comp.setLayout(twlayout);
+            // interpose a composite to contain both
+            // the text control and an "update" button
+            Composite composite = toolkit.createComposite(parent);
+            composite
+                    .setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            GridLayout layout = new GridLayout(2, false);
+            composite.setLayout(layout);
 
-            final Text text = createText(comp, toolkit, style);
+            final Text text = createTextControl(composite, toolkit, style);
             text.setText(attrValue);
             text.setEditable(true);
             text.setForeground(parent.getDisplay().getSystemColor(
                     SWT.COLOR_BLUE));
             if (handler != null) {
-                Button updateButton = toolkit.createButton(comp,
-                        Messages.AttributeControlFactory_updateButtonTitle,
-                        SWT.PUSH);
+                Button updateButton = toolkit.createButton(composite,
+                    Messages.AttributeControlFactory_updateButtonTitle, SWT.PUSH);
+                updateButton.setLayoutData(new GridData(SWT.END, SWT.TOP,
+                        false, false));
                 updateButton.addSelectionListener(new SelectionListener() {
 
                     public void widgetDefaultSelected(SelectionEvent event) {
-                        widgetSelected(event);
-                    }
-
-                    public void widgetSelected(SelectionEvent event) {
                         try {
                             Object newValue = MBeanUtils.getValue(text
                                     .getText(), type);
@@ -163,19 +162,26 @@ public class AttributeControlFactory {
                                             t.getMessage(), errorStatus);
                         }
                     }
+
+                    public void widgetSelected(SelectionEvent event) {
+                        widgetDefaultSelected(event);
+                    }
+
                 });
             }
             return text;
         }
     }
 
-    private static Text createText(final Composite parent, FormToolkit toolkit,
-            int style) {
+    private static Text createTextControl(final Composite parent,
+            FormToolkit toolkit, int style) {
+        final Text text;
         if (toolkit != null) {
-            return toolkit.createText(parent, "", style); //$NON-NLS-1$
+            text = toolkit.createText(parent, "", style); //$NON-NLS-1$
         } else {
-            return new Text(parent, style); //$NON-NLS-1$    
+            text = new Text(parent, style); //$NON-NLS-1$    
         }
+        return text;
     }
 
     private static Control createBooleanControl(final Composite parent,
@@ -217,15 +223,21 @@ public class AttributeControlFactory {
         return combo;
     }
 
-    private static Table createTable(Composite parent, FormToolkit toolkit, boolean visibleHeader, boolean visibleLines) {
-        int style = SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL;
+    private static Table createTable(Composite parent, FormToolkit toolkit,
+            boolean visibleHeader, boolean visibleLines) {
+        int style = SWT.SINGLE | SWT.FULL_SELECTION;
         Table table = null;
         if (toolkit != null) {
             table = toolkit.createTable(parent, style);
-            toolkit.paintBordersFor(table);
+            toolkit.paintBordersFor(parent);
         } else {
+            style |= SWT.BORDER;
             table = new Table(parent, style);
         }
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        gd.heightHint = 20;
+        gd.widthHint = 100;
+        table.setLayoutData(gd);
         table.setHeaderVisible(visibleHeader);
         table.setLinesVisible(visibleLines);
         return table;
@@ -234,7 +246,7 @@ public class AttributeControlFactory {
     private static void fillArray(Table table, Object arrayObj) {
         TableColumn columnName = new TableColumn(table, SWT.NONE);
         columnName.setText(Messages.name);
-        columnName.setWidth(150);
+        columnName.setWidth(400);
         fillArrayItems(table, arrayObj);
     }
 
@@ -251,7 +263,7 @@ public class AttributeControlFactory {
     private static void fillCollection(final Table table, Collection collection) {
         TableColumn columnName = new TableColumn(table, SWT.NONE);
         columnName.setText(Messages.name);
-        columnName.setWidth(150);
+        columnName.setWidth(400);
         Iterator iter = collection.iterator();
         while (iter.hasNext()) {
             Object element = (Object) iter.next();
@@ -267,7 +279,7 @@ public class AttributeControlFactory {
         keyColumn.setWidth(150);
         TableColumn valueColumn = new TableColumn(table, SWT.NONE);
         valueColumn.setText(Messages.value);
-        valueColumn.setWidth(150);
+        valueColumn.setWidth(250);
         Iterator iter = map.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry entry = (Map.Entry) iter.next();
@@ -278,14 +290,13 @@ public class AttributeControlFactory {
     }
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
-    private static void fillCompositeData(final Table table,
-            CompositeData data) {
+    private static void fillCompositeData(final Table table, CompositeData data) {
         TableColumn keyColumn = new TableColumn(table, SWT.NONE);
         keyColumn.setText(Messages.key);
         keyColumn.setWidth(150);
         TableColumn valueColumn = new TableColumn(table, SWT.NONE);
         valueColumn.setText(Messages.value);
-        valueColumn.setWidth(150);
+        valueColumn.setWidth(250);
         Iterator iter = data.getCompositeType().keySet().iterator();
         while (iter.hasNext()) {
             String key = (String) iter.next();
@@ -296,8 +307,7 @@ public class AttributeControlFactory {
     }
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
-    private static void fillTabularData(final Table table,
-            TabularData data) {
+    private static void fillTabularData(final Table table, TabularData data) {
         Set keySet = data.getTabularType().getRowType().keySet();
         Iterator keyIter = keySet.iterator();
         while (keyIter.hasNext()) {
@@ -321,5 +331,4 @@ public class AttributeControlFactory {
             }
         }
     }
-
 }

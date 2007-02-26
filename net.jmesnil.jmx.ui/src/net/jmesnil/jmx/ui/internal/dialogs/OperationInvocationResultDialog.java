@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package net.jmesnil.jmx.ui.internal.views.opinvocation;
+package net.jmesnil.jmx.ui.internal.dialogs;
 
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.controls.AttributeControlFactory;
@@ -28,11 +28,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public class InvocationResultDialog extends Dialog {
+public class OperationInvocationResultDialog extends Dialog {
 
     private Object result;
 
-    public InvocationResultDialog(Shell parentShell, Object result) {
+    public OperationInvocationResultDialog(Shell parentShell, Object result) {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         this.result = result;
@@ -60,7 +60,7 @@ public class InvocationResultDialog extends Dialog {
     }
 
     public static void open(Shell shell, Object result) {
-        Dialog dialog = new InvocationResultDialog(shell, result);
+        Dialog dialog = new OperationInvocationResultDialog(shell, result);
         dialog.open();
     }
 }

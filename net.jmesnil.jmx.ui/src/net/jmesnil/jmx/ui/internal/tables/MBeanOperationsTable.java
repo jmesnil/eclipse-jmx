@@ -16,7 +16,7 @@
  * 
  *  Code was inspired from org.eclipse.equinox.client source, (c) 2006 IBM 
  */
-package net.jmesnil.jmx.ui.internal.views;
+package net.jmesnil.jmx.ui.internal.tables;
 
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
@@ -26,26 +26,22 @@ import net.jmesnil.jmx.resources.MBeanOperationInfoWrapper;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
-import net.jmesnil.jmx.ui.internal.views.opinvocation.MBeanOperationInvocationView;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.TableWrapData;
 
 public class MBeanOperationsTable {
 
@@ -157,27 +153,15 @@ public class MBeanOperationsTable {
     private TableViewer viewer;
 
     public MBeanOperationsTable(Composite parent, final FormToolkit toolkit) {
-        final Table operationsTable = toolkit.createTable(parent, SWT.BORDER
-                | SWT.SINGLE | SWT.FLAT | SWT.FULL_SELECTION | SWT.V_SCROLL
-                | SWT.H_SCROLL);
+        final Table operationsTable = toolkit.createTable(parent, SWT.FULL_SELECTION);
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        gd.heightHint = 20;
+        gd.widthHint = 100;
+        operationsTable.setLayoutData(gd);
+        toolkit.paintBordersFor(parent);
         createColumns(operationsTable);
-        toolkit.paintBordersFor(operationsTable);
-        TableWrapData twdata = new TableWrapData(TableWrapData.FILL_GRAB);
-        twdata.colspan = 2;
-        operationsTable.setLayoutData(twdata);
         operationsTable.setLinesVisible(true);
         operationsTable.setHeaderVisible(true);
-        operationsTable.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                if (e.item == null || e.item.getData() == null)
-                    return;
-                MBeanOperationInvocationView invocationView = ViewUtil
-                        .getMBeanOperationInvocationView();
-                invocationView.selectionChanged(null, new StructuredSelection(
-                        e.item.getData()));
-            }
-        });
 
         viewer = new TableViewer(operationsTable);
         viewer.setContentProvider(new MBeanOpContentProvider());
@@ -233,10 +217,14 @@ public class MBeanOperationsTable {
         opTable.setSortDirection(SWT.UP);
     }
 
-    protected void setInput(MBeanInfoWrapper input) {
+    public void setInput(MBeanInfoWrapper input) {
         if (input == null || input.getMBeanInfo() == null)
             viewer.setInput(null);
         else
             viewer.setInput(input.getMBeanOperationInfoWrappers());
+    }
+    
+    public Viewer getViewer() {
+        return viewer;
     }
 }

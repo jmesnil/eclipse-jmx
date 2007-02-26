@@ -1,6 +1,6 @@
 /**
  * Eclipse JMX Console
- * Copyright (C) 2006 Jeff Mesnil
+ * Copyright (C) 2007 Jeff Mesnil
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. 
- * 
- *  Code was inspired from org.eclipse.equinox.client source, (c) 2006 IBM 
  */
-package net.jmesnil.jmx.ui.internal.views.opinvocation;
+package net.jmesnil.jmx.ui.internal.editors;
 
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
@@ -28,7 +26,7 @@ import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.MBeanUtils;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
-import net.jmesnil.jmx.ui.internal.views.ViewUtil;
+import net.jmesnil.jmx.ui.internal.dialogs.OperationInvocationResultDialog;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -42,47 +40,52 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.forms.ManagedForm;
+import org.eclipse.ui.forms.AbstractFormPart;
+import org.eclipse.ui.forms.IDetailsPage;
+import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
-public class MBeanOperationInvocationView extends ViewPart implements
-        ISelectionListener {
+public class OperationDetails extends AbstractFormPart implements IDetailsPage {
 
-    public static final String ID = "net.jmesnil.jmx.ui.internal.views.opinvocation.MBeanOperationInvocationView"; //$NON-NLS-1$
+    private FormToolkit toolkit;
 
-    private Composite invocationComposite;
-
-    private ManagedForm managedForm;
+    private Composite container;
 
     private MBeanOperationInfoWrapper opInfoWrapper;
 
-    private Composite parentComp;
+    private Section section;
 
-    @Override
-    public void createPartControl(Composite parent) {
-        parentComp = parent;
-        getSite().getPage().addSelectionListener(this);
+    public OperationDetails(IFormPart masterSection) {
     }
 
-    @Override
-    public void dispose() {
-        if (managedForm != null)
-            managedForm.dispose();
-        getSite().getPage().removePostSelectionListener(this);
-        super.dispose();
+    public void createContents(Composite parent) {
+        TableWrapLayout layout = new TableWrapLayout();
+        parent.setLayout(layout);
+
+        toolkit = getManagedForm().getToolkit();
+
+        section = toolkit.createSection(parent, Section.TITLE_BAR | SWT.WRAP
+                | Section.DESCRIPTION);
+        section.marginWidth = 10;
+        section.setText(Messages.OperationDetails_title);
+        section.setDescription(""); //$NON-NLS-1$
+        section.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+
+        container = toolkit.createComposite(section);
+        section.setClient(container);
+        GridLayout glayout = new GridLayout();
+        glayout.marginWidth = glayout.marginHeight = 0;
+        glayout.numColumns = 2;
+        glayout.makeColumnsEqualWidth = false;
+        container.setLayout(glayout);
     }
 
-    @Override
-    public void setFocus() {
-        if (managedForm != null)
-            managedForm.setFocus();
-    }
-
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+    public void selectionChanged(IFormPart part, ISelection selection) {
         if (!(selection instanceof IStructuredSelection))
             return;
 
@@ -108,9 +111,9 @@ public class MBeanOperationInvocationView extends ViewPart implements
     }
 
     protected void drawInvocationDetails(MBeanOperationInfoWrapper wrapper) {
-        if (parentComp != null && !parentComp.isDisposed()) {
+        if (container != null && !container.isDisposed()) {
             // remove any controls created from prior selections
-            Control[] childs = parentComp.getChildren();
+            Control[] childs = container.getChildren();
             if (childs.length > 0) {
                 for (int i = 0; i < childs.length; i++) {
                     childs[i].dispose();
@@ -121,64 +124,52 @@ public class MBeanOperationInvocationView extends ViewPart implements
             return;
         }
         MBeanOperationInfo opInfo = wrapper.getMBeanOperationInfo();
-        if (managedForm != null) {
-            managedForm.dispose();
-        }
-        managedForm = new ManagedForm(parentComp);
-        Composite body = managedForm.getForm().getBody();
-        body.setLayout(new GridLayout());
-        body.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        invocationComposite = ViewUtil.createSection(
-                Messages.MBeanOperationInvocationView_invocationTitle, null,
-                managedForm, body, 1, true, false);
-
-        FormToolkit toolkit = managedForm.getToolkit();
         String desc = opInfo.getDescription();
-        // do not display the description if it is set to the operation name
-        if (desc != null && !desc.equals(opInfo.getName())) {
-            Composite c = toolkit
-                    .createComposite(invocationComposite, SWT.NONE);
-            c.setLayout(new GridLayout());
-            toolkit.createLabel(c, desc);
-        }
+        section.setDescription(desc);
+
         // composite for method signature [ return type | method button | ( |
-        // Composite(1..n parameters) |�) ]
-        Composite c = toolkit.createComposite(invocationComposite, SWT.NONE);
+        // Composite(1..n parameters) | ) ]
+        Composite c = toolkit.createComposite(container, SWT.NONE);
         c.setLayout(new GridLayout(5, false));
         // return type
-        toolkit.createLabel(c, opInfo.getReturnType() != null ? StringUtils
-                .toString(opInfo.getReturnType()) : "void"); //$NON-NLS-1$
+        Label returnTypeLabel = toolkit.createLabel(c,
+                opInfo.getReturnType() != null ? StringUtils.toString(opInfo
+                        .getReturnType()) : "void"); //$NON-NLS-1$
+        returnTypeLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER,
+                false, false));
         // method name
         InvokeOperationButton invocationButton = new InvokeOperationButton(c,
                 SWT.PUSH);
-        toolkit.createLabel(c, "("); //$NON-NLS-1$
+        Label leftParenthesis = toolkit.createLabel(c, "("); //$NON-NLS-1$
+        leftParenthesis.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER,
+                false, false));
+
         // parameters
         final MBeanParameterInfo[] params = opInfo.getSignature();
         Text[] textParams = null;
         if (params.length > 0) {
             Composite paramsComposite = toolkit.createComposite(c, SWT.NONE);
-            paramsComposite.setLayout(new GridLayout(
-                    params.length + 1 /* button */, false));
+            paramsComposite.setLayout(new GridLayout(1, false));
+            paramsComposite.setLayoutData(new GridData(SWT.BEGINNING, SWT.BOTTOM,
+                    false, false));
             textParams = new Text[params.length];
             for (int j = 0; j < params.length; j++) {
-                if (j > 0) {
-                    toolkit.createLabel(paramsComposite, ", "); //$NON-NLS-1$
-                }
                 MBeanParameterInfo param = params[j];
                 textParams[j] = new Text(paramsComposite, SWT.SINGLE
                         | SWT.BORDER);
                 textParams[j].setText(StringUtils.toString(param.getType()));
-                textParams[j].setLayoutData(new GridData(
-                        GridData.GRAB_HORIZONTAL
-                                | GridData.HORIZONTAL_ALIGN_FILL));
+                textParams[j].setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM,
+                        true, true));
             }
             paramsComposite.pack();
         }
-        toolkit.createLabel(c, ")"); //$NON-NLS-1$
+        Label rightParenthesis = toolkit.createLabel(c, ")"); //$NON-NLS-1$
+        rightParenthesis.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER,
+                false, false));
+
         invocationButton.setTextParams(textParams);
-        invocationComposite.pack();
-        parentComp.layout();
+        container.pack();
+        container.layout();
     }
 
     private class InvokeOperationButton extends SelectionAdapter {
@@ -188,9 +179,11 @@ public class MBeanOperationInvocationView extends ViewPart implements
         private Button button;
 
         public InvokeOperationButton(Composite parent, int style) {
-            button = managedForm.getToolkit().createButton(parent,
-                    opInfoWrapper.getMBeanOperationInfo().getName(), style);
+            button = toolkit.createButton(parent, opInfoWrapper
+                    .getMBeanOperationInfo().getName(), style);
             button.addSelectionListener(this);
+            button.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
+                    false));
         }
 
         void setTextParams(Text[] textParams) {
@@ -229,14 +222,12 @@ public class MBeanOperationInvocationView extends ViewPart implements
                 }
                 if ("void".equals(opInfoWrapper.getMBeanOperationInfo() //$NON-NLS-1$
                         .getReturnType())) {
-                    MessageDialog.openInformation(managedForm.getForm()
-                            .getShell(),
-                            Messages.MBeanOperationInvocationView_result,
-                            Messages.MBeanOperationInvocationView_success);
+                    MessageDialog.openInformation(container.getShell(),
+                            Messages.OperationDetails_invocationResult,
+                            Messages.OperationDetails_invocationSuccess);
                     return;
                 } else {
-                    InvocationResultDialog.open(managedForm.getForm()
-                            .getShell(), result);
+                    OperationInvocationResultDialog.open(container.getShell(), result);
                 }
             } catch (Exception e) {
                 String message = e.getLocalizedMessage();
@@ -252,10 +243,9 @@ public class MBeanOperationInvocationView extends ViewPart implements
                 if (e.getCause() != null) {
                     message = e.getCause().getLocalizedMessage();
                 }
-                MessageDialog.openError(managedForm.getForm().getShell(),
-                        Messages.MBeanOperationInvocationView_error, message);
+                MessageDialog.openError(container.getShell(),
+                        Messages.OperationDetails_invocationError, message);
             }
         }
     }
-
 }

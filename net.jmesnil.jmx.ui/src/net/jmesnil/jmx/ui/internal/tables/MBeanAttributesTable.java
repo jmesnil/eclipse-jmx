@@ -17,48 +17,36 @@
  *  Code was inspired from org.eclipse.equinox.client source, (c) 2006 IBM 
  */
 
-package net.jmesnil.jmx.ui.internal.views;
+package net.jmesnil.jmx.ui.internal.tables;
 
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.internal.Messages;
 
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.TableWrapData;
 
 public class MBeanAttributesTable {
 
     private TableViewer viewer;
 
-    public MBeanAttributesTable(Composite parent, final FormToolkit toolkit,
-            final MBeanInfoView infoView) {
-        final Table attrTable = toolkit.createTable(parent, SWT.BORDER
-                | SWT.SINGLE | SWT.FLAT | SWT.FULL_SELECTION | SWT.V_SCROLL
-                | SWT.H_SCROLL);
-        toolkit.paintBordersFor(attrTable);
+    public MBeanAttributesTable(Composite parent, final FormToolkit toolkit) {
+        final Table attrTable = toolkit.createTable(parent, SWT.FULL_SELECTION);
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        gd.heightHint = 20;
+        gd.widthHint = 100;
+        attrTable.setLayoutData(gd);
+        toolkit.paintBordersFor(parent);
         createColumns(attrTable);
-        attrTable.setLayoutData(new TableWrapData(TableWrapData.FILL));
         attrTable.setLinesVisible(true);
         attrTable.setHeaderVisible(true);
-        attrTable.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                if (e.item == null || e.item.getData() == null)
-                    return;
-                infoView.selectionChanged(infoView, new StructuredSelection(
-                        e.item.getData()));
-            }
-        });
         viewer = new TableViewer(attrTable);
         viewer.setContentProvider(new AttributesContentProvider());
         viewer.setLabelProvider(new AttributesLabelProvider());
@@ -70,7 +58,7 @@ public class MBeanAttributesTable {
         attrName.setWidth(150);
         final TableColumn attrValue = new TableColumn(attrTable, SWT.NONE);
         attrValue.setText(Messages.value);
-        attrValue.setWidth(250);
+        attrValue.setWidth(350);
 
         Listener sortListener = new Listener() {
             public void handleEvent(Event e) {
@@ -104,7 +92,7 @@ public class MBeanAttributesTable {
         attrTable.setSortDirection(SWT.UP);
     }
 
-    protected void setInput(MBeanInfoWrapper input) {
+    public void setInput(MBeanInfoWrapper input) {
         if (input == null || input.getMBeanInfo() == null)
             viewer.setInput(null);
         else

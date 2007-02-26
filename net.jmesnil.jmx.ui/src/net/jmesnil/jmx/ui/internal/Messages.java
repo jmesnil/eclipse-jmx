@@ -23,9 +23,13 @@ public class Messages extends NLS {
 
     public static String AttributeControlFactory_updateButtonTitle;
 
+    public static String AttributeDetails_title;
+
     public static String AttributeDetailsSection_errorTitle;
 
-    public static String AttributeDetailsSection_permission;
+    public static String AttributesPage_title;
+
+    public static String AttributesSection_title;
 
     public static String className;
 
@@ -45,19 +49,23 @@ public class Messages extends NLS {
 
     public static String ConnectionSelectionDialog_title;
 
-    public static String details;
-
     public static String description;
 
     public static String domain;
 
     public static String general;
 
+    public static String horizontal;
+
+    public static String InfoPage_notificationsSectionTitle;
+
     public static String InvocationResultDialog_title;
 
     public static String key;
 
     public static String impact;
+
+    public static String InfoPage_title;
 
     public static String LayoutActionGroup_flat;
 
@@ -79,30 +87,6 @@ public class Messages extends NLS {
 
     public static String MBeanAttributeValue_Warning;
 
-    public static String MBeanInfoView_attrSectionDesc;
-
-    public static String MBeanInfoView_attrSectionTitle;
-
-    public static String MBeanInfoView_infoSectionDesc;
-
-    public static String MBeanInfoView_infoSectionTitle;
-
-    public static String MBeanInfoView_javaClass;
-
-    public static String MBeanInfoView_opSectionDesct;
-
-    public static String MBeanInfoView_opSectionTitle;
-
-    public static String MBeanInfoView_summary;
-
-    public static String MBeanOperationInvocationView_error;
-
-    public static String MBeanOperationInvocationView_invocationTitle;
-
-    public static String MBeanOperationInvocationView_result;
-
-    public static String MBeanOperationInvocationView_success;
-
     public static String MBeanServerConnectAction_connectionFailure;
 
     public static String MBeanServerConnectAction_error;
@@ -113,9 +97,27 @@ public class Messages extends NLS {
 
     public static String name;
 
+    public static String NotificationsPage_title;
+
     public static String objectName;
 
+    public static String OperationDetails_invocationError;
+
+    public static String OperationDetails_invocationResult;
+
+    public static String OperationDetails_invocationSuccess;
+
+    public static String OperationDetails_title;
+
+    public static String OperationsPage_formText;
+
+    public static String OperationsPage_title;
+
+    public static String OperationsSection_title;
+
     public static String parameters;
+
+    public static String permission;
 
     public static String readable;
 
@@ -128,6 +130,8 @@ public class Messages extends NLS {
     public static String type;
 
     public static String value;
+
+    public static String vertical;
 
     public static String writable;
 

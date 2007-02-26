@@ -16,9 +16,7 @@
  */
 package net.jmesnil.jmx.ui.internal.perspectives;
 
-import net.jmesnil.jmx.ui.internal.views.MBeanInfoView;
 import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
-import net.jmesnil.jmx.ui.internal.views.opinvocation.MBeanOperationInvocationView;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -34,28 +32,19 @@ public class JMXPerspective implements IPerspectiveFactory {
 
     public void createInitialLayout(IPageLayout factory) {
         this.factory = factory;
-        factory.setEditorAreaVisible(false);
+        factory.setEditorAreaVisible(true);
         addViews();
         addViewShortcuts();
     }
 
     private void addViews() {
         IFolderLayout left = factory.createFolder("left", //$NON-NLS-1$
-                IPageLayout.LEFT, 0.25f, factory.getEditorArea());
+                IPageLayout.LEFT, 0.2f, factory.getEditorArea());
         left.addView(MBeanExplorer.ID);
-        IFolderLayout right = factory.createFolder("right", IPageLayout.RIGHT, //$NON-NLS-1$
-                0.75f, factory.getEditorArea());
-        IFolderLayout topRight = factory.createFolder("topRight", //$NON-NLS-1$
-                IPageLayout.TOP, 0.75f, "right"); //$NON-NLS-1$
-        topRight.addView(MBeanInfoView.ID);
-        right.addView(MBeanOperationInvocationView.ID);
-        right.addView("org.eclipse.ui.views.PropertySheet"); //$NON-NLS-1$
     }
 
     private void addViewShortcuts() {
         factory.addShowViewShortcut(MBeanExplorer.ID);
-        factory.addShowViewShortcut(MBeanInfoView.ID);
-        factory.addShowViewShortcut(MBeanOperationInvocationView.ID);
         factory.addShowViewShortcut("org.eclipse.ui.views.PropertySheet"); //$NON-NLS-1$
     }
 

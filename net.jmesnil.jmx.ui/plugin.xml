@@ -15,20 +15,16 @@
             class="net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer"
             id="net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer">
       </view>
-      <view
-            name="%MBeanInfoView.name"
-            icon="icons/sample.gif"
-            category="net.jmesnil.jmx.ui.views"
-            class="net.jmesnil.jmx.ui.internal.views.MBeanInfoView"
-            id="net.jmesnil.jmx.ui.internal.views.MBeanInfoView">
-      </view>
-      <view
-            name="%MBeanOperationInvocationView.name"
-            icon="icons/sample.gif"
-            category="net.jmesnil.jmx.ui.views"
-            class="net.jmesnil.jmx.ui.internal.views.opinvocation.MBeanOperationInvocationView"
-            id="net.jmesnil.jmx.ui.internal.views.opinvocation.MBeanOperationInvocationView">
-      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="MBean Editor"
+            id="net.jmesnil.jmx.ui.internal.editors.MBeanEditor"
+            class="net.jmesnil.jmx.ui.internal.editors.MBeanEditor"
+            extensions="jmx"
+            icon="icons/releng_gears.gif">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">

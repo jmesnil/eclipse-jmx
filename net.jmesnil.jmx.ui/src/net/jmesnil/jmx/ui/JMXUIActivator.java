@@ -25,7 +25,6 @@ import net.jmesnil.jmx.ui.internal.adapters.JMXAdapterFactory;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -69,18 +68,6 @@ public class JMXUIActivator extends AbstractUIPlugin {
      */
     public static JMXUIActivator getDefault() {
         return plugin;
-    }
-
-    /**
-     * Returns an image descriptor for the image file at the given plug-in
-     * relative path
-     * 
-     * @param path
-     *            the path
-     * @return the image descriptor
-     */
-    public static ImageDescriptor getImageDescriptor(String path) {
-        return imageDescriptorFromPlugin(PLUGIN_ID, path);
     }
 
     public static void log(IStatus status) {

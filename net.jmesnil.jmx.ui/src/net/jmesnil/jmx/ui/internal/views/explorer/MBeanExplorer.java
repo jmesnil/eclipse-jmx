@@ -31,12 +31,15 @@ import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
+import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanServerConnectionWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.actions.MBeanServerConnectAction;
 import net.jmesnil.jmx.ui.internal.actions.MBeanServerDisconnectAction;
+import net.jmesnil.jmx.ui.internal.editors.MBeanEditor;
+import net.jmesnil.jmx.ui.internal.editors.MBeanEditorInput;
 import net.jmesnil.jmx.ui.internal.tree.DomainNode;
 import net.jmesnil.jmx.ui.internal.tree.Node;
 import net.jmesnil.jmx.ui.internal.tree.NodeBuilder;
@@ -63,6 +66,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
@@ -264,11 +269,26 @@ public class MBeanExplorer extends ViewPart {
                 ISelection selection = event.getSelection();
                 StructuredSelection structured = (StructuredSelection) selection;
                 Object element = structured.getFirstElement();
-                boolean expanded = viewer.getExpandedState(element);
-                if (expanded) {
-                    viewer.collapseToLevel(element, 1);
+                if (element instanceof ObjectNameNode) {
+                    ObjectNameNode node = (ObjectNameNode) element;
+                    MBeanInfoWrapper wrapper = node.getMbeanInfoWrapper();
+                    IWorkbenchPage page = getViewSite().getPage();
+                    try {
+                        page.openEditor(new MBeanEditorInput(wrapper),
+                                MBeanEditor.ID);
+                    } catch (PartInitException e) {
+                        JMXUIActivator.log(IStatus.ERROR, e.getMessage(), e);
+                    }
                 } else {
+                  boolean expanded = viewer.getExpandedState(element);
+                  if (expanded)
+                  {
+                    viewer.collapseToLevel(element, 1);
+                  }
+                  else
+                  {
                     viewer.expandToLevel(element, 1);
+                  }
                 }
             }
         });
