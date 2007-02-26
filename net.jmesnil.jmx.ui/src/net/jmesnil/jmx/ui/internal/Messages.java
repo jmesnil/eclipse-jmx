@@ -19,7 +19,6 @@ package net.jmesnil.jmx.ui.internal;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-    private static final String BUNDLE_NAME = "net.jmesnil.jmx.ui.internal.messages"; //$NON-NLS-1$
 
     public static String AttributeControlFactory_updateButtonTitle;
 
@@ -57,15 +56,15 @@ public class Messages extends NLS {
 
     public static String horizontal;
 
+    public static String impact;
+
     public static String InfoPage_notificationsSectionTitle;
+
+    public static String InfoPage_title;
 
     public static String InvocationResultDialog_title;
 
     public static String key;
-
-    public static String impact;
-
-    public static String InfoPage_title;
 
     public static String LayoutActionGroup_flat;
 
@@ -73,33 +72,31 @@ public class Messages extends NLS {
 
     public static String LayoutActionGroup_menu;
 
-    public static String MBeanServerConnectAction_text;
-
-    public static String MBeanServerConnectDialog_password;
-
-    public static String MBeanServerConnectDialog_userName;
-
-    public static String MBeanServerDisconnectAction_text;
-
-    public static String ObjectNameNode_error;
-
-    public static String unavailable;
-
     public static String MBeanAttributeValue_Warning;
 
     public static String MBeanServerConnectAction_connectionFailure;
 
     public static String MBeanServerConnectAction_error;
 
+    public static String MBeanServerConnectAction_text;
+
     public static String MBeanServerConnectDialog_advancedTab;
 
+    public static String MBeanServerConnectDialog_password;
+
     public static String MBeanServerConnectDialog_simpleTab;
+
+    public static String MBeanServerConnectDialog_userName;
+
+    public static String MBeanServerDisconnectAction_text;
 
     public static String name;
 
     public static String NotificationsPage_title;
 
     public static String objectName;
+
+    public static String ObjectNameNode_error;
 
     public static String OperationDetails_invocationError;
 
@@ -129,6 +126,8 @@ public class Messages extends NLS {
 
     public static String type;
 
+    public static String unavailable;
+
     public static String value;
 
     public static String vertical;
@@ -136,6 +135,8 @@ public class Messages extends NLS {
     public static String writable;
 
     public static String writeOnly;
+
+    private static final String BUNDLE_NAME = "net.jmesnil.jmx.ui.internal.messages"; //$NON-NLS-1$
 
     static {
         // initialize resource bundle
