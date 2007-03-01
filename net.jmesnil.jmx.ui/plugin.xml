@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="JMX"
+            id="net.jmesnil.jmx.ui.views">
+      </category>
+      <view
+            name="%MBeanExplorer.name"
+            icon="icons/sample.gif"
+            category="net.jmesnil.jmx.ui.views"
+            class="net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer"
+            id="net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="MBean Editor"
+            id="net.jmesnil.jmx.ui.internal.editors.MBeanEditor"
+            class="net.jmesnil.jmx.ui.internal.editors.MBeanEditor"
+            extensions="jmx"
+            icon="icons/releng_gears.gif">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="net.jmesnil.jmx.ui.internal.perspectives.JMXPerspective"
+            icon="icons/releng_gears.gif"
+            id="net.jmesnil.jmx.ui.perspectives.JMXPerspective"
+            name="JMX">
+      </perspective>
+   </extension>
+</plugin>
