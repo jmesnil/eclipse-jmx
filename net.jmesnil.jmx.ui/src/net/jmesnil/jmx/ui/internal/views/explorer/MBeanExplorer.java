@@ -19,9 +19,7 @@
 package net.jmesnil.jmx.ui.internal.views.explorer;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import javax.management.MBeanServerConnection;
@@ -41,13 +39,11 @@ import net.jmesnil.jmx.ui.internal.actions.MBeanServerConnectAction;
 import net.jmesnil.jmx.ui.internal.actions.MBeanServerDisconnectAction;
 import net.jmesnil.jmx.ui.internal.editors.MBeanEditor;
 import net.jmesnil.jmx.ui.internal.editors.MBeanEditorInput;
-import net.jmesnil.jmx.ui.internal.tree.DomainNode;
 import net.jmesnil.jmx.ui.internal.tree.Node;
 import net.jmesnil.jmx.ui.internal.tree.NodeBuilder;
 import net.jmesnil.jmx.ui.internal.tree.NodeUtils;
 import net.jmesnil.jmx.ui.internal.tree.ObjectNameNode;
 import net.jmesnil.jmx.ui.internal.tree.PropertyNode;
-import net.jmesnil.jmx.ui.internal.tree.Root;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
@@ -58,16 +54,12 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
@@ -75,13 +67,11 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener2;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.ViewPart;
@@ -94,7 +84,7 @@ public class MBeanExplorer extends ViewPart {
     private static final int FLAT_LAYOUT= 0x2;
     
     private static final String TAG_LAYOUT= "layout"; //$NON-NLS-1$
-   private static final String TAG_LINKED_WITH_EDITOR = "linkedWithEditor"; //$NON-NLS-1$
+    private static final String TAG_LINKED_WITH_EDITOR = "linkedWithEditor"; //$NON-NLS-1$
 
     private TreeViewer viewer;
 
@@ -116,6 +106,45 @@ public class MBeanExplorer extends ViewPart {
     private ISelectionChangedListener postSelectionListener;
 
     private MBeanServerConnectionWrapper wrapper;
+    
+    private MBeanExplorerContentProvider contentProvider;
+
+    private MBeanExplorerLabelProvider labelProvider;
+
+    private final class NodePatternFilter extends PatternFilter {
+        
+        public NodePatternFilter() {
+            super();
+            setIncludeLeadingWildcard(true);
+        }
+
+        protected boolean isLeafMatch(Viewer viewer, Object element) {
+            if (element instanceof PropertyNode) {
+                PropertyNode propNode = (PropertyNode) element;
+                return wordMatches(propNode.getKey() + "=" //$NON-NLS-1$
+                        + propNode.getValue());
+            }
+            return super.isLeafMatch(viewer, element);
+        }
+
+        public boolean isElementVisible(Viewer viewer, Object element) {
+            return matchesObjectName((Node) element);
+        }
+
+        private boolean matchesObjectName(Node node) {
+            if (node instanceof ObjectNameNode) {
+                ObjectNameNode onNode = (ObjectNameNode) node;
+                return wordMatches(onNode.getObjectName().toString());
+            }
+            boolean hasMatchingChildren = false;
+            Node[] children = node.getChildren();
+            for (int i = 0; i < children.length; i++) {
+                Node child = children[i];
+                hasMatchingChildren |= matchesObjectName(child);
+            }
+            return hasMatchingChildren;
+        }
+    }
 
     private final class CollapseAllAction extends Action {
 
@@ -127,111 +156,6 @@ public class MBeanExplorer extends ViewPart {
         @Override
         public void run() {
             viewer.collapseAll();
-        }
-    }
-
-    protected class ViewContentProvider implements IStructuredContentProvider,
-            ITreeContentProvider {
-
-        public void inputChanged(Viewer v, Object oldInput, Object newInput) {}
-        public void dispose() {}
-
-        public Object[] getElements(Object parent) {
-            return getChildren(parent);
-        }
-
-        public Object getParent(Object child) {
-            if (child instanceof Node) {
-                Node node = (Node) child;
-                return node.getParent();
-            }
-            return null;
-        }
-
-        @SuppressWarnings("unchecked")//$NON-NLS-1$
-        public Object[] getChildren(Object parent) {
-            if (parent instanceof Root) {
-                Root root = (Root) parent;
-                return root.getChildren();
-            }
-            if (parent instanceof DomainNode) {
-                DomainNode node = (DomainNode) parent;
-                if (currentLayoutIsFlat) {
-                    List objectNameNodes = findOnlyObjectNames(node);
-                    return objectNameNodes.toArray();
-                } else {
-                    return node.getChildren();
-                }
-            }
-            if (parent instanceof Node) {
-                Node node = (Node) parent;
-                return node.getChildren();
-            }
-            return new Object[0];
-        }
-
-        @SuppressWarnings("unchecked")//$NON-NLS-1$
-        private List findOnlyObjectNames(Node node) {
-            List objectNameNodes = new ArrayList();
-            Node[] children = node.getChildren();
-            for (int i = 0; i < children.length; i++) {
-                Node child = children[i];
-                if (child instanceof ObjectNameNode) {
-                    objectNameNodes.add(child);
-                } else {
-                    objectNameNodes.addAll(findOnlyObjectNames(child));
-                }
-            }
-            return objectNameNodes;
-        }
-
-        public boolean hasChildren(Object parent) {
-            if (parent instanceof Node) {
-                Node node = (Node) parent;
-                return (node.getChildren().length > 0);
-            }
-            return true;
-        }
-    }
-
-    protected class ViewLabelProvider extends LabelProvider {
-
-        @SuppressWarnings("unchecked")//$NON-NLS-1$
-        @Override
-        public String getText(Object obj) {
-            if (obj instanceof DomainNode) {
-                DomainNode node = (DomainNode) obj;
-                return node.getDomain();
-            }
-            if (obj instanceof ObjectNameNode) {
-                ObjectNameNode node = (ObjectNameNode) obj;
-                if (currentLayoutIsFlat) {
-                    return node.getObjectName().getKeyPropertyListString();
-                } else {
-                    return node.getValue();
-                }
-            }
-            if (obj instanceof PropertyNode) {
-                PropertyNode node = (PropertyNode) obj;
-                return node.getValue();
-            }
-            return obj.toString();
-        }
-
-        @Override
-        public Image getImage(Object obj) {
-            if (obj instanceof DomainNode) {
-                return JMXImages.get(JMXImages.IMG_OBJS_LIBRARY);
-            }
-            if (obj instanceof ObjectNameNode) {
-                return JMXImages.get(JMXImages.IMG_OBJS_METHOD);
-            }
-            if (obj instanceof PropertyNode) {
-                return JMXImages.get(JMXImages.IMG_OBJS_PACKAGE);
-            }
-            String imageKey = ISharedImages.IMG_OBJ_ELEMENT;
-            return PlatformUI.getWorkbench().getSharedImages().getImage(
-                    imageKey);
         }
     }
 
@@ -281,42 +205,20 @@ public class MBeanExplorer extends ViewPart {
     public void createPartControl(Composite parent) {
         makeActions();
         fillActionBars();
-        PatternFilter patternFilter = new PatternFilter() {
-            protected boolean isLeafMatch(Viewer viewer, Object element) {
-                if (element instanceof PropertyNode) {
-                    PropertyNode propNode = (PropertyNode) element;
-                    return wordMatches(propNode.getKey() + "=" //$NON-NLS-1$
-                            + propNode.getValue());
-                }
-                return super.isLeafMatch(viewer, element);
-            }
-
-            public boolean isElementVisible(Viewer viewer, Object element) {
-                return matchesObjectName((Node) element);
-            }
-
-            private boolean matchesObjectName(Node node) {
-                if (node instanceof ObjectNameNode) {
-                    ObjectNameNode onNode = (ObjectNameNode) node;
-                    return wordMatches(onNode.getObjectName().toString());
-                }
-                boolean hasMatchingChildren = false;
-                Node[] children = node.getChildren();
-                for (int i = 0; i < children.length; i++) {
-                    Node child = children[i];
-                    hasMatchingChildren |= matchesObjectName(child);
-                }
-                return hasMatchingChildren;
-            }
-        };
+        PatternFilter patternFilter = new NodePatternFilter();
         patternFilter.setIncludeLeadingWildcard(true);
 
         final FilteredTree filter = new FilteredTree(parent, SWT.MULTI
                 | SWT.H_SCROLL | SWT.V_SCROLL, patternFilter);
 
         viewer = filter.getViewer();
-        viewer.setContentProvider(new ViewContentProvider());
-        viewer.setLabelProvider(new ViewLabelProvider());
+        contentProvider = new MBeanExplorerContentProvider();
+        contentProvider.setFlatLayout(currentLayoutIsFlat);
+        viewer.setContentProvider(contentProvider);
+        labelProvider = new MBeanExplorerLabelProvider();
+        labelProvider.setFlatLayout(currentLayoutIsFlat);
+        viewer.setLabelProvider(labelProvider);
+        
         viewer.addDoubleClickListener(new IDoubleClickListener() {
             public void doubleClick(DoubleClickEvent event) {
                 ISelection selection = event.getSelection();
@@ -370,7 +272,7 @@ public class MBeanExplorer extends ViewPart {
         linkWithEditorAction.run();
     }
 
-    void fillActionBars() {
+    private void fillActionBars() {
         IActionBars actionBars = getViewSite().getActionBars();
         IMenuManager viewMenu = actionBars.getMenuManager();
 
@@ -474,9 +376,11 @@ public class MBeanExplorer extends ViewPart {
         viewer.getControl().setFocus();
     }
 
-    public void toggleLayout() {
+    void toggleLayout() {
         currentLayoutIsFlat = !currentLayoutIsFlat;
         saveLayoutState(null);
+        contentProvider.setFlatLayout(currentLayoutIsFlat);
+        labelProvider.setFlatLayout(currentLayoutIsFlat);
         viewer.getControl().setRedraw(false);
         try {
             viewer.refresh();
@@ -521,15 +425,15 @@ public class MBeanExplorer extends ViewPart {
             return HIERARCHICAL_LAYOUT;
     }
 
-    public boolean isCurrentLayoutFlat() {
+    boolean isCurrentLayoutFlat() {
         return currentLayoutIsFlat;
     }
 
-    public boolean isLinkingEnabled() {
+    private boolean isLinkingEnabled() {
         return linkingIsEnabled;
     }
 
-    public void setLinkingEnabled(boolean enabled) {
+    private void setLinkingEnabled(boolean enabled) {
         linkingIsEnabled = enabled;
         saveLinkWithEditorState(null);
         IWorkbenchPage page = getSite().getPage();
@@ -577,7 +481,7 @@ public class MBeanExplorer extends ViewPart {
             linkingIsEnabled = false;
     }
 
-    void editorActivated(IEditorPart editor) {
+    private void editorActivated(IEditorPart editor) {
         Object input = editor.getEditorInput();
         if (input == null || !(input instanceof MBeanEditorInput)) {
             return;
@@ -600,7 +504,7 @@ public class MBeanExplorer extends ViewPart {
         return inputIsSelected;
     }
 
-    boolean showInput(MBeanEditorInput input) {
+    private boolean showInput(MBeanEditorInput input) {
         MBeanInfoWrapper infoWrapper = input.getWrapper();
         ObjectName objectName = infoWrapper.getObjectName();
         Node root = (Node) viewer.getInput();
