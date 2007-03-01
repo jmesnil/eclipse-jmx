@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -64,7 +65,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -76,6 +79,11 @@ import org.eclipse.ui.part.ViewPart;
 public class MBeanExplorer extends ViewPart {
 
     public static final String ID = "net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer"; //$NON-NLS-1$
+
+    private static final int HIERARCHICAL_LAYOUT= 0x1;
+    private static final int FLAT_LAYOUT= 0x2;
+    
+    private static final String TAG_LAYOUT= "layout"; //$NON-NLS-1$
 
     private TreeViewer viewer;
 
@@ -220,6 +228,19 @@ public class MBeanExplorer extends ViewPart {
     public MBeanExplorer() {
     }
 
+    @Override
+    public void init(IViewSite site, IMemento memento) throws PartInitException
+    {
+      super.init(site, memento);
+      restoreLayoutState(memento);
+    }
+    
+    @Override
+    public void saveState(IMemento memento)
+    {
+      saveLayoutState(memento);
+    }
+    
     /**
      * This is a callback that will allow us to create the viewer and initialize
      * it.
@@ -412,6 +433,7 @@ public class MBeanExplorer extends ViewPart {
 
     public void toggleLayout() {
         currentLayoutIsFlat = !currentLayoutIsFlat;
+        saveLayoutState(null);
         viewer.getControl().setRedraw(false);
         try {
             viewer.refresh();
@@ -420,6 +442,42 @@ public class MBeanExplorer extends ViewPart {
         }
     }
 
+    private void saveLayoutState(IMemento memento) {
+        if (memento != null) {  
+            memento.putInteger(TAG_LAYOUT, getLayoutAsInt());
+        } else {
+          //if memento is null save in preference store
+            IPreferenceStore store= JMXUIActivator.getDefault().getPreferenceStore();
+            store.setValue(TAG_LAYOUT, getLayoutAsInt());
+        }
+    }
+    
+    private void restoreLayoutState(IMemento memento) {
+        Integer state= null;
+        if (memento != null)
+            state= memento.getInteger(TAG_LAYOUT);
+
+        // If no memento try an restore from preference store
+        if(state == null) {
+            IPreferenceStore store= JMXUIActivator.getDefault().getPreferenceStore();
+            state= new Integer(store.getInt(TAG_LAYOUT));
+        }
+
+        if (state.intValue() == FLAT_LAYOUT)
+          currentLayoutIsFlat= true;
+        else if (state.intValue() == HIERARCHICAL_LAYOUT)
+          currentLayoutIsFlat= false;
+        else
+          currentLayoutIsFlat= false;
+    }
+    
+    private int getLayoutAsInt() {
+        if (currentLayoutIsFlat)
+            return FLAT_LAYOUT;
+        else
+            return HIERARCHICAL_LAYOUT;
+    }
+    
     public boolean isCurrentLayoutFlat() {
         return currentLayoutIsFlat;
     }
