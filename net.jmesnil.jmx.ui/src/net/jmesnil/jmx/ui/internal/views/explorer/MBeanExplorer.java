@@ -34,6 +34,7 @@ import javax.management.ObjectName;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanServerConnectionWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
+import net.jmesnil.jmx.ui.internal.EditorUtils;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.actions.MBeanServerConnectAction;
@@ -43,6 +44,7 @@ import net.jmesnil.jmx.ui.internal.editors.MBeanEditorInput;
 import net.jmesnil.jmx.ui.internal.tree.DomainNode;
 import net.jmesnil.jmx.ui.internal.tree.Node;
 import net.jmesnil.jmx.ui.internal.tree.NodeBuilder;
+import net.jmesnil.jmx.ui.internal.tree.NodeUtils;
 import net.jmesnil.jmx.ui.internal.tree.ObjectNameNode;
 import net.jmesnil.jmx.ui.internal.tree.PropertyNode;
 import net.jmesnil.jmx.ui.internal.tree.Root;
@@ -55,9 +57,12 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -65,11 +70,16 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
@@ -84,10 +94,12 @@ public class MBeanExplorer extends ViewPart {
     private static final int FLAT_LAYOUT= 0x2;
     
     private static final String TAG_LAYOUT= "layout"; //$NON-NLS-1$
+   private static final String TAG_LINKED_WITH_EDITOR = "linkedWithEditor"; //$NON-NLS-1$
 
     private TreeViewer viewer;
 
     private boolean currentLayoutIsFlat = false;
+    private boolean linkingIsEnabled = false;
 
     private Action collapseAllAction;
 
@@ -97,7 +109,11 @@ public class MBeanExplorer extends ViewPart {
 
     private LayoutActionGroup layoutActionGroup;
 
+    private Action linkWithEditorAction;
+
     private NotificationListener registrationListener;
+
+    private ISelectionChangedListener postSelectionListener;
 
     private MBeanServerConnectionWrapper wrapper;
 
@@ -117,11 +133,8 @@ public class MBeanExplorer extends ViewPart {
     protected class ViewContentProvider implements IStructuredContentProvider,
             ITreeContentProvider {
 
-        public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-        }
-
-        public void dispose() {
-        }
+        public void inputChanged(Viewer v, Object oldInput, Object newInput) {}
+        public void dispose() {}
 
         public Object[] getElements(Object parent) {
             return getChildren(parent);
@@ -222,29 +235,48 @@ public class MBeanExplorer extends ViewPart {
         }
     }
 
-    /**
-     * The constructor.
-     */
+    private IPartListener2 linkWithEditorListener = new IPartListener2() {
+        public void partVisible(IWorkbenchPartReference partRef) {}
+        public void partBroughtToTop(IWorkbenchPartReference partRef) {}
+        public void partClosed(IWorkbenchPartReference partRef) {}
+        public void partDeactivated(IWorkbenchPartReference partRef) {}
+        public void partHidden(IWorkbenchPartReference partRef) {}
+        public void partOpened(IWorkbenchPartReference partRef) {}
+
+        public void partInputChanged(IWorkbenchPartReference partRef) {
+            if (partRef instanceof IEditorReference) {
+                editorActivated(((IEditorReference) partRef).getEditor(true));
+            }
+        }
+
+        public void partActivated(IWorkbenchPartReference partRef) {
+            if (partRef instanceof IEditorReference) {
+                editorActivated(((IEditorReference) partRef).getEditor(true));
+            }
+        }
+    };
+
     public MBeanExplorer() {
+        postSelectionListener = new ISelectionChangedListener() {
+            public void selectionChanged(SelectionChangedEvent event) {
+                handlePostSelectionChanged(event);
+            }
+        };
     }
 
     @Override
-    public void init(IViewSite site, IMemento memento) throws PartInitException
-    {
-      super.init(site, memento);
-      restoreLayoutState(memento);
+    public void init(IViewSite site, IMemento memento) throws PartInitException {
+        super.init(site, memento);
+        restoreLayoutState(memento);
+        restoreLinkWithEditorState(memento);
     }
-    
+
     @Override
-    public void saveState(IMemento memento)
-    {
-      saveLayoutState(memento);
+    public void saveState(IMemento memento) {
+        saveLinkWithEditorState(memento);
+        saveLayoutState(memento);
     }
-    
-    /**
-     * This is a callback that will allow us to create the viewer and initialize
-     * it.
-     */
+
     @Override
     public void createPartControl(Composite parent) {
         makeActions();
@@ -290,35 +322,33 @@ public class MBeanExplorer extends ViewPart {
                 ISelection selection = event.getSelection();
                 StructuredSelection structured = (StructuredSelection) selection;
                 Object element = structured.getFirstElement();
-                if (element instanceof ObjectNameNode) {
-                    ObjectNameNode node = (ObjectNameNode) element;
-                    MBeanInfoWrapper wrapper = node.getMbeanInfoWrapper();
+                IEditorInput editorInput = EditorUtils.getEditorInput(element);
+                if (editorInput != null) {
                     IWorkbenchPage page = getViewSite().getPage();
                     try {
-                        page.openEditor(new MBeanEditorInput(wrapper),
-                                MBeanEditor.ID);
+                        page.openEditor(editorInput, MBeanEditor.ID);
                     } catch (PartInitException e) {
                         JMXUIActivator.log(IStatus.ERROR, e.getMessage(), e);
                     }
                 } else {
-                  boolean expanded = viewer.getExpandedState(element);
-                  if (expanded)
-                  {
-                    viewer.collapseToLevel(element, 1);
-                  }
-                  else
-                  {
-                    viewer.expandToLevel(element, 1);
-                  }
+                    boolean expanded = viewer.getExpandedState(element);
+                    if (expanded) {
+                        viewer.collapseToLevel(element, 1);
+                    } else {
+                        viewer.expandToLevel(element, 1);
+                    }
                 }
             }
         });
+        viewer.addPostSelectionChangedListener(postSelectionListener);
         getViewSite().setSelectionProvider(viewer);
     }
 
     @Override
     public void dispose() {
         removeRegistrationListener();
+        // always remove even if we didn't register
+        getSite().getPage().removePartListener(linkWithEditorListener);
         super.dispose();
     }
 
@@ -328,6 +358,16 @@ public class MBeanExplorer extends ViewPart {
         disconnectAction = new MBeanServerDisconnectAction(this);
         layoutActionGroup = new LayoutActionGroup(this);
         layoutActionGroup.setFlatLayout(currentLayoutIsFlat);
+        linkWithEditorAction = new Action("Link with Editor",
+                Action.AS_CHECK_BOX) {
+            @Override
+            public void run() {
+                setLinkingEnabled(linkWithEditorAction.isChecked());
+            }
+        };
+        JMXImages.setLocalImageDescriptors(linkWithEditorAction, "synced.gif"); //$NON-NLS-1$
+        linkWithEditorAction.setChecked(linkingIsEnabled);
+        linkWithEditorAction.run();
     }
 
     void fillActionBars() {
@@ -341,10 +381,13 @@ public class MBeanExplorer extends ViewPart {
                 + "-end"));//$NON-NLS-1$        
 
         layoutActionGroup.fillActionBars(actionBars);
+        viewMenu.add(new Separator());
+        viewMenu.add(linkWithEditorAction);
 
         actionBars.getToolBarManager().add(connectAction);
         actionBars.getToolBarManager().add(new Separator());
         actionBars.getToolBarManager().add(collapseAllAction);
+        actionBars.getToolBarManager().add(linkWithEditorAction);
     }
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
@@ -443,7 +486,7 @@ public class MBeanExplorer extends ViewPart {
     }
 
     private void saveLayoutState(IMemento memento) {
-        if (memento != null) {  
+        if (memento != null) {
             memento.putInteger(TAG_LAYOUT, getLayoutAsInt());
         } else {
           //if memento is null save in preference store
@@ -451,11 +494,11 @@ public class MBeanExplorer extends ViewPart {
             store.setValue(TAG_LAYOUT, getLayoutAsInt());
         }
     }
-    
+
     private void restoreLayoutState(IMemento memento) {
-        Integer state= null;
+        Integer state = null;
         if (memento != null)
-            state= memento.getInteger(TAG_LAYOUT);
+            state = memento.getInteger(TAG_LAYOUT);
 
         // If no memento try an restore from preference store
         if(state == null) {
@@ -464,21 +507,139 @@ public class MBeanExplorer extends ViewPart {
         }
 
         if (state.intValue() == FLAT_LAYOUT)
-          currentLayoutIsFlat= true;
+            currentLayoutIsFlat= true;
         else if (state.intValue() == HIERARCHICAL_LAYOUT)
-          currentLayoutIsFlat= false;
+            currentLayoutIsFlat= false;
         else
-          currentLayoutIsFlat= false;
+            currentLayoutIsFlat = false;
     }
-    
+
     private int getLayoutAsInt() {
         if (currentLayoutIsFlat)
             return FLAT_LAYOUT;
         else
             return HIERARCHICAL_LAYOUT;
     }
-    
+
     public boolean isCurrentLayoutFlat() {
         return currentLayoutIsFlat;
+    }
+
+    public boolean isLinkingEnabled() {
+        return linkingIsEnabled;
+    }
+
+    public void setLinkingEnabled(boolean enabled) {
+        linkingIsEnabled = enabled;
+        saveLinkWithEditorState(null);
+        IWorkbenchPage page = getSite().getPage();
+        if (enabled) {
+            page.addPartListener(linkWithEditorListener);
+
+            IEditorPart editor = page.getActiveEditor();
+            if (editor != null) {
+                editorActivated(editor);
+            }
+        } else {
+            page.removePartListener(linkWithEditorListener);
+        }
+    }
+
+    private void saveLinkWithEditorState(IMemento memento) {
+        int linkingIsEnabledAsInt = linkingIsEnabled ? 0 : 1;
+        if (memento != null) {
+            memento.putInteger(TAG_LINKED_WITH_EDITOR, linkingIsEnabledAsInt);
+        } else {
+            // if memento is null save in preference store
+            IPreferenceStore store = JMXUIActivator.getDefault()
+                    .getPreferenceStore();
+            store.setValue(TAG_LINKED_WITH_EDITOR, linkingIsEnabledAsInt);
+        }
+    }
+
+    private void restoreLinkWithEditorState(IMemento memento) {
+        Integer state = null;
+        if (memento != null)
+            state = memento.getInteger(TAG_LINKED_WITH_EDITOR);
+
+        // If no memento try an restore from preference store
+        if (state == null) {
+            IPreferenceStore store = JMXUIActivator.getDefault()
+                    .getPreferenceStore();
+            state = new Integer(store.getInt(TAG_LINKED_WITH_EDITOR));
+        }
+
+        if (state.intValue() == 0)
+            linkingIsEnabled = true;
+        else if (state.intValue() == 1)
+            linkingIsEnabled = false;
+        else
+            linkingIsEnabled = false;
+    }
+
+    void editorActivated(IEditorPart editor) {
+        Object input = editor.getEditorInput();
+        if (input == null || !(input instanceof MBeanEditorInput)) {
+            return;
+        }
+        MBeanEditorInput mbeanInput = (MBeanEditorInput) input;
+        if (!inputIsSelected(mbeanInput)) {
+            showInput(mbeanInput);
+        } else {
+            viewer.getTree().showSelection();
+        }
+    }
+
+    private boolean inputIsSelected(MBeanEditorInput input) {
+        IStructuredSelection selection = (IStructuredSelection) viewer
+                .getSelection();
+        if (selection.size() != 1)
+            return false;
+        boolean inputIsSelected = input.equals(EditorUtils.getEditorInput(selection
+                .getFirstElement()));
+        return inputIsSelected;
+    }
+
+    boolean showInput(MBeanEditorInput input) {
+        MBeanInfoWrapper infoWrapper = input.getWrapper();
+        ObjectName objectName = infoWrapper.getObjectName();
+        Node root = (Node) viewer.getInput();
+        ObjectNameNode node = NodeUtils.findObjectNameNode(root, objectName);
+        if (node == null) {
+            return false;
+        } else {
+            ISelection newSelection = new StructuredSelection(node);
+            if (viewer.getSelection().equals(newSelection)) {
+                viewer.reveal(node);
+            } else {
+                viewer.setSelection(newSelection, true);
+            }
+            return true;
+        }
+    }
+
+    private void handlePostSelectionChanged(SelectionChangedEvent event) {
+        ISelection selection = event.getSelection();
+        if (isLinkingEnabled()) {
+            linkToEditor((IStructuredSelection) selection);
+        }
+    }
+
+    private void linkToEditor(IStructuredSelection selection) {
+        if (!isActivePart())
+            return;
+        Object obj = selection.getFirstElement();
+
+        if (selection.size() == 1) {
+            IEditorPart part = EditorUtils.isOpenInEditor(obj);
+            if (part != null) {
+                IWorkbenchPage page = getSite().getPage();
+                page.bringToTop(part);
+            }
+        }
+    }
+
+    private boolean isActivePart() {
+        return this == getSite().getPage().getActivePart();
     }
 }

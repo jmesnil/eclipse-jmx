@@ -25,6 +25,8 @@ import net.jmesnil.jmx.ui.internal.adapters.JMXAdapterFactory;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -68,6 +70,17 @@ public class JMXUIActivator extends AbstractUIPlugin {
      */
     public static JMXUIActivator getDefault() {
         return plugin;
+    }
+    
+    public static IWorkbenchPage getActivePage() {
+        return getDefault().internalGetActivePage();
+    }
+    
+    private IWorkbenchPage internalGetActivePage() {
+        IWorkbenchWindow window= getWorkbench().getActiveWorkbenchWindow();
+        if (window == null)
+            return null;
+        return window.getActivePage();
     }
 
     public static void log(IStatus status) {
