@@ -74,6 +74,8 @@ public class Messages extends NLS {
 
     public static String MBeanAttributeValue_Warning;
 
+    public static String MBeanExplorer_linkWithEditorActionText;
+
     public static String MBeanServerConnectAction_connectionFailure;
 
     public static String MBeanServerConnectAction_error;

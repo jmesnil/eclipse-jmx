@@ -260,7 +260,7 @@ public class MBeanExplorer extends ViewPart {
         disconnectAction = new MBeanServerDisconnectAction(this);
         layoutActionGroup = new LayoutActionGroup(this);
         layoutActionGroup.setFlatLayout(currentLayoutIsFlat);
-        linkWithEditorAction = new Action("Link with Editor",
+        linkWithEditorAction = new Action(Messages.MBeanExplorer_linkWithEditorActionText,
                 Action.AS_CHECK_BOX) {
             @Override
             public void run() {
