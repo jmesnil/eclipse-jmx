@@ -508,6 +508,9 @@ public class MBeanExplorer extends ViewPart {
         MBeanInfoWrapper infoWrapper = input.getWrapper();
         ObjectName objectName = infoWrapper.getObjectName();
         Node root = (Node) viewer.getInput();
+        if (root == null) {
+            return false;
+        }
         ObjectNameNode node = NodeUtils.findObjectNameNode(root, objectName);
         if (node == null) {
             return false;

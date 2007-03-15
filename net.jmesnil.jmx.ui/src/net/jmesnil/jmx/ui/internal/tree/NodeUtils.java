@@ -19,10 +19,14 @@ package net.jmesnil.jmx.ui.internal.tree;
 
 import javax.management.ObjectName;
 
+import org.eclipse.core.runtime.Assert;
+
 public class NodeUtils {
 
     public static ObjectNameNode findObjectNameNode(Node node,
             ObjectName objectName) {
+        Assert.isNotNull(node);
+        
         if (node instanceof ObjectNameNode) {
             ObjectNameNode onNode = (ObjectNameNode) node;
             if (onNode.getObjectName().equals(objectName)) {
