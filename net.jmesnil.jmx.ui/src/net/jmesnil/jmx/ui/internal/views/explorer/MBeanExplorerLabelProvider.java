@@ -27,11 +27,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-class MBeanExplorerLabelProvider extends LabelProvider {
+public class MBeanExplorerLabelProvider extends LabelProvider {
     
     private boolean flatLayout;
 
-    MBeanExplorerLabelProvider() {
+    public MBeanExplorerLabelProvider() {
     }
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
@@ -72,7 +72,7 @@ class MBeanExplorerLabelProvider extends LabelProvider {
                 imageKey);
     }
     
-    void setFlatLayout(boolean state) {
+    public void setFlatLayout(boolean state) {
         flatLayout = state;
     }
 }

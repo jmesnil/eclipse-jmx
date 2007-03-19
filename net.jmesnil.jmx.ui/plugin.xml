@@ -27,6 +27,23 @@
       </editor>
    </extension>
    <extension
+         point="org.eclipse.ui.actionSets">
+         <actionSet
+            label="%MBeanActionSet.label"
+            description="%MBeanActionSet.description"
+            visible="false"
+            id="net.jmesnil.jmx.ui.MBeanActionSet">
+           <action
+               id="openMBean"
+               class="net.jmesnil.jmx.ui.internal.actions.OpenMBeanAction"
+               definitionId="net.jmesnil.jmx.ui.navigate.open.mbean"
+               label="%OpenMBeanAction.label"
+               menubarPath="navigate/open.ext2"
+               tooltip="%OpenMBeanAction.tooltip">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
          point="org.eclipse.ui.perspectives">
       <perspective
             class="net.jmesnil.jmx.ui.internal.perspectives.JMXPerspective"
@@ -34,5 +51,29 @@
             id="net.jmesnil.jmx.ui.perspectives.JMXPerspective"
             name="JMX">
       </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="net.jmesnil.jmx.ui.perspectives.JMXPerspective">
+           <actionSet
+               id="net.jmesnil.jmx.ui.MBeanActionSet" />
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            name="%ActionDefinition.openMBean.name"
+            description="%ActionDefinition.openMBean.description"
+            categoryId="org.eclipse.ui.category.navigate"
+            id="net.jmesnil.jmx.ui.navigate.open.mbean">
+      </command>    
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+           sequence="M1+M2+M"
+           commandId="net.jmesnil.jmx.ui.navigate.open.mbean"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
    </extension>
 </plugin>

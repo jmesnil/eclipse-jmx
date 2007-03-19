@@ -42,6 +42,8 @@ public class JMXCoreActivator extends Plugin {
     // The shared instance
     private static JMXCoreActivator plugin;
 
+    private MBeanServerConnection mbsc;
+
     public JMXCoreActivator() {
     }
 
@@ -80,9 +82,13 @@ public class JMXCoreActivator extends Plugin {
 
         JMXServiceURL jmxurl = new JMXServiceURL(url);
         JMXConnector connector = JMXConnectorFactory.connect(jmxurl, env);
-        MBeanServerConnection mbsc = connector.getMBeanServerConnection();
+        mbsc = connector.getMBeanServerConnection();
         MBeanServerConnectionWrapper wrapper = new MBeanServerConnectionWrapper(
                 mbsc);
         return wrapper;
+    }
+
+    public MBeanServerConnection getMBeanServerConnection() {
+        return mbsc;
     }
 }

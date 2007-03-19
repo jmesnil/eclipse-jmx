@@ -100,6 +100,16 @@ public class Messages extends NLS {
 
     public static String ObjectNameNode_error;
 
+    public static String OpenMBeanAction_description;
+
+    public static String OpenMBeanAction_dialogDescription;
+
+    public static String OpenMBeanAction_dialogTitle;
+
+    public static String OpenMBeanAction_text;
+
+    public static String OpenMBeanAction_tooltip;
+
     public static String OperationDetails_invocationError;
 
     public static String OperationDetails_invocationResult;

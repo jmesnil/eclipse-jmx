@@ -25,6 +25,7 @@ import net.jmesnil.jmx.ui.internal.adapters.JMXAdapterFactory;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -72,6 +73,18 @@ public class JMXUIActivator extends AbstractUIPlugin {
         return plugin;
     }
     
+    public static Shell getActiveWorkbenchShell() {
+         IWorkbenchWindow window= getActiveWorkbenchWindow();
+         if (window != null) {
+            return window.getShell();
+         }
+         return null;
+    }
+
+    public static IWorkbenchWindow getActiveWorkbenchWindow() {
+        return getDefault().getWorkbench().getActiveWorkbenchWindow();
+    }
+
     public static IWorkbenchPage getActivePage() {
         return getDefault().internalGetActivePage();
     }

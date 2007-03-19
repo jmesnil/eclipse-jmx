@@ -18,12 +18,15 @@ package net.jmesnil.jmx.ui.internal;
 
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
+import net.jmesnil.jmx.ui.internal.editors.MBeanEditor;
 import net.jmesnil.jmx.ui.internal.editors.MBeanEditorInput;
 import net.jmesnil.jmx.ui.internal.tree.ObjectNameNode;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 
 public class EditorUtils {
 
@@ -33,11 +36,19 @@ public class EditorUtils {
             MBeanInfoWrapper wrapper = node.getMbeanInfoWrapper();
             return new MBeanEditorInput(wrapper);
         }
+        if (input instanceof MBeanInfoWrapper) {
+            MBeanInfoWrapper wrapper = (MBeanInfoWrapper) input;
+            return new MBeanEditorInput(wrapper);
+        }
         return null;
     }
 
     public static IEditorPart isOpenInEditor(Object inputElement) {
         IEditorInput input = getEditorInput(inputElement);
+        return isOpenInEditor(input);
+    }
+
+    private static IEditorPart isOpenInEditor(IEditorInput input) {
         if (input != null) {
             IWorkbenchPage p = JMXUIActivator.getActivePage();
             if (p != null) {
@@ -47,4 +58,17 @@ public class EditorUtils {
         return null;
     }
 
+    public static void openMBeanEditor(IEditorInput input) {
+        IEditorPart part = EditorUtils.isOpenInEditor(input);
+        if (part != null) {
+            JMXUIActivator.getActivePage().bringToTop(part);
+        } else {
+            try {
+                JMXUIActivator.getActivePage()
+                        .openEditor(input, MBeanEditor.ID);
+            } catch (PartInitException e) {
+                JMXUIActivator.log(IStatus.ERROR, e.getMessage(), e);
+            }
+        }
+    }
 }

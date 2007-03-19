@@ -29,12 +29,12 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-class MBeanExplorerContentProvider implements IStructuredContentProvider,
+public class MBeanExplorerContentProvider implements IStructuredContentProvider,
         ITreeContentProvider {
 
     private boolean flatLayout;
 
-    MBeanExplorerContentProvider() {
+    public MBeanExplorerContentProvider() {
     }
     
     public void inputChanged(Viewer v, Object oldInput, Object newInput) {}
@@ -97,7 +97,7 @@ class MBeanExplorerContentProvider implements IStructuredContentProvider,
         return true;
     }
     
-    void setFlatLayout(boolean state) {
+    public void setFlatLayout(boolean state) {
         flatLayout = state;
     }
 }

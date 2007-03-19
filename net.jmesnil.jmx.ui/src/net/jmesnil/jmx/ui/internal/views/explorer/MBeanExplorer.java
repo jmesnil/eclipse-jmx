@@ -18,17 +18,13 @@
  */
 package net.jmesnil.jmx.ui.internal.views.explorer;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Set;
-
 import javax.management.MBeanServerConnection;
 import javax.management.MBeanServerNotification;
-import javax.management.MalformedObjectNameException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
+import net.jmesnil.jmx.core.JMXCoreActivator;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanServerConnectionWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
@@ -37,10 +33,8 @@ import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.actions.MBeanServerConnectAction;
 import net.jmesnil.jmx.ui.internal.actions.MBeanServerDisconnectAction;
-import net.jmesnil.jmx.ui.internal.editors.MBeanEditor;
 import net.jmesnil.jmx.ui.internal.editors.MBeanEditorInput;
 import net.jmesnil.jmx.ui.internal.tree.Node;
-import net.jmesnil.jmx.ui.internal.tree.NodeBuilder;
 import net.jmesnil.jmx.ui.internal.tree.NodeUtils;
 import net.jmesnil.jmx.ui.internal.tree.ObjectNameNode;
 import net.jmesnil.jmx.ui.internal.tree.PropertyNode;
@@ -105,8 +99,6 @@ public class MBeanExplorer extends ViewPart {
 
     private ISelectionChangedListener postSelectionListener;
 
-    private MBeanServerConnectionWrapper wrapper;
-    
     private MBeanExplorerContentProvider contentProvider;
 
     private MBeanExplorerLabelProvider labelProvider;
@@ -226,12 +218,7 @@ public class MBeanExplorer extends ViewPart {
                 Object element = structured.getFirstElement();
                 IEditorInput editorInput = EditorUtils.getEditorInput(element);
                 if (editorInput != null) {
-                    IWorkbenchPage page = getViewSite().getPage();
-                    try {
-                        page.openEditor(editorInput, MBeanEditor.ID);
-                    } catch (PartInitException e) {
-                        JMXUIActivator.log(IStatus.ERROR, e.getMessage(), e);
-                    }
+                    EditorUtils.openMBeanEditor(editorInput);
                 } else {
                     boolean expanded = viewer.getExpandedState(element);
                     if (expanded) {
@@ -299,11 +286,10 @@ public class MBeanExplorer extends ViewPart {
             viewer.setInput(null);
             return;
         }
-        this.wrapper = wrapper;
         MBeanServerConnection mbsc = wrapper.getMBeanServerConnection();
         addRegistrationListener(mbsc);
         try {
-            Node root = createObjectNameTree(mbsc);
+            Node root = NodeUtils.createObjectNameTree(mbsc);
             viewer.setInput(root);
         } catch (Exception e) {
             JMXUIActivator.log(IStatus.ERROR, e.getMessage(), e);
@@ -317,7 +303,7 @@ public class MBeanExplorer extends ViewPart {
                 if (notifcation instanceof MBeanServerNotification) {
                     try {
                         MBeanServerConnection mbsc = (MBeanServerConnection) handback;
-                        final Node root = createObjectNameTree(mbsc);
+                        final Node root = NodeUtils.createObjectNameTree(mbsc);
                         viewer.getControl().getDisplay().syncExec(
                                 new Runnable() {
                                     public void run() {
@@ -341,31 +327,17 @@ public class MBeanExplorer extends ViewPart {
     }
 
     private void removeRegistrationListener() {
-        if (wrapper != null) {
-            MBeanServerConnection mbsc = wrapper.getMBeanServerConnection();
+        MBeanServerConnection mbsc = JMXCoreActivator.getDefault().getMBeanServerConnection();
+        if (mbsc != null) {
             try {
                 ObjectName mbeanServerON = ObjectName
-                        .getInstance("JMImplementation:type=MBeanServerDelegate"); //$NON-NLS-1$
+                .getInstance("JMImplementation:type=MBeanServerDelegate"); //$NON-NLS-1$
                 mbsc.removeNotificationListener(mbeanServerON,
                         registrationListener);
             } catch (Exception e) {
                 JMXUIActivator.log(IStatus.ERROR, e.getMessage(), e);
             }
         }
-    }
-
-    @SuppressWarnings("unchecked")//$NON-NLS-1$
-    private Node createObjectNameTree(Object handback) throws IOException,
-            MalformedObjectNameException {
-        MBeanServerConnection connection = (MBeanServerConnection) handback;
-        Set beanInfo = connection.queryNames(new ObjectName("*:*"), null); //$NON-NLS-1$
-        final Node root = NodeBuilder.createRoot(connection);
-        Iterator iter = beanInfo.iterator();
-        while (iter.hasNext()) {
-            ObjectName on = (ObjectName) iter.next();
-            NodeBuilder.addToTree(root, on);
-        }
-        return root;
     }
 
     /**

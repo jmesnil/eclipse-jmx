@@ -17,6 +17,12 @@
  */
 package net.jmesnil.jmx.ui.internal.tree;
 
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import org.eclipse.core.runtime.Assert;
@@ -26,7 +32,7 @@ public class NodeUtils {
     public static ObjectNameNode findObjectNameNode(Node node,
             ObjectName objectName) {
         Assert.isNotNull(node);
-        
+
         if (node instanceof ObjectNameNode) {
             ObjectNameNode onNode = (ObjectNameNode) node;
             if (onNode.getObjectName().equals(objectName)) {
@@ -44,4 +50,16 @@ public class NodeUtils {
         return null;
     }
 
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
+    public static Node createObjectNameTree(MBeanServerConnection mbsc)
+            throws IOException, MalformedObjectNameException {
+        Set beanInfo = mbsc.queryNames(new ObjectName("*:*"), null); //$NON-NLS-1$
+        final Node root = NodeBuilder.createRoot(mbsc);
+        Iterator iter = beanInfo.iterator();
+        while (iter.hasNext()) {
+            ObjectName on = (ObjectName) iter.next();
+            NodeBuilder.addToTree(root, on);
+        }
+        return root;
+    }
 }
