@@ -38,7 +38,7 @@ public class NotificationsPage extends FormPage {
 
     protected void createFormContent(IManagedForm managedForm) {
         ScrolledForm form = managedForm.getForm();
-        form.setText(wrapper.getObjectName().getCanonicalName());
+        form.setText(wrapper.getObjectName().toString());
         form.getForm().setSeparatorVisible(true);
     }
 }

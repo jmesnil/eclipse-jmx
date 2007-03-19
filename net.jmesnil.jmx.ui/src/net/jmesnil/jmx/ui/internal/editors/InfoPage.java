@@ -57,7 +57,7 @@ public class InfoPage extends FormPage {
 
     protected void createFormContent(IManagedForm managedForm) {
         ScrolledForm form = managedForm.getForm();
-        form.setText(wrapper.getObjectName().getCanonicalName());
+        form.setText(wrapper.getObjectName().toString());
         FormToolkit toolkit = managedForm.getToolkit();
         form.getForm().setSeparatorVisible(true);
 

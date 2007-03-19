@@ -20,7 +20,6 @@ import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanOperationInfoWrapper;
 import net.jmesnil.jmx.ui.internal.Messages;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.DetailsPart;
 import org.eclipse.ui.forms.IDetailsPage;
@@ -90,7 +89,7 @@ public class OperationsPage extends FormPage {
     protected void createFormContent(IManagedForm managedForm) {
         ScrolledForm form = managedForm.getForm();
         form.getForm().setSeparatorVisible(true);
-        form.getForm().setText(NLS.bind(Messages.OperationsPage_formText, wrapper.getObjectName().toString()));
+        form.getForm().setText(wrapper.getObjectName().toString());
         block.createContent(managedForm);
     }
 }

@@ -118,8 +118,6 @@ public class Messages extends NLS {
 
     public static String OperationDetails_title;
 
-    public static String OperationsPage_formText;
-
     public static String OperationsPage_title;
 
     public static String OperationsSection_title;
