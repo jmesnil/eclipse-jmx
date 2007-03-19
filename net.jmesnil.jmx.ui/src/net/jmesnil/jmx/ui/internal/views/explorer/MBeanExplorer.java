@@ -26,7 +26,6 @@ import javax.management.ObjectName;
 
 import net.jmesnil.jmx.core.JMXCoreActivator;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
-import net.jmesnil.jmx.resources.MBeanServerConnectionWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.EditorUtils;
 import net.jmesnil.jmx.ui.internal.JMXImages;
@@ -280,13 +279,13 @@ public class MBeanExplorer extends ViewPart {
     }
 
     @SuppressWarnings("unchecked")//$NON-NLS-1$
-    public void setMBeanServerConnection(MBeanServerConnectionWrapper wrapper) {
-        if (wrapper == null) {
+    public void setMBeanServerConnection(MBeanServerConnection mbsc) {
+        if (mbsc == null) {
             removeRegistrationListener();
+            mbsc = null;
             viewer.setInput(null);
             return;
         }
-        MBeanServerConnection mbsc = wrapper.getMBeanServerConnection();
         addRegistrationListener(mbsc);
         try {
             Node root = NodeUtils.createObjectNameTree(mbsc);

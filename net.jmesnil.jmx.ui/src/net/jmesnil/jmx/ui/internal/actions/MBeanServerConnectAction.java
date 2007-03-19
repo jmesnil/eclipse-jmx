@@ -16,8 +16,9 @@
  */
 package net.jmesnil.jmx.ui.internal.actions;
 
+import javax.management.MBeanServerConnection;
+
 import net.jmesnil.jmx.core.JMXCoreActivator;
-import net.jmesnil.jmx.resources.MBeanServerConnectionWrapper;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
@@ -48,9 +49,9 @@ public class MBeanServerConnectAction extends Action {
             String url = dialog.getURL();
             String userName = dialog.getUserName();
             String password = dialog.getPassword();
-            MBeanServerConnectionWrapper connection = JMXCoreActivator
+            MBeanServerConnection mbsc = JMXCoreActivator
                     .getDefault().connect(url, userName, password);
-            view.setMBeanServerConnection(connection);
+            view.setMBeanServerConnection(mbsc);
         } catch (Exception e) {
             String message = Messages.MBeanServerConnectAction_connectionFailure;
             ErrorDialog.openError(view.getSite().getShell(),

@@ -25,8 +25,6 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
-import net.jmesnil.jmx.resources.MBeanServerConnectionWrapper;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
@@ -69,7 +67,7 @@ public class JMXCoreActivator extends Plugin {
     }
 
     @SuppressWarnings("unchecked") //$NON-NLS-1$
-    public MBeanServerConnectionWrapper connect(String url, String userName,
+    public MBeanServerConnection connect(String url, String userName,
             String password) throws IOException {
         Assert.isNotNull(url);
         Assert.isNotNull(userName);
@@ -83,9 +81,7 @@ public class JMXCoreActivator extends Plugin {
         JMXServiceURL jmxurl = new JMXServiceURL(url);
         JMXConnector connector = JMXConnectorFactory.connect(jmxurl, env);
         mbsc = connector.getMBeanServerConnection();
-        MBeanServerConnectionWrapper wrapper = new MBeanServerConnectionWrapper(
-                mbsc);
-        return wrapper;
+        return mbsc;
     }
 
     public MBeanServerConnection getMBeanServerConnection() {

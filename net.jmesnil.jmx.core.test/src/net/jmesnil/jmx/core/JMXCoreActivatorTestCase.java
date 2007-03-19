@@ -19,12 +19,12 @@ package net.jmesnil.jmx.core;
 import java.lang.management.ManagementFactory;
 
 import javax.management.MBeanServer;
+import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
 
 import junit.framework.TestCase;
-import net.jmesnil.jmx.resources.MBeanServerConnectionWrapper;
 
 public class JMXCoreActivatorTestCase extends TestCase {
 
@@ -68,8 +68,7 @@ public class JMXCoreActivatorTestCase extends TestCase {
 
     public void testConnectToURL() throws Exception {
         JMXCoreActivator activator = JMXCoreActivator.getDefault();
-        MBeanServerConnectionWrapper wrapper = activator.connect(correctURL, "", "");
-        assertNotNull(wrapper);
-        assertNotNull(wrapper.getMBeanServerConnection());
+        MBeanServerConnection mbsc = activator.connect(correctURL, "", "");
+        assertNotNull(mbsc);
     }
 }
