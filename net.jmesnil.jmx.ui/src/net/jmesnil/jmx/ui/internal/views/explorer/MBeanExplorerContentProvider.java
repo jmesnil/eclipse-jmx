@@ -20,6 +20,7 @@ package net.jmesnil.jmx.ui.internal.views.explorer;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.jmesnil.jmx.resources.MBeanFeatureInfoWrapper;
 import net.jmesnil.jmx.ui.internal.tree.DomainNode;
 import net.jmesnil.jmx.ui.internal.tree.Node;
 import net.jmesnil.jmx.ui.internal.tree.ObjectNameNode;
@@ -29,16 +30,19 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-public class MBeanExplorerContentProvider implements IStructuredContentProvider,
-        ITreeContentProvider {
+public class MBeanExplorerContentProvider implements
+        IStructuredContentProvider, ITreeContentProvider {
 
     private boolean flatLayout;
 
     public MBeanExplorerContentProvider() {
     }
-    
-    public void inputChanged(Viewer v, Object oldInput, Object newInput) {}
-    public void dispose() {}
+
+    public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+    }
+
+    public void dispose() {
+    }
 
     public Object[] getElements(Object parent) {
         return getChildren(parent);
@@ -51,7 +55,7 @@ public class MBeanExplorerContentProvider implements IStructuredContentProvider,
         }
         return null;
     }
-    
+
     @SuppressWarnings("unchecked")//$NON-NLS-1$
     public Object[] getChildren(Object parent) {
         if (parent instanceof Root) {
@@ -66,6 +70,10 @@ public class MBeanExplorerContentProvider implements IStructuredContentProvider,
             } else {
                 return node.getChildren();
             }
+        }
+        if (parent instanceof ObjectNameNode) {
+            ObjectNameNode node = (ObjectNameNode) parent;
+            return node.getMbeanInfoWrapper().getMBeanFeatureInfos();
         }
         if (parent instanceof Node) {
             Node node = (Node) parent;
@@ -90,13 +98,20 @@ public class MBeanExplorerContentProvider implements IStructuredContentProvider,
     }
 
     public boolean hasChildren(Object parent) {
+        if (parent instanceof ObjectNameNode) {
+            ObjectNameNode node = (ObjectNameNode) parent;
+            return (node.getMbeanInfoWrapper().getMBeanFeatureInfos().length > 0);
+        }
         if (parent instanceof Node) {
             Node node = (Node) parent;
             return (node.getChildren().length > 0);
         }
+        if (parent instanceof MBeanFeatureInfoWrapper) {
+            return false;
+        }
         return true;
     }
-    
+
     public void setFlatLayout(boolean state) {
         flatLayout = state;
     }

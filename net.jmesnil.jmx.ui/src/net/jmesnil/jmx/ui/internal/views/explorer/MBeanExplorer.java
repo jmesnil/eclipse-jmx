@@ -119,7 +119,10 @@ public class MBeanExplorer extends ViewPart {
         }
 
         public boolean isElementVisible(Viewer viewer, Object element) {
-            return matchesObjectName((Node) element);
+            if (element instanceof Node) {
+                return matchesObjectName((Node) element);
+            }
+            return false;
         }
 
         private boolean matchesObjectName(Node node) {

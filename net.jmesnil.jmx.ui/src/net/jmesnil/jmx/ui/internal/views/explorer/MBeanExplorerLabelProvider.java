@@ -17,7 +17,10 @@
  */
 package net.jmesnil.jmx.ui.internal.views.explorer;
 
+import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
+import net.jmesnil.jmx.resources.MBeanOperationInfoWrapper;
 import net.jmesnil.jmx.ui.internal.JMXImages;
+import net.jmesnil.jmx.ui.internal.MBeanUtils;
 import net.jmesnil.jmx.ui.internal.tree.DomainNode;
 import net.jmesnil.jmx.ui.internal.tree.ObjectNameNode;
 import net.jmesnil.jmx.ui.internal.tree.PropertyNode;
@@ -28,7 +31,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 public class MBeanExplorerLabelProvider extends LabelProvider {
-    
+
     private boolean flatLayout;
 
     public MBeanExplorerLabelProvider() {
@@ -53,6 +56,14 @@ public class MBeanExplorerLabelProvider extends LabelProvider {
             PropertyNode node = (PropertyNode) obj;
             return node.getValue();
         }
+        if (obj instanceof MBeanOperationInfoWrapper) {
+            MBeanOperationInfoWrapper wrapper = (MBeanOperationInfoWrapper) obj;
+            return MBeanUtils.prettySignature(wrapper.getMBeanOperationInfo());
+        }
+        if (obj instanceof MBeanAttributeInfoWrapper) {
+            MBeanAttributeInfoWrapper wrapper = (MBeanAttributeInfoWrapper) obj;
+            return wrapper.getMBeanAttributeInfo().getName();
+        }
         return obj.toString();
     }
 
@@ -67,11 +78,16 @@ public class MBeanExplorerLabelProvider extends LabelProvider {
         if (obj instanceof PropertyNode) {
             return JMXImages.get(JMXImages.IMG_OBJS_PACKAGE);
         }
+        if (obj instanceof MBeanAttributeInfoWrapper) {
+            return JMXImages.get(JMXImages.IMG_FIELD_PUBLIC);
+        }
+        if (obj instanceof MBeanOperationInfoWrapper) {
+            return JMXImages.get(JMXImages.IMG_MISC_PUBLIC);
+        }
         String imageKey = ISharedImages.IMG_OBJ_ELEMENT;
-        return PlatformUI.getWorkbench().getSharedImages().getImage(
-                imageKey);
+        return PlatformUI.getWorkbench().getSharedImages().getImage(imageKey);
     }
-    
+
     public void setFlatLayout(boolean state) {
         flatLayout = state;
     }

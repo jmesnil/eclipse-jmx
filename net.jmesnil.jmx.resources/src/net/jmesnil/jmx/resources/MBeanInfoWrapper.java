@@ -69,7 +69,7 @@ public class MBeanInfoWrapper {
         MBeanOperationInfoWrapper[] opWrappers = new MBeanOperationInfoWrapper[operations.length];
         for (int i = 0; i < operations.length; i++) {
             MBeanOperationInfo opInfo = operations[i];
-            opWrappers[i] = new MBeanOperationInfoWrapper(opInfo, on, mbsc);
+            opWrappers[i] = new MBeanOperationInfoWrapper(opInfo, this);
         }
         return opWrappers;
     }
@@ -97,7 +97,7 @@ public class MBeanInfoWrapper {
         for (int i = 0; i < operations.length; i++) {
             MBeanOperationInfo opInfo = operations[i];
             o[attributes.length + i] = new MBeanOperationInfoWrapper(opInfo,
-                    on, mbsc);
+                    this);
         }
         return o;
     }

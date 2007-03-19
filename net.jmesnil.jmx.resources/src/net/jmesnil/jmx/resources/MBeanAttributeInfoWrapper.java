@@ -23,21 +23,14 @@ public class MBeanAttributeInfoWrapper extends MBeanFeatureInfoWrapper {
 
     private MBeanAttributeInfo info;
 
-    private MBeanInfoWrapper mbeanInfoWrapper;
-
     public MBeanAttributeInfoWrapper(MBeanAttributeInfo attrInfo,
             MBeanInfoWrapper wrapper) {
-        super(wrapper.getObjectName(), wrapper.getMBeanServerConnection());
+        super(wrapper);
         this.info = attrInfo;
-        mbeanInfoWrapper = wrapper;
     }
 
     public MBeanAttributeInfo getMBeanAttributeInfo() {
         return info;
-    }
-
-    public MBeanInfoWrapper getMBeanInfoWrapper() {
-        return mbeanInfoWrapper;
     }
     
     public Object getValue() throws Exception {

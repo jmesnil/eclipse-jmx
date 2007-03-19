@@ -16,12 +16,14 @@
  */
 package net.jmesnil.jmx.ui.internal;
 
+import net.jmesnil.jmx.resources.MBeanFeatureInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.editors.MBeanEditor;
 import net.jmesnil.jmx.ui.internal.editors.MBeanEditorInput;
 import net.jmesnil.jmx.ui.internal.tree.ObjectNameNode;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -31,6 +33,8 @@ import org.eclipse.ui.PartInitException;
 public class EditorUtils {
 
     public static IEditorInput getEditorInput(Object input) {
+        Assert.isNotNull(input);
+        
         if (input instanceof ObjectNameNode) {
             ObjectNameNode node = (ObjectNameNode) input;
             MBeanInfoWrapper wrapper = node.getMbeanInfoWrapper();
@@ -40,6 +44,11 @@ public class EditorUtils {
             MBeanInfoWrapper wrapper = (MBeanInfoWrapper) input;
             return new MBeanEditorInput(wrapper);
         }
+        if (input instanceof MBeanFeatureInfoWrapper) {
+            MBeanFeatureInfoWrapper wrapper = (MBeanFeatureInfoWrapper) input;
+            return new MBeanEditorInput(wrapper.getMBeanInfoWrapper());
+        }
+
         return null;
     }
 

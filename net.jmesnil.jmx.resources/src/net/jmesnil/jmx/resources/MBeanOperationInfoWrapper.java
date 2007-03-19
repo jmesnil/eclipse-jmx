@@ -17,8 +17,6 @@
 package net.jmesnil.jmx.resources;
 
 import javax.management.MBeanOperationInfo;
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
 
 import org.eclipse.core.runtime.Assert;
 
@@ -26,9 +24,9 @@ public class MBeanOperationInfoWrapper extends MBeanFeatureInfoWrapper {
 
     private MBeanOperationInfo info;
 
-    public MBeanOperationInfoWrapper(MBeanOperationInfo info, ObjectName on,
-            MBeanServerConnection mbsc) {
-        super(on, mbsc);
+    public MBeanOperationInfoWrapper(MBeanOperationInfo info,
+            MBeanInfoWrapper wrapper) {
+        super(wrapper);
         Assert.isNotNull(info);
         this.info = info;
     }

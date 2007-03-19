@@ -23,6 +23,7 @@ import java.util.List;
 import javax.management.MBeanServerConnection;
 
 import net.jmesnil.jmx.core.JMXCoreActivator;
+import net.jmesnil.jmx.resources.MBeanFeatureInfoWrapper;
 import net.jmesnil.jmx.ui.internal.tree.Node;
 import net.jmesnil.jmx.ui.internal.tree.NodeUtils;
 import net.jmesnil.jmx.ui.internal.tree.ObjectNameNode;
@@ -105,6 +106,12 @@ public class OpenMBeanSelectionDialog extends SelectionStatusDialog {
             ObjectNameNode node = (ObjectNameNode) selected;
             List results = new ArrayList();
             results.add(node.getMbeanInfoWrapper());
+            setResult(results);
+        }
+        if (selected instanceof MBeanFeatureInfoWrapper) {
+            MBeanFeatureInfoWrapper feature = (MBeanFeatureInfoWrapper) selected;
+            List results = new ArrayList();
+            results.add(feature);
             setResult(results);
         }
     }

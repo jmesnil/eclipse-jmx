@@ -17,7 +17,6 @@
  */
 package net.jmesnil.jmx.ui.internal.actions;
 
-import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.EditorUtils;
 import net.jmesnil.jmx.ui.internal.Messages;
@@ -52,8 +51,8 @@ public class OpenMBeanAction extends Action implements
         if (result != IDialogConstants.OK_ID)
             return;
         Object object = dialog.getFirstResult();
-        if (object instanceof MBeanInfoWrapper) {
-            IEditorInput input = EditorUtils.getEditorInput(object);
+        IEditorInput input = EditorUtils.getEditorInput(object);
+        if (input != null) {
             EditorUtils.openMBeanEditor(input);
         }
     }

@@ -23,22 +23,22 @@ import org.eclipse.core.runtime.Assert;
 
 public class MBeanFeatureInfoWrapper {
 
-    private final MBeanServerConnection mbsc;
+    private MBeanInfoWrapper parent;
 
-    private final ObjectName on;
-
-    MBeanFeatureInfoWrapper(ObjectName on, MBeanServerConnection mbsc) {
-        Assert.isNotNull(on);
-        Assert.isNotNull(mbsc);
-        this.on = on;
-        this.mbsc = mbsc;
-    }
-
-    public MBeanServerConnection getMBeanServerConnection() {
-        return mbsc;
+    MBeanFeatureInfoWrapper(MBeanInfoWrapper parent) {
+        Assert.isNotNull(parent);
+        this.parent = parent;
     }
 
     public ObjectName getObjectName() {
-        return on;
+        return parent.getObjectName();
+    }
+    
+    public MBeanInfoWrapper getMBeanInfoWrapper() {
+        return parent;
+    }
+    
+    public MBeanServerConnection getMBeanServerConnection() {
+        return parent.getMBeanServerConnection();
     }
 }
