@@ -30,7 +30,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-public class MBeanExplorerContentProvider implements
+class MBeanExplorerContentProvider implements
         IStructuredContentProvider, ITreeContentProvider {
 
     private boolean flatLayout;

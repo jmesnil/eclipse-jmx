@@ -15,23 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
+
 package net.jmesnil.jmx.ui.internal.dialogs;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import javax.management.MBeanInfo;
 import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
 
 import net.jmesnil.jmx.core.JMXCoreActivator;
-import net.jmesnil.jmx.resources.MBeanFeatureInfoWrapper;
-import net.jmesnil.jmx.ui.internal.tree.Node;
-import net.jmesnil.jmx.ui.internal.tree.NodeUtils;
-import net.jmesnil.jmx.ui.internal.tree.ObjectNameNode;
-import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorerContentProvider;
+import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorerLabelProvider;
 
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -65,6 +70,7 @@ public class OpenMBeanSelectionDialog extends SelectionStatusDialog {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite area = (Composite) super.createDialogArea(parent);
@@ -73,18 +79,22 @@ public class OpenMBeanSelectionDialog extends SelectionStatusDialog {
                 | SWT.H_SCROLL | SWT.V_SCROLL, new PatternFilter());
 
         viewer = filter.getViewer();
-        MBeanExplorerContentProvider contentProvider = new MBeanExplorerContentProvider();
-        contentProvider.setFlatLayout(true);
-        viewer.setContentProvider(contentProvider);
-        MBeanExplorerLabelProvider labelProvider = new MBeanExplorerLabelProvider();
-        labelProvider.setFlatLayout(true);
-        viewer.setLabelProvider(labelProvider);
+        viewer.setContentProvider(new ContentProvider());
+        viewer.setLabelProvider(new MBeanExplorerLabelProvider());
         MBeanServerConnection mbsc = JMXCoreActivator.getDefault()
                 .getMBeanServerConnection();
         if (mbsc != null) {
             try {
-                Node root = NodeUtils.createObjectNameTree(mbsc);
-                viewer.setInput(root);
+                Set set = mbsc.queryNames(ObjectName.getInstance("*:*"), null);
+                List mbeans = new ArrayList();
+                Iterator iter = set.iterator();
+                while (iter.hasNext()) {
+                    ObjectName objectName = (ObjectName) iter.next();
+                    MBeanInfo info = mbsc.getMBeanInfo(objectName);
+                    mbeans.add(new MBeanInfoWrapper(objectName, info, mbsc));
+                }
+                Collections.sort(mbeans);
+                viewer.setInput(mbeans);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -102,18 +112,51 @@ public class OpenMBeanSelectionDialog extends SelectionStatusDialog {
             setResult(null);
             return;
         }
-        if (selected instanceof ObjectNameNode) {
-            ObjectNameNode node = (ObjectNameNode) selected;
+        if (selected instanceof MBeanInfoWrapper) {
+            MBeanInfoWrapper wrapper = (MBeanInfoWrapper) selected;
             List results = new ArrayList();
-            results.add(node.getMbeanInfoWrapper());
-            setResult(results);
-        }
-        if (selected instanceof MBeanFeatureInfoWrapper) {
-            MBeanFeatureInfoWrapper feature = (MBeanFeatureInfoWrapper) selected;
-            List results = new ArrayList();
-            results.add(feature);
+            results.add(wrapper);
             setResult(results);
         }
     }
 
+    class ContentProvider implements IStructuredContentProvider,
+            ITreeContentProvider {
+
+        @SuppressWarnings("unchecked")//$NON-NLS-1$
+        private List mbeans;
+
+        ContentProvider() {
+        }
+
+        @SuppressWarnings("unchecked")//$NON-NLS-1$
+        public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+            this.mbeans = (List) newInput;
+        }
+
+        public void dispose() {
+        }
+
+        @SuppressWarnings("unchecked")//$NON-NLS-1$
+        public Object[] getElements(Object parent) {
+            if (mbeans != null) {
+                return (MBeanInfoWrapper[]) mbeans
+                        .toArray(new MBeanInfoWrapper[mbeans.size()]);
+            }
+            return new Object[0];
+        }
+
+        public Object getParent(Object child) {
+            return null;
+        }
+
+        @SuppressWarnings("unchecked")//$NON-NLS-1$
+        public Object[] getChildren(Object parent) {
+            return new Object[0];
+        }
+
+        public boolean hasChildren(Object parent) {
+            return false;
+        }
+    }
 }

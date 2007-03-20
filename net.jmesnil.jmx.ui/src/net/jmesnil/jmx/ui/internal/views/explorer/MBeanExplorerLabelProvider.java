@@ -18,6 +18,7 @@
 package net.jmesnil.jmx.ui.internal.views.explorer;
 
 import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
+import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanOperationInfoWrapper;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.MBeanUtils;
@@ -56,6 +57,10 @@ public class MBeanExplorerLabelProvider extends LabelProvider {
             PropertyNode node = (PropertyNode) obj;
             return node.getValue();
         }
+        if (obj instanceof MBeanInfoWrapper) {
+            MBeanInfoWrapper wrapper = (MBeanInfoWrapper) obj;
+            return wrapper.getObjectName().toString();
+        }
         if (obj instanceof MBeanOperationInfoWrapper) {
             MBeanOperationInfoWrapper wrapper = (MBeanOperationInfoWrapper) obj;
             return MBeanUtils.prettySignature(wrapper.getMBeanOperationInfo());
@@ -77,6 +82,9 @@ public class MBeanExplorerLabelProvider extends LabelProvider {
         }
         if (obj instanceof PropertyNode) {
             return JMXImages.get(JMXImages.IMG_OBJS_PACKAGE);
+        }
+        if (obj instanceof MBeanInfoWrapper) {
+            return JMXImages.get(JMXImages.IMG_OBJS_METHOD);
         }
         if (obj instanceof MBeanAttributeInfoWrapper) {
             return JMXImages.get(JMXImages.IMG_FIELD_PUBLIC);
