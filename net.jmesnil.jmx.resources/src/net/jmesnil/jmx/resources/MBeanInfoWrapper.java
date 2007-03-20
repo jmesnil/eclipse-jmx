@@ -25,7 +25,7 @@ import javax.management.ObjectName;
 
 import org.eclipse.core.runtime.Assert;
 
-public class MBeanInfoWrapper {
+public class MBeanInfoWrapper implements Comparable {
     private final ObjectName on;
 
     private final MBeanInfo info;
@@ -100,5 +100,13 @@ public class MBeanInfoWrapper {
                     this);
         }
         return o;
+    }
+
+    public int compareTo(Object object) {
+        if (object instanceof MBeanInfoWrapper) {
+            MBeanInfoWrapper other = (MBeanInfoWrapper) object;
+            return on.toString().compareTo(other.on.toString());
+        }
+        return 0;
     }
 }
