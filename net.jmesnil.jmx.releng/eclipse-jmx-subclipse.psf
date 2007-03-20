@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<psf version="2.0">
+<provider id="org.tigris.subversion.subclipse.core.svnnature">
+<project reference="0.9.3,http://eclipse-jmx.googlecode.com/svn/trunk/net.jmesnil.jmx.feature,net.jmesnil.jmx.feature"/>
+<project reference="0.9.3,http://eclipse-jmx.googlecode.com/svn/trunk/net.jmesnil.jmx.ui,net.jmesnil.jmx.ui"/>
+<project reference="0.9.3,http://eclipse-jmx.googlecode.com/svn/trunk/net.jmesnil.jmx.ui.test,net.jmesnil.jmx.ui.test"/>
+<project reference="0.9.3,http://eclipse-jmx.googlecode.com/svn/trunk/net.jmesnil.jmx.ui.test.interactive,net.jmesnil.jmx.ui.test.interactive"/>
+<project reference="0.9.3,http://eclipse-jmx.googlecode.com/svn/trunk/net.jmesnil.jmx.core,net.jmesnil.jmx.core"/>
+<project reference="0.9.3,http://eclipse-jmx.googlecode.com/svn/trunk/net.jmesnil.jmx.core.test,net.jmesnil.jmx.core.test"/>
+<project reference="0.9.3,http://eclipse-jmx.googlecode.com/svn/trunk/net.jmesnil.jmx.resources,net.jmesnil.jmx.resources"/>
+</provider>
+</psf>
