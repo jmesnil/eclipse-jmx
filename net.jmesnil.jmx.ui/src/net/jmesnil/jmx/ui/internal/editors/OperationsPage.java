@@ -20,6 +20,7 @@ import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanOperationInfoWrapper;
 import net.jmesnil.jmx.ui.internal.Messages;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.DetailsPart;
 import org.eclipse.ui.forms.IDetailsPage;
@@ -91,5 +92,17 @@ public class OperationsPage extends FormPage {
         form.getForm().setSeparatorVisible(true);
         form.getForm().setText(wrapper.getObjectName().toString());
         block.createContent(managedForm);
+    }
+
+    @Override
+    public boolean selectReveal(Object object) {
+        Assert.isNotNull(object);
+        
+        if (object instanceof MBeanOperationInfoWrapper) {
+            MBeanOperationInfoWrapper opWrapper = (MBeanOperationInfoWrapper) object;
+            getEditor().setActivePage(ID);
+            return block.masterSection.setFormInput(opWrapper);
+        }
+        return super.selectReveal(object);
     }
 }
