@@ -97,6 +97,7 @@ public class AttributesPage extends FormPage {
     public boolean selectReveal(Object object) {
         if (object instanceof MBeanAttributeInfoWrapper) {
             MBeanAttributeInfoWrapper attrWrapper = (MBeanAttributeInfoWrapper) object;
+            getEditor().setActivePage(ID);
             return block.masterSection.setFormInput(attrWrapper);
         }
         return super.selectReveal(object);
