@@ -37,4 +37,27 @@ public class MBeanAttributeInfoWrapper extends MBeanFeatureInfoWrapper {
            MBeanServerConnection mbsc = getMBeanServerConnection();
         return mbsc.getAttribute(getObjectName(),  info.getName());
     }
+
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((info == null) ? 0 : info.hashCode());
+        return result;
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof MBeanAttributeInfoWrapper))
+            return false;
+        final MBeanAttributeInfoWrapper other = (MBeanAttributeInfoWrapper) obj;
+        if (info == null) {
+            if (other.info != null)
+                return false;
+        } else if (!info.equals(other.info))
+            return false;
+        return true;
+    }
 }
