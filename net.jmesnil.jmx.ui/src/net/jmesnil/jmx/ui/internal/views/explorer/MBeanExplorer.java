@@ -25,6 +25,7 @@ import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
 import net.jmesnil.jmx.core.JMXCoreActivator;
+import net.jmesnil.jmx.resources.MBeanFeatureInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.EditorUtils;
@@ -220,7 +221,10 @@ public class MBeanExplorer extends ViewPart {
                 Object element = structured.getFirstElement();
                 IEditorInput editorInput = EditorUtils.getEditorInput(element);
                 if (editorInput != null) {
-                    EditorUtils.openMBeanEditor(editorInput);
+                    IEditorPart editor = EditorUtils.openMBeanEditor(editorInput);
+                    if (editor != null) {
+                        EditorUtils.revealInEditor(editor, element);
+                    }
                 } else {
                     boolean expanded = viewer.getExpandedState(element);
                     if (expanded) {
@@ -516,6 +520,9 @@ public class MBeanExplorer extends ViewPart {
             if (part != null) {
                 IWorkbenchPage page = getSite().getPage();
                 page.bringToTop(part);
+                if (obj instanceof MBeanFeatureInfoWrapper) {
+                    EditorUtils.revealInEditor(part, (MBeanFeatureInfoWrapper)obj);
+                }
             }
         }
     }

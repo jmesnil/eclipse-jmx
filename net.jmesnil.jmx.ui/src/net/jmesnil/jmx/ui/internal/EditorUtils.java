@@ -67,16 +67,27 @@ public class EditorUtils {
         return null;
     }
 
-    public static void openMBeanEditor(IEditorInput input) {
+    public static IEditorPart openMBeanEditor(IEditorInput input) {
         IEditorPart part = EditorUtils.isOpenInEditor(input);
         if (part != null) {
             JMXUIActivator.getActivePage().bringToTop(part);
+            return part;
         } else {
             try {
-                JMXUIActivator.getActivePage()
-                        .openEditor(input, MBeanEditor.ID);
+                return JMXUIActivator.getActivePage().openEditor(input,
+                        MBeanEditor.ID);
             } catch (PartInitException e) {
                 JMXUIActivator.log(IStatus.ERROR, e.getMessage(), e);
+            }
+        }
+        return null;
+    }
+
+    public static void revealInEditor(IEditorPart editor, Object input) {
+        if (input instanceof MBeanFeatureInfoWrapper) {
+            MBeanFeatureInfoWrapper feature = (MBeanFeatureInfoWrapper) input;
+            if (editor instanceof MBeanEditor) {
+                ((MBeanEditor) editor).selectReveal(feature);
             }
         }
     }

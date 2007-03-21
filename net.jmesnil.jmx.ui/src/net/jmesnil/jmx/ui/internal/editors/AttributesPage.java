@@ -92,4 +92,13 @@ public class AttributesPage extends FormPage {
         form.getForm().setText(wrapper.getObjectName().toString());
         block.createContent(managedForm);
     }
+
+    @Override
+    public boolean selectReveal(Object object) {
+        if (object instanceof MBeanAttributeInfoWrapper) {
+            MBeanAttributeInfoWrapper attrWrapper = (MBeanAttributeInfoWrapper) object;
+            return block.masterSection.setFormInput(attrWrapper);
+        }
+        return super.selectReveal(object);
+    }
 }

@@ -16,12 +16,15 @@
  */
 package net.jmesnil.jmx.ui.internal.editors;
 
+import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.tables.MBeanAttributesTable;
 
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -68,5 +71,16 @@ public class AttributesSection extends SectionPart {
     public void refresh() {
         super.refresh();
         attributesTable.getViewer().refresh();
+    }
+    
+    @Override
+    public boolean setFormInput(Object input) {
+        if (input instanceof MBeanAttributeInfoWrapper) {
+            MBeanAttributeInfoWrapper wrapper = (MBeanAttributeInfoWrapper) input;
+            ISelection selection = new StructuredSelection(wrapper);
+            attributesTable.getViewer().setSelection(selection, true);
+            return true;
+        }
+        return false;
     }
 }
