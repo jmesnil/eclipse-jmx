@@ -55,6 +55,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -237,6 +239,12 @@ public class MBeanExplorer extends ViewPart implements ISetSelectionTarget {
             }
         });
         viewer.addPostSelectionChangedListener(postSelectionListener);
+        // workaround for issue #19 (observed on linux/gtk only)
+        viewer.getControl().addListener(SWT.FocusIn, new Listener() {
+            public void handleEvent(Event event) {
+                JMXUIActivator.getActivePage().activate(getSite().getPart());
+            }          
+        });
         getViewSite().setSelectionProvider(viewer);
     }
 
