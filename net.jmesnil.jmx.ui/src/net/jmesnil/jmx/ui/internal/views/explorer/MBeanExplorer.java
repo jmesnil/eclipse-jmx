@@ -68,9 +68,10 @@ import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.ui.part.ISetSelectionTarget;
 import org.eclipse.ui.part.ViewPart;
 
-public class MBeanExplorer extends ViewPart {
+public class MBeanExplorer extends ViewPart implements ISetSelectionTarget {
 
     public static final String ID = "net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer"; //$NON-NLS-1$
 
@@ -529,5 +530,11 @@ public class MBeanExplorer extends ViewPart {
 
     private boolean isActivePart() {
         return this == getSite().getPage().getActivePart();
+    }
+
+    public void selectReveal(ISelection selection) {
+        if (isLinkingEnabled()) {
+            viewer.setSelection(selection, true);
+        }
     }
 }

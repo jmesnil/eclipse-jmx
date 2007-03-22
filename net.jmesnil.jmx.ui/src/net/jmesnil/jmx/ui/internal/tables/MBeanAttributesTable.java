@@ -20,8 +20,12 @@
 package net.jmesnil.jmx.ui.internal.tables;
 
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
+import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
 
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -31,7 +35,9 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.part.ISetSelectionTarget;
 
 public class MBeanAttributesTable {
 
@@ -50,6 +56,16 @@ public class MBeanAttributesTable {
         viewer = new TableViewer(attrTable);
         viewer.setContentProvider(new AttributesContentProvider());
         viewer.setLabelProvider(new AttributesLabelProvider());
+        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+            public void selectionChanged(SelectionChangedEvent event) {
+                IViewPart part = JMXUIActivator.getActivePage().findView(
+                        MBeanExplorer.ID);
+                if (part != JMXUIActivator.getActivePage().getActivePart()) {
+                    ((ISetSelectionTarget) part).selectReveal(event
+                            .getSelection());
+                }
+            }
+        });
     }
 
     private void createColumns(final Table attrTable) {
