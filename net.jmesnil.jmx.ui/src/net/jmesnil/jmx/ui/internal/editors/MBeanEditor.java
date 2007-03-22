@@ -51,7 +51,7 @@ public class MBeanEditor extends FormEditor {
         try {
             addPage(new AttributesPage(this));
             addPage(new OperationsPage(this));
-            addPage(new NotificationsPage(this));
+            // addPage(new NotificationsPage(this));
             addPage(new InfoPage(this));
         } catch (PartInitException e) {
             JMXUIActivator.log(IStatus.ERROR, e.getMessage(), e);
