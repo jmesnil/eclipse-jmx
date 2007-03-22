@@ -70,7 +70,7 @@ public class OpenMBeanSelectionDialog extends SelectionStatusDialog {
         return result;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite area = (Composite) super.createDialogArea(parent);
@@ -85,7 +85,7 @@ public class OpenMBeanSelectionDialog extends SelectionStatusDialog {
                 .getMBeanServerConnection();
         if (mbsc != null) {
             try {
-                Set set = mbsc.queryNames(ObjectName.getInstance("*:*"), null);
+                Set set = mbsc.queryNames(ObjectName.getInstance("*:*"), null); //$NON-NLS-1$
                 List mbeans = new ArrayList();
                 Iterator iter = set.iterator();
                 while (iter.hasNext()) {
