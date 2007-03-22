@@ -109,4 +109,39 @@ public class MBeanInfoWrapper implements Comparable {
         }
         return 0;
     }
+
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 1;
+        result = PRIME * result + ((info == null) ? 0 : info.hashCode());
+        result = PRIME * result + ((mbsc == null) ? 0 : mbsc.hashCode());
+        result = PRIME * result + ((on == null) ? 0 : on.hashCode());
+        return result;
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final MBeanInfoWrapper other = (MBeanInfoWrapper) obj;
+        if (info == null) {
+            if (other.info != null)
+                return false;
+        } else if (!info.equals(other.info))
+            return false;
+        if (mbsc == null) {
+            if (other.mbsc != null)
+                return false;
+        } else if (!mbsc.equals(other.mbsc))
+            return false;
+        if (on == null) {
+            if (other.on != null)
+                return false;
+        } else if (!on.equals(other.on))
+            return false;
+        return true;
+    }
 }
