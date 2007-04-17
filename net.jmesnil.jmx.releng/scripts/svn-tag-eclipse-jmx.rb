@@ -1,18 +1,21 @@
 require "fileutils"
 
 # tag argument is mandatory.
-# it is expected to follow the format IHHHHMMDDhhmm (e.g. I200702071405)
+# it is expected to follow the format IYYYYMMDDhhmm (e.g. I200702071405)
 tag = ARGV[0]
-exit unless tag
+unless tag =~ /I\d{12}/
+  puts "#{tag} is not a valid integration task (must be of the form IYYYYMMDDhhmm)"
+  exit 1
+end
 
-projects = [
-  "net.jmesnil.jmx.core",
-  "net.jmesnil.jmx.core.test",
-  "net.jmesnil.jmx.feature", 
-  "net.jmesnil.jmx.resources",
-  "net.jmesnil.jmx.ui",
-  "net.jmesnil.jmx.ui.test",
-  "net.jmesnil.jmx.ui.test.interactive"]
+projects = %w{
+  net.jmesnil.jmx.core
+  net.jmesnil.jmx.core.test
+  net.jmesnil.jmx.feature
+  net.jmesnil.jmx.resources
+  net.jmesnil.jmx.ui
+  net.jmesnil.jmx.ui.test
+  net.jmesnil.jmx.ui.test.interactive}
 
 repository = "https://eclipse-jmx.googlecode.com/svn"
 tag_url = "#{repository}/tags/#{tag}"
