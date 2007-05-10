@@ -135,6 +135,7 @@ public class AttributeControlFactory {
         return factory.createControl(parent, toolkit, writable, type, value, handler);
     }
 
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     private static List<IAttributeControlFactory> findFactories(final Class valueClass) {
         for (Map.Entry<String, List<IAttributeControlFactory>> entry : typeFactories.entrySet()) {
             try {
