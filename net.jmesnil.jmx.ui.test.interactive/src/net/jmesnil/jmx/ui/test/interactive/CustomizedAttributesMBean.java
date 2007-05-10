@@ -14,8 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package net.jmesnil.jmx.ui.internal;
+package net.jmesnil.jmx.ui.test.interactive;
 
-public interface IWritableAttributeHandler {
-    void write(Object newValue);
+public interface CustomizedAttributesMBean {
+    String getRedString();
+
+    String getGreenString();
+
+    String getUnmodifiedString();
 }

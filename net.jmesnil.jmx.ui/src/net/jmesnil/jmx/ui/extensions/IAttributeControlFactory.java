@@ -1,6 +1,6 @@
 /**
  * Eclipse JMX Console
- * Copyright (C) 2006 Jeff Mesnil
+ * Copyright (C) 2007 Jeff Mesnil
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. 
+ * 
+ * Contributors:
+ *      Benjamin Walstrum (issue #24)
  */
+package net.jmesnil.jmx.ui.extensions;
 
-package net.jmesnil.jmx.ui.test.interactive;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
-public interface ComplexTypeMBean {
-    @SuppressWarnings("unchecked")//$NON-NLS-1$
-    Map getMap();
+public interface IAttributeControlFactory {
 
-    @SuppressWarnings("unchecked")//$NON-NLS-1$
-    HashMap getHashMap();
-
-    @SuppressWarnings("unchecked")//$NON-NLS-1$
-    Collection getCollection();
-
-    Properties getSystemProperties();
-
+    Control createControl(Composite parent, FormToolkit toolkit, 
+    		boolean writable, String type, Object value, 
+    		IWritableAttributeHandler handler);
+	
 }

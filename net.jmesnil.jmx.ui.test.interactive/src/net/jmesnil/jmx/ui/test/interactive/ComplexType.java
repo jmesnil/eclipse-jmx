@@ -41,6 +41,15 @@ public class ComplexType extends StandardMBean implements ComplexTypeMBean {
         return map;
     }
 
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
+    public HashMap getHashMap() {
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("must", "be"); //$NON-NLS-1$ //$NON-NLS-2$
+        map.put("displayed", "as"); //$NON-NLS-1$ //$NON-NLS-2$
+        map.put("a", "map"); //$NON-NLS-1$ //$NON-NLS-2$
+        return map;
+    }
+
     public Collection<String> getCollection() {
         Collection<String> coll = new ArrayList<String>();
         coll.add("first"); //$NON-NLS-1$

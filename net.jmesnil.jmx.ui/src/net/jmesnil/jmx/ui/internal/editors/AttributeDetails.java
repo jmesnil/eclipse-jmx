@@ -13,6 +13,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. 
+ * 
+ * Contributors:
+ *      Benjamin Walstrum (issue #24)
  */
 package net.jmesnil.jmx.ui.internal.editors;
 
@@ -25,7 +28,7 @@ import javax.management.MBeanServerConnection;
 
 import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
-import net.jmesnil.jmx.ui.internal.IWritableAttributeHandler;
+import net.jmesnil.jmx.ui.extensions.IWritableAttributeHandler;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
@@ -185,8 +188,9 @@ public class AttributeDetails extends AbstractFormPart implements IDetailsPage {
 
         try {
             Control attrControl = AttributeControlFactory.createControl(
-                    valueComposite, toolkit, writable, type,
-                    wrapper.getValue(), updateAttributeHandler);
+                    valueComposite, wrapper.getValue(), type, 
+                    wrapper.getObjectName().getCanonicalName(), attrInfo.getName(),
+                    writable, updateAttributeHandler, toolkit);
             GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
             attrControl.setLayoutData(gd);
             attrControl.pack(true);

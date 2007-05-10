@@ -14,23 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package net.jmesnil.jmx.ui.internal.controls;
+package net.jmesnil.jmx.ui.test.interactive;
 
-import org.eclipse.jface.fieldassist.IControlCreator;
+import net.jmesnil.jmx.ui.extensions.IAttributeControlFactory;
+import net.jmesnil.jmx.ui.extensions.IWritableAttributeHandler;
+
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-public class ToolkitTextControlCreator implements IControlCreator {
+public class GreenTextControlFactory implements IAttributeControlFactory {
 
-    private FormToolkit toolkit;
+    public Control createControl(Composite parent, FormToolkit toolkit,
+            boolean writable, String type, Object value,
+            IWritableAttributeHandler handler) {
 
-    public ToolkitTextControlCreator(FormToolkit toolkit) {
-        this.toolkit = toolkit;
+        final Text text = toolkit.createText(parent, value.toString(),
+                SWT.BORDER);
+        text.setEditable(false);
+        text.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_GREEN));
+        return text;
     }
-
-    public Control createControl(Composite parent, int style) {
-        return toolkit.createText(parent, "", style); //$NON-NLS-1$
-    }
-
 }

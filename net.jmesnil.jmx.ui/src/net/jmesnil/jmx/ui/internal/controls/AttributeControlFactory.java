@@ -13,322 +13,139 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. 
+ * 
+ * Contributors:
+ *      Benjamin Walstrum (issue #24)
  */
 package net.jmesnil.jmx.ui.internal.controls;
 
-import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import javax.management.openmbean.CompositeData;
-import javax.management.openmbean.TabularData;
+import java.util.regex.Pattern;
 
 import net.jmesnil.jmx.ui.JMXUIActivator;
-import net.jmesnil.jmx.ui.internal.IWritableAttributeHandler;
-import net.jmesnil.jmx.ui.internal.MBeanUtils;
-import net.jmesnil.jmx.ui.internal.Messages;
-import net.jmesnil.jmx.ui.internal.StringUtils;
+import net.jmesnil.jmx.ui.extensions.IAttributeControlFactory;
+import net.jmesnil.jmx.ui.extensions.IWritableAttributeHandler;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class AttributeControlFactory {
 
-    @SuppressWarnings("unchecked")//$NON-NLS-1$
-    public static Control createControl(final Composite parent,
-            final Object value) {
-        return createControl(parent, null, false, value.getClass()
-                .getSimpleName(), value, null);
-    }
+    private static final Map<String, List<IAttributeControlFactory>> typeFactories;
+    private static final Map<String, Map<Pattern, IAttributeControlFactory>> patternFactories;
+    
+    private static final IAttributeControlFactory defaultFactory = new TextControlFactory();
+    private static final IAttributeControlFactory arrayFactory = new ArrayControlFactory();
+    
+    static {
+        Map<String, List<IAttributeControlFactory>> typeMap =
+            new HashMap<String, List<IAttributeControlFactory>>();
+        Map<String, IAttributeControlFactory> idMap = 
+            new HashMap<String, IAttributeControlFactory>();
 
-    @SuppressWarnings("unchecked")//$NON-NLS-1$
-    public static Control createControl(final Composite parent,
-            FormToolkit toolkit, final boolean writable, final String type,
-            final Object value, final IWritableAttributeHandler handler) {
-        if (value != null && value instanceof Boolean) {
-            return createBooleanControl(parent, toolkit, writable, value,
-                    handler);
-        }
-        if (value != null && value.getClass().isArray()) {
-            final Table table = createTable(parent, toolkit, false, true);
-            fillArray(table, value);
-            return table;
-        }
-        if (value != null && value instanceof CompositeData) {
-            final Table table = createTable(parent, toolkit, true, true);
-            fillCompositeData(table, (CompositeData) value);
-            return table;
-        }
-        if (value != null && value instanceof TabularData) {
-            final Table table = createTable(parent, toolkit, true, true);
-            fillTabularData(table, (TabularData) value);
-            return table;
-        }
-        if (value != null && value instanceof Collection) {
-            final Table table = createTable(parent, toolkit, false, true);
-            fillCollection(table, (Collection) value);
-            return table;
-        }
-        if (value != null && value instanceof Map) {
-            final Table table = createTable(parent, toolkit, true, true);
-            fillMap(table, (Map) value);
-            return table;
-        }
-        return createText(parent, toolkit, writable, type, value, handler);
-    }
-
-    private static Control createText(final Composite parent,
-            FormToolkit toolkit, final boolean writable, final String type,
-            final Object value, final IWritableAttributeHandler handler) {
-
-        String attrValue = ""; //$NON-NLS-1$
-        try {
-            attrValue = StringUtils.toString(value, true);
-        } catch (Exception e) {
-            JMXUIActivator.log(IStatus.ERROR,
-                    Messages.MBeanAttributeValue_Warning, e);
-            attrValue = Messages.unavailable;
-        }
-
-        int style = SWT.BORDER;
-        // fixed issue #12
-        if (value instanceof Number || value instanceof Character) {
-            style |= SWT.SINGLE;
-        } else {
-            style |= SWT.MULTI | SWT.WRAP;
-        }
-
-        if (!writable) {
-            final Text text = createTextControl(parent, toolkit, style);
-            text.setText(attrValue);
-            text.setEditable(false);
-            text.setForeground(parent.getDisplay().getSystemColor(
-                    SWT.COLOR_BLACK));
-            return text;
-        } else {
-            // interpose a composite to contain both
-            // the text control and an "update" button
-            Composite composite = toolkit.createComposite(parent);
-            composite
-                    .setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            GridLayout layout = new GridLayout(2, false);
-            composite.setLayout(layout);
-
-            final Text text = createTextControl(composite, toolkit, style);
-            text.setText(attrValue);
-            text.setEditable(true);
-            text.setForeground(parent.getDisplay().getSystemColor(
-                    SWT.COLOR_BLUE));
-            if (handler != null) {
-                Button updateButton = toolkit.createButton(composite,
-                    Messages.AttributeControlFactory_updateButtonTitle, SWT.PUSH);
-                updateButton.setLayoutData(new GridData(SWT.END, SWT.TOP,
-                        false, false));
-                updateButton.addSelectionListener(new SelectionListener() {
-
-                    public void widgetDefaultSelected(SelectionEvent event) {
-                        try {
-                            Object newValue = MBeanUtils.getValue(text
-                                    .getText(), type);
-                            handler.write(newValue);
-                            text.setText(newValue.toString());
-                        } catch (Throwable t) {
-                            IStatus errorStatus = new Status(IStatus.ERROR,
-                                    JMXUIActivator.PLUGIN_ID, IStatus.OK, t
-                                            .getMessage(), t);
-                            ErrorDialog
-                                    .openError(
-                                            parent.getShell(),
-                                            Messages.AttributeDetailsSection_errorTitle,
-                                            t.getMessage(), errorStatus);
-                        }
-                    }
-
-                    public void widgetSelected(SelectionEvent event) {
-                        widgetDefaultSelected(event);
-                    }
-
-                });
+        IExtensionRegistry registry = Platform.getExtensionRegistry();
+        IExtensionPoint epDisplays = 
+                registry.getExtensionPoint("net.jmesnil.jmx.ui.attribute.controls"); //$NON-NLS-1$
+        for (IConfigurationElement element : epDisplays.getConfigurationElements()) {
+            String id = element.getAttribute("id"); //$NON-NLS-1$
+            String type = element.getAttribute("type"); //$NON-NLS-1$
+            IAttributeControlFactory factory = null;
+            try {
+                factory = (IAttributeControlFactory) element.createExecutableExtension("class"); //$NON-NLS-1$
+            } catch (CoreException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                continue;
             }
-            return text;
-        }
-    }
-
-    private static Text createTextControl(final Composite parent,
-            FormToolkit toolkit, int style) {
-        final Text text;
-        if (toolkit != null) {
-            text = toolkit.createText(parent, "", style); //$NON-NLS-1$
-        } else {
-            text = new Text(parent, style); //$NON-NLS-1$    
-        }
-        return text;
-    }
-
-    private static Control createBooleanControl(final Composite parent,
-            FormToolkit toolkit, boolean writable, Object value,
-            final IWritableAttributeHandler handler) {
-        boolean booleanValue = ((Boolean) value).booleanValue();
-        if (!writable) {
-            if (toolkit != null) {
-                return toolkit.createText(parent, Boolean
-                        .toString(booleanValue), SWT.SINGLE);
-            } else {
-                Text text = new Text(parent, SWT.SINGLE);
-                text.setText(Boolean.toString(booleanValue));
-                return text;
-            }
-        }
-
-        final Combo combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
-        if (toolkit != null) {
-            combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-            toolkit.paintBordersFor(combo);
-        }
-        combo.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
-        combo.setItems(new String[] { Boolean.TRUE.toString(),
-                Boolean.FALSE.toString() });
-        if (booleanValue) {
-            combo.select(0);
-        } else {
-            combo.select(1);
-        }
-        if (handler != null) {
-            combo.addListener(SWT.Selection, new Listener() {
-                public void handleEvent(Event event) {
-                    Boolean newValue = Boolean.valueOf(combo.getText());
-                    handler.write(newValue);
+            if (factory != null) {
+                List<IAttributeControlFactory> displays = typeMap.get(type);
+                if (displays == null) {
+                    displays = new ArrayList<IAttributeControlFactory>(1);
+                    typeMap.put(type, displays);
                 }
-            });
+                displays.add(factory);
+            }
+            idMap.put(id, factory);
         }
-        return combo;
+        
+        Map<String, Map<Pattern, IAttributeControlFactory>> patternMap =
+            new HashMap<String, Map<Pattern, IAttributeControlFactory>>();
+        
+        IExtensionPoint bindings = 
+                registry.getExtensionPoint("net.jmesnil.jmx.ui.attribute.bindings"); //$NON-NLS-1$
+        for (IConfigurationElement element : bindings.getConfigurationElements()) {
+            IAttributeControlFactory factory = idMap.get(element.getAttribute("controlID")); //$NON-NLS-1$
+            String name = element.getAttribute("name"); //$NON-NLS-1$
+            Pattern pattern = Pattern.compile(element.getAttribute("objectName")); //$NON-NLS-1$
+
+            Map<Pattern, IAttributeControlFactory> factoryMap = patternMap.get(name);
+            if (factoryMap == null) {
+                factoryMap = new HashMap<Pattern, IAttributeControlFactory>();
+                patternMap.put(name, factoryMap);
+            }
+            factoryMap.put(pattern, factory);
+        }
+        
+        typeFactories = Collections.unmodifiableMap(typeMap);
+        patternFactories = Collections.unmodifiableMap(patternMap);
+    }
+    
+    public static Control createControl(final Composite parent, final Object value) {
+        return createControl(parent, value, value.getClass().getSimpleName(), 
+                null, null, false, null, null);
     }
 
-    private static Table createTable(Composite parent, FormToolkit toolkit,
-            boolean visibleHeader, boolean visibleLines) {
-        int style = SWT.SINGLE | SWT.FULL_SELECTION;
-        Table table = null;
-        if (toolkit != null) {
-            table = toolkit.createTable(parent, style);
-            toolkit.paintBordersFor(parent);
-        } else {
-            style |= SWT.BORDER;
-            table = new Table(parent, style);
-        }
-        GridData gd = new GridData(GridData.FILL_BOTH);
-        gd.heightHint = 20;
-        gd.widthHint = 100;
-        table.setLayoutData(gd);
-        table.setHeaderVisible(visibleHeader);
-        table.setLinesVisible(visibleLines);
-        return table;
-    }
+    public static Control createControl(final Composite parent, final Object value, 
+            final String type, final String objectName, final String attributeName,
+            final boolean writable, final IWritableAttributeHandler handler, 
+            final FormToolkit toolkit) {
+        IAttributeControlFactory factory = null;
 
-    private static void fillArray(Table table, Object arrayObj) {
-        TableColumn columnName = new TableColumn(table, SWT.NONE);
-        columnName.setText(Messages.name);
-        columnName.setWidth(400);
-        fillArrayItems(table, arrayObj);
-    }
-
-    private static void fillArrayItems(Table table, Object arrayObj) {
-        int length = Array.getLength(arrayObj);
-        for (int i = 0; i < length; i++) {
-            Object element = Array.get(arrayObj, i);
-            TableItem item = new TableItem(table, SWT.NONE);
-            item.setText(StringUtils.toString(element, false));
-        }
-    }
-
-    @SuppressWarnings("unchecked")//$NON-NLS-1$
-    private static void fillCollection(final Table table, Collection collection) {
-        TableColumn columnName = new TableColumn(table, SWT.NONE);
-        columnName.setText(Messages.name);
-        columnName.setWidth(400);
-        Iterator iter = collection.iterator();
-        while (iter.hasNext()) {
-            Object element = (Object) iter.next();
-            TableItem item = new TableItem(table, SWT.NONE);
-            item.setText(StringUtils.toString(element, false));
-        }
-    }
-
-    @SuppressWarnings("unchecked")//$NON-NLS-1$
-    private static void fillMap(final Table table, Map map) {
-        TableColumn keyColumn = new TableColumn(table, SWT.NONE);
-        keyColumn.setText(Messages.key);
-        keyColumn.setWidth(150);
-        TableColumn valueColumn = new TableColumn(table, SWT.NONE);
-        valueColumn.setText(Messages.value);
-        valueColumn.setWidth(250);
-        Iterator iter = map.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            TableItem item = new TableItem(table, SWT.NONE);
-            item.setText(0, StringUtils.toString(entry.getKey(), false));
-            item.setText(1, StringUtils.toString(entry.getValue(), false));
-        }
-    }
-
-    @SuppressWarnings("unchecked")//$NON-NLS-1$
-    private static void fillCompositeData(final Table table, CompositeData data) {
-        TableColumn keyColumn = new TableColumn(table, SWT.NONE);
-        keyColumn.setText(Messages.key);
-        keyColumn.setWidth(150);
-        TableColumn valueColumn = new TableColumn(table, SWT.NONE);
-        valueColumn.setText(Messages.value);
-        valueColumn.setWidth(250);
-        Iterator iter = data.getCompositeType().keySet().iterator();
-        while (iter.hasNext()) {
-            String key = (String) iter.next();
-            TableItem item = new TableItem(table, SWT.NONE);
-            item.setText(0, key);
-            item.setText(1, StringUtils.toString(data.get(key), false));
-        }
-    }
-
-    @SuppressWarnings("unchecked")//$NON-NLS-1$
-    private static void fillTabularData(final Table table, TabularData data) {
-        Set keySet = data.getTabularType().getRowType().keySet();
-        Iterator keyIter = keySet.iterator();
-        while (keyIter.hasNext()) {
-            String key = (String) keyIter.next();
-            TableColumn column = new TableColumn(table, SWT.LEFT);
-            column.setText(key);
-            column.setWidth(150);
-            column.setMoveable(true);
-            column.setResizable(true);
-        }
-        Iterator valueIter = data.values().iterator();
-        while (valueIter.hasNext()) {
-            CompositeData rowData = (CompositeData) valueIter.next();
-            TableItem item = new TableItem(table, SWT.NONE);
-            keyIter = keySet.iterator();
-            int i = 0;
-            while (keyIter.hasNext()) {
-                String key = (String) keyIter.next();
-                item.setText(i, StringUtils.toString(rowData.get(key), false));
-                i++;
+        if (objectName != null && attributeName != null) {
+            Map<Pattern, IAttributeControlFactory> patterns = patternFactories.get(attributeName);
+            if (patterns != null) {
+                for (Map.Entry<Pattern, IAttributeControlFactory> entry : patterns.entrySet()) {
+                    if (entry.getKey().matcher(objectName).matches()) {
+                        factory = entry.getValue();
+                    }
+                }
             }
         }
+        
+        if (factory == null) {
+            List<IAttributeControlFactory> factories = findFactories(value.getClass());
+            if (factories == null) {
+                factory = value.getClass().isArray() ? arrayFactory : defaultFactory;
+            } else {
+                factory = factories.get(0);
+            }
+        }
+        
+        return factory.createControl(parent, toolkit, writable, type, value, handler);
     }
+
+    private static List<IAttributeControlFactory> findFactories(final Class valueClass) {
+        for (Map.Entry<String, List<IAttributeControlFactory>> entry : typeFactories.entrySet()) {
+            try {
+                if (Class.forName(entry.getKey()).isAssignableFrom(valueClass)) {
+                    return entry.getValue();
+                }
+            } catch (ClassNotFoundException e) {
+                JMXUIActivator.log(IStatus.WARNING, e.getMessage(), e);
+            }
+        }
+        return null;
+    }
+
 }
