@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.Assert;
 
 public class StringUtils {
 
-    private static final String NULL = "null"; //$NON-NLS-1$
+    public static final String NULL = "null"; //$NON-NLS-1$
 
     public static String toString(Object obj, boolean detailed) {
         if (obj == null) {

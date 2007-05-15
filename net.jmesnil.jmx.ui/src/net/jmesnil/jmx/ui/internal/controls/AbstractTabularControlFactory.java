@@ -21,12 +21,15 @@ package net.jmesnil.jmx.ui.internal.controls;
 
 import net.jmesnil.jmx.ui.extensions.IAttributeControlFactory;
 import net.jmesnil.jmx.ui.extensions.IWritableAttributeHandler;
+import net.jmesnil.jmx.ui.internal.StringUtils;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public abstract class AbstractTabularControlFactory 
@@ -50,10 +53,23 @@ public abstract class AbstractTabularControlFactory
         gd.widthHint = 100;
         table.setLayoutData(gd);
         
-        table.setHeaderVisible(getVisibleHeader());
-        table.setLinesVisible(getVisibleLines());
-        
-        fillTable(table, value);
+        if (value == null) {
+            TableColumn column = new TableColumn(table, SWT.LEFT);
+            column.setWidth(200);
+            column.setMoveable(false);
+            column.setResizable(true);
+            
+            table.setHeaderVisible(false);
+            table.setLinesVisible(getVisibleLines());
+            
+            TableItem item = new TableItem(table, SWT.NONE);
+            item.setText(StringUtils.NULL);
+            
+        } else {
+            fillTable(table, value);
+            table.setHeaderVisible(getVisibleHeader());
+            table.setLinesVisible(getVisibleLines());
+        }
         
         return table;
 	}

@@ -147,7 +147,11 @@ public class AttributeDetails extends AbstractFormPart implements IDetailsPage {
         GridData layoutData = new GridData(GridData.FILL_BOTH);
         layoutData.horizontalSpan = 2;
         valueComposite.setLayoutData(layoutData);
-        valueComposite.setLayout(new GridLayout());
+        
+        GridLayout valueLayout = new GridLayout();
+        valueLayout.marginWidth = 0;
+        valueLayout.marginHeight = 0;
+        valueComposite.setLayout(valueLayout);
     }
 
     private GridData newLayoutData() {

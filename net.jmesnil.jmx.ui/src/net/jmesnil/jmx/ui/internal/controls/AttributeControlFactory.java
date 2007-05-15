@@ -124,19 +124,23 @@ public class AttributeControlFactory {
         }
         
         if (factory == null) {
-            List<IAttributeControlFactory> factories = findFactories(value.getClass());
-            if (factories == null) {
-                factory = value.getClass().isArray() ? arrayFactory : defaultFactory;
-            } else {
-                factory = factories.get(0);
-            }
+        	Class<? extends Object> clazz = value == null ? getClass(type) : value.getClass();
+        	if (clazz == null) {
+        		factory = defaultFactory;
+        	} else {
+                List<IAttributeControlFactory> factories = findFactories(clazz);
+                if (factories == null) {
+                    factory = value.getClass().isArray() ? arrayFactory : defaultFactory;
+                } else {
+                    factory = factories.get(0);
+                }
+        	}
         }
         
         return factory.createControl(parent, toolkit, writable, type, value, handler);
     }
 
-    @SuppressWarnings("unchecked") //$NON-NLS-1$
-    private static List<IAttributeControlFactory> findFactories(final Class valueClass) {
+    private static List<IAttributeControlFactory> findFactories(final Class<? extends Object> valueClass) {
         for (Map.Entry<String, List<IAttributeControlFactory>> entry : typeFactories.entrySet()) {
             try {
                 if (Class.forName(entry.getKey()).isAssignableFrom(valueClass)) {
@@ -147,6 +151,30 @@ public class AttributeControlFactory {
             }
         }
         return null;
+    }
+    
+    private static Class<? extends Object> getClass(final String type) {
+    	Class<? extends Object> result = null;
+    	if (type.equals("int")) { //$NON-NLS-1$
+    		result = Integer.class;
+    	} else if (type.equals("boolean")) { //$NON-NLS-1$
+    		result = Boolean.class;
+    	} else if (type.equals("short")) { //$NON-NLS-1$
+    		result = Short.class;
+    	} else if (type.equals("long")) {
+    		result = Long.class;
+    	} else if (type.equals("char")) {
+    		result = Character.class;
+    	} else if (type.equals("byte")) {
+    		result = Byte.class;
+    	} else if (type.equals("float")) {
+    		result = Float.class;
+    	} else {
+    		try {
+				result = Class.forName(type);
+			} catch (ClassNotFoundException e) {}
+    	}
+    	return result;
     }
 
 }
