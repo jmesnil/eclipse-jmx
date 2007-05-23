@@ -12,9 +12,17 @@
    <feature url="features/net.jmesnil.jmx_0.1.0.200702122110.jar" id="net.jmesnil.jmx" version="0.1.0.200702122110">
       <category name="JMX Console"/>
    </feature>
+   <feature url="features/net.jmesnil.jmx.monkey.feature_0.1.0.200705231025.jar" id="net.jmesnil.jmx.monkey.feature" version="0.1.0.200705231025">
+      <category name="JMX Monkey"/>
+   </feature>
    <category-def name="JMX Console" label="net.jmesnil.jmx">
       <description>
          eclipse-jmx is a JMX plugin-in for Eclipse IDE which is used to manage Java applications through JMX and its RMI Connector.
+      </description>
+   </category-def>
+   <category-def name="JMX Monkey" label="net.jmesnil.jmx.monkey">
+      <description>
+         JMX DOMs &amp; Scripts for Eclipse Monkey
       </description>
    </category-def>
 </site>
