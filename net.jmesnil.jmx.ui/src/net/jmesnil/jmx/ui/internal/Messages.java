@@ -94,7 +94,23 @@ public class Messages extends NLS {
 
     public static String name;
 
+    public static String NotificationsPage_clearActionToolTip;
+
+    public static String NotificationsPage_message;
+
+    public static String NotificationsPage_sequenceNumber;
+
+    public static String NotificationsPage_source;
+
+    public static String NotificationsPage_subscribeActionToolTip;
+
+    public static String NotificationsPage_timestamp;
+
     public static String NotificationsPage_title;
+
+    public static String NotificationsPage_type;
+
+    public static String NotificationsPage_userData;
 
     public static String objectName;
 
