@@ -161,13 +161,13 @@ public class AttributeControlFactory {
     		result = Boolean.class;
     	} else if (type.equals("short")) { //$NON-NLS-1$
     		result = Short.class;
-    	} else if (type.equals("long")) {
+    	} else if (type.equals("long")) { //$NON-NLS-1$
     		result = Long.class;
-    	} else if (type.equals("char")) {
+    	} else if (type.equals("char")) { //$NON-NLS-1$
     		result = Character.class;
-    	} else if (type.equals("byte")) {
+    	} else if (type.equals("byte")) { //$NON-NLS-1$
     		result = Byte.class;
-    	} else if (type.equals("float")) {
+    	} else if (type.equals("float")) { //$NON-NLS-1$
     		result = Float.class;
     	} else {
     		try {
