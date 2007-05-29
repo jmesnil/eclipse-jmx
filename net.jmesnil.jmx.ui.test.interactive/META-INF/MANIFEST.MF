@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JMX UI Interactive Tests Bundle
+Bundle-SymbolicName: net.jmesnil.jmx.ui.test.interactive;singleton:=true
+Bundle-Version: 0.2.1
+Bundle-Activator: net.jmesnil.jmx.ui.test.interactive.Activator
+Bundle-Vendor: Jeff Mesnil
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.forms,
+ net.jmesnil.jmx.ui
+Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="net.jmesnil.jmx.ui.test.interactive.Activator">
+      </startup>
+   </extension>
+   <extension
+         point="net.jmesnil.jmx.ui.attribute.controls">
+      <control
+            id="net.jmesnil.jmx.ui.test.interactive.redDisplay"
+            class="net.jmesnil.jmx.ui.test.interactive.RedTextControlFactory"
+            type="java.lang.String">
+      </control>
+      <control
+            id="net.jmesnil.jmx.ui.test.interactive.greenDisplay"
+            class="net.jmesnil.jmx.ui.test.interactive.GreenTextControlFactory"
+            type="java.lang.String">
+      </control>
+   </extension>
+   <extension
+         point="net.jmesnil.jmx.ui.attribute.bindings">
+      <binding
+            name="RedString"
+            objectName="net.jmesnil.test:type=CustomizedAttributes"
+            controlID="net.jmesnil.jmx.ui.test.interactive.redDisplay">
+      </binding>
+      <binding
+            name="GreenString"
+            objectName="net.jmesnil.test:type=CustomizedAttributes"
+            controlID="net.jmesnil.jmx.ui.test.interactive.greenDisplay">
+      </binding>
+   </extension>
+</plugin>
