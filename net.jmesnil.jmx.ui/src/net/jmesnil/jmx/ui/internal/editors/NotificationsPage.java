@@ -183,7 +183,9 @@ public class NotificationsPage extends FormPage {
             @SuppressWarnings("unchecked")//$NON-NLS-1$
             public void handleNotification(final Notification notification,
                     Object handback) {
-                notifications.add(notification);
+                // add notification at the head so that the more recent
+                // appears at the top of the table (issue #25)
+                notifications.add(0, notification);
                 viewer.getControl().getDisplay().asyncExec(new Runnable() {
                     public void run() {
                         viewer.refresh();
