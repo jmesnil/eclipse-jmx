@@ -21,6 +21,7 @@ import javax.management.MBeanInfo;
 import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanServerConnection;
+import javax.management.NotificationBroadcaster;
 import javax.management.ObjectName;
 
 import org.eclipse.core.runtime.Assert;
@@ -52,6 +53,23 @@ public class MBeanInfoWrapper implements Comparable {
 
     public MBeanServerConnection getMBeanServerConnection() {
         return mbsc;
+    }
+
+    /**
+     * Test if the wrapped MBean is a <code>NotificationBroadcaster</code>
+     * using {@link MBeanServerConnection#isInstanceOf(ObjectName, String)}.
+     * 
+     * @return <code>true</code> if the wrapped MBean is a
+     *         <code>NotificationBroadcaster</code>, <code>false</code>
+     *         else
+     */
+    public boolean isNotificationBroadcaster() {
+        try {
+            return mbsc.isInstanceOf(on, NotificationBroadcaster.class
+                    .getName());
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public MBeanAttributeInfoWrapper[] getMBeanAttributeInfoWrappers() {

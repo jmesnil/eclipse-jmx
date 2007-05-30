@@ -120,7 +120,9 @@ public class NotificationsPage extends FormPage {
         };
         subscribeAction
                 .setToolTipText(Messages.NotificationsPage_subscribeActionToolTip);
-
+        
+        subscribeAction.setEnabled(wrapper.isNotificationBroadcaster());
+        
         form.getToolBarManager().add(clearAction);
         form.getToolBarManager().add(subscribeAction);
         form.updateToolBar();
