@@ -14,13 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
+
 package net.jmesnil.jmx.ui.internal.actions;
 
+import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.internal.editors.MBeanEditor;
 import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
 
 public class MBeanServerDisconnectAction extends Action {
 
@@ -33,6 +39,18 @@ public class MBeanServerDisconnectAction extends Action {
     }
 
     public void run() {
-        view.setMBeanServerConnection(null);
+        IEditorReference[] references = JMXUIActivator.getActivePage()
+                .findEditors(null, MBeanEditor.ID, IWorkbenchPage.MATCH_ID);
+        boolean close = true;
+        if (references.length > 0) {
+            close = MessageDialog.openConfirm(JMXUIActivator
+                    .getActiveWorkbenchShell(),
+                    Messages.MBeanServerDisconnectAction_dialogTitle,
+                    Messages.MBeanServerDisconnectAction_dialogText);
+        }
+        if (close) {
+            JMXUIActivator.getActivePage().closeEditors(references, false);
+            view.setMBeanServerConnection(null);
+        }
     }
 }

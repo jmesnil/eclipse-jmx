@@ -90,6 +90,10 @@ public class Messages extends NLS {
 
     public static String MBeanServerConnectDialog_userName;
 
+    public static String MBeanServerDisconnectAction_dialogText;
+
+    public static String MBeanServerDisconnectAction_dialogTitle;
+
     public static String MBeanServerDisconnectAction_text;
 
     public static String name;
