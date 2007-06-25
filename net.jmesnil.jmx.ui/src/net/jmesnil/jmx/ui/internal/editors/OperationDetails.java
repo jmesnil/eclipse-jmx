@@ -125,8 +125,10 @@ public class OperationDetails extends AbstractFormPart implements IDetailsPage {
         }
         MBeanOperationInfo opInfo = wrapper.getMBeanOperationInfo();
         String desc = opInfo.getDescription();
-        section.setDescription(desc);
-
+        // FIX issue #27: the MBean operation description can be null
+        if (desc != null) {
+            section.setDescription(desc);
+        }
         // composite for method signature [ return type | method button | ( |
         // Composite(1..n parameters) | ) ]
         Composite c = toolkit.createComposite(container, SWT.NONE);
