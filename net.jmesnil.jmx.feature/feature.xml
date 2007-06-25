@@ -2,7 +2,7 @@
 <feature
       id="net.jmesnil.jmx.feature"
       label="%featureName"
-      version="0.2.1.qualifier"
+      version="0.2.2.qualifier"
       provider-name="%featureProvider">
 
    <description url="http://code.google.com/p/eclipse-jmx/">
