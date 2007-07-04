@@ -132,7 +132,7 @@ public class AttributeControlFactory {
                 if (factories == null) {
                     factory = value.getClass().isArray() ? arrayFactory : defaultFactory;
                 } else {
-                    factory = factories.get(0);
+                    factory = factories.get(factories.size() - 1);
                 }
         	}
         }
