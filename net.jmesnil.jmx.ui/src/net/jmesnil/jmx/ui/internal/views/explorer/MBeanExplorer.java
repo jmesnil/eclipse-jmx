@@ -24,7 +24,6 @@ import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
-import net.jmesnil.jmx.core.JMXCoreActivator;
 import net.jmesnil.jmx.resources.MBeanFeatureInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
@@ -100,7 +99,7 @@ public class MBeanExplorer extends ViewPart implements ISetSelectionTarget {
 
     private NotificationListener registrationListener;
 
-    private ISelectionChangedListener postSelectionListener;
+    private final ISelectionChangedListener postSelectionListener;
 
     private MBeanExplorerContentProvider contentProvider;
 
@@ -113,7 +112,8 @@ public class MBeanExplorer extends ViewPart implements ISetSelectionTarget {
             setIncludeLeadingWildcard(true);
         }
 
-        protected boolean isLeafMatch(Viewer viewer, Object element) {
+        @Override
+		protected boolean isLeafMatch(Viewer viewer, Object element) {
             if (element instanceof PropertyNode) {
                 PropertyNode propNode = (PropertyNode) element;
                 return wordMatches(propNode.getKey() + "=" //$NON-NLS-1$
@@ -122,7 +122,8 @@ public class MBeanExplorer extends ViewPart implements ISetSelectionTarget {
             return super.isLeafMatch(viewer, element);
         }
 
-        public boolean isElementVisible(Viewer viewer, Object element) {
+        @Override
+		public boolean isElementVisible(Viewer viewer, Object element) {
             if (element instanceof Node) {
                 return matchesObjectName((Node) element);
             }
@@ -157,7 +158,7 @@ public class MBeanExplorer extends ViewPart implements ISetSelectionTarget {
         }
     }
 
-    private IPartListener2 linkWithEditorListener = new IPartListener2() {
+    private final IPartListener2 linkWithEditorListener = new IPartListener2() {
         public void partVisible(IWorkbenchPartReference partRef) {}
         public void partBroughtToTop(IWorkbenchPartReference partRef) {}
         public void partClosed(IWorkbenchPartReference partRef) {}
@@ -342,7 +343,7 @@ public class MBeanExplorer extends ViewPart implements ISetSelectionTarget {
     }
 
     private void removeRegistrationListener() {
-        MBeanServerConnection mbsc = JMXCoreActivator.getDefault().getMBeanServerConnection();
+        MBeanServerConnection mbsc = JMXUIActivator.getDefault().getCurrentConnection();
         if (mbsc != null) {
             try {
                 ObjectName mbeanServerON = ObjectName
@@ -530,7 +531,7 @@ public class MBeanExplorer extends ViewPart implements ISetSelectionTarget {
                 IWorkbenchPage page = getSite().getPage();
                 page.bringToTop(part);
                 if (obj instanceof MBeanFeatureInfoWrapper) {
-                    EditorUtils.revealInEditor(part, (MBeanFeatureInfoWrapper)obj);
+                    EditorUtils.revealInEditor(part, obj);
                 }
             }
         }

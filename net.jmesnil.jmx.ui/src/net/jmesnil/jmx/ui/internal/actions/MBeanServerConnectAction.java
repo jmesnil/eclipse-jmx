@@ -18,7 +18,8 @@ package net.jmesnil.jmx.ui.internal.actions;
 
 import javax.management.MBeanServerConnection;
 
-import net.jmesnil.jmx.core.JMXCoreActivator;
+import net.jmesnil.jmx.resources.MBeanServerConnectionDescriptor;
+import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
@@ -31,7 +32,7 @@ import org.eclipse.jface.window.Window;
 
 public class MBeanServerConnectAction extends Action {
 
-    private MBeanExplorer view;
+    private final MBeanExplorer view;
 
     public MBeanServerConnectAction(MBeanExplorer view) {
         super(Messages.MBeanServerConnectAction_text, AS_PUSH_BUTTON);
@@ -39,7 +40,8 @@ public class MBeanServerConnectAction extends Action {
         JMXImages.setLocalImageDescriptors(this, "attachAgent.gif"); //$NON-NLS-1$
     }
 
-    public void run() {
+    @Override
+	public void run() {
         MBeanServerConnectDialog dialog = new MBeanServerConnectDialog(view
                 .getViewSite().getShell());
         if (dialog.open() != Window.OK) {
@@ -49,14 +51,15 @@ public class MBeanServerConnectAction extends Action {
             String url = dialog.getURL();
             String userName = dialog.getUserName();
             String password = dialog.getPassword();
-            MBeanServerConnection mbsc = JMXCoreActivator
-                    .getDefault().connect(url, userName, password);
+            MBeanServerConnectionDescriptor connectionDescriptor  = new MBeanServerConnectionDescriptor(url, url, userName, password);  
+            MBeanServerConnection mbsc = JMXUIActivator.getDefault().getConnectionFactory().createMBeanServerConnection(connectionDescriptor);
             view.setMBeanServerConnection(mbsc);
+            JMXUIActivator.getDefault().setCurrentConnection(mbsc);
         } catch (Exception e) {
             String message = Messages.MBeanServerConnectAction_connectionFailure;
             ErrorDialog.openError(view.getSite().getShell(),
                     Messages.MBeanServerConnectAction_error, message,
-                    new Status(IStatus.ERROR, JMXCoreActivator.PLUGIN_ID,
+                    new Status(IStatus.ERROR, JMXUIActivator.PLUGIN_ID,
                             IStatus.OK, message, e));
         }
     }

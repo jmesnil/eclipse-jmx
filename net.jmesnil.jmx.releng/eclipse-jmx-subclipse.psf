@@ -6,7 +6,7 @@
 <project reference="0.9.3,http://eclipse-jmx.googlecode.com/svn/trunk/net.jmesnil.jmx.ui.test,net.jmesnil.jmx.ui.test"/>
 <project reference="0.9.3,http://eclipse-jmx.googlecode.com/svn/trunk/net.jmesnil.jmx.ui.test.interactive,net.jmesnil.jmx.ui.test.interactive"/>
 <project reference="0.9.3,http://eclipse-jmx.googlecode.com/svn/trunk/net.jmesnil.jmx.core,net.jmesnil.jmx.core"/>
-<project reference="0.9.3,http://eclipse-jmx.googlecode.com/svn/trunk/net.jmesnil.jmx.core.test,net.jmesnil.jmx.core.test"/>
 <project reference="0.9.3,http://eclipse-jmx.googlecode.com/svn/trunk/net.jmesnil.jmx.resources,net.jmesnil.jmx.resources"/>
+<project reference="0.9.3,http://eclipse-jmx.googlecode.com/svn/trunk/net.jmesnil.jmx.resources.test,net.jmesnil.jmx.resources.test"/>
 </provider>
 </psf>

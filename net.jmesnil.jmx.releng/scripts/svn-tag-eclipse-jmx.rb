@@ -10,9 +10,9 @@ end
 
 projects = %w{
   net.jmesnil.jmx.core
-  net.jmesnil.jmx.core.test
   net.jmesnil.jmx.feature
   net.jmesnil.jmx.resources
+  net.jmesnil.jmx.resources.test
   net.jmesnil.jmx.ui
   net.jmesnil.jmx.ui.test
   net.jmesnil.jmx.ui.test.interactive}

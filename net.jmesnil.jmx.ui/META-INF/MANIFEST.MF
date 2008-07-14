@@ -7,11 +7,11 @@ Bundle-Activator: net.jmesnil.jmx.ui.JMXUIActivator
 Bundle-Vendor: %BundleProvider
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- net.jmesnil.jmx.core,
  net.jmesnil.jmx.resources,
  org.eclipse.ui.views,
  org.eclipse.ui.forms;bundle-version="[3.2.0,4.0.0)"
-Eclipse-LazyStart: true
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: net.jmesnil.jmx.ui.extensions
+Bundle-ActivationPolicy: lazy
+Eclipse-LazyStart: true

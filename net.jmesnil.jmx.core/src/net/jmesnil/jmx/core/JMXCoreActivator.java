@@ -16,18 +16,12 @@
  */
 package net.jmesnil.jmx.core;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import net.jmesnil.jmx.resources.MBeanServerConnectionFactory;
+import net.jmesnil.jmx.resources.DefaultMBeanServerConnectionFactory;
 
-import javax.management.MBeanServerConnection;
-import javax.management.remote.JMXConnector;
-import javax.management.remote.JMXConnectorFactory;
-import javax.management.remote.JMXServiceURL;
-
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -40,8 +34,7 @@ public class JMXCoreActivator extends Plugin {
     // The shared instance
     private static JMXCoreActivator plugin;
 
-    private MBeanServerConnection mbsc;
-
+    private ServiceRegistration connectionFactoryRegistration;
     public JMXCoreActivator() {
     }
 
@@ -49,12 +42,15 @@ public class JMXCoreActivator extends Plugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
+        connectionFactoryRegistration =  context.registerService(MBeanServerConnectionFactory.class.getName(), new DefaultMBeanServerConnectionFactory(), null);
     }
 
     @Override
     public void stop(BundleContext context) throws Exception {
         plugin = null;
         super.stop(context);
+        if (connectionFactoryRegistration!= null)
+        	connectionFactoryRegistration.unregister();
     }
 
     /**
@@ -64,27 +60,5 @@ public class JMXCoreActivator extends Plugin {
      */
     public static JMXCoreActivator getDefault() {
         return plugin;
-    }
-
-    @SuppressWarnings("unchecked") //$NON-NLS-1$
-    public MBeanServerConnection connect(String url, String userName,
-            String password) throws IOException {
-        Assert.isNotNull(url);
-        Assert.isNotNull(userName);
-        Assert.isNotNull(password);
-        Map env = new HashMap();
-        if (userName.length() > 0) {
-            String[] credentials = new String[] { userName, password };
-            env.put(JMXConnector.CREDENTIALS, credentials);
-        }
-
-        JMXServiceURL jmxurl = new JMXServiceURL(url);
-        JMXConnector connector = JMXConnectorFactory.connect(jmxurl, env);
-        mbsc = connector.getMBeanServerConnection();
-        return mbsc;
-    }
-
-    public MBeanServerConnection getMBeanServerConnection() {
-        return mbsc;
     }
 }

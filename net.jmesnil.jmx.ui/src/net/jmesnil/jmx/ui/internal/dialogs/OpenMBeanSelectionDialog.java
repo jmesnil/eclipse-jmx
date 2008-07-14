@@ -28,8 +28,8 @@ import javax.management.MBeanInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
-import net.jmesnil.jmx.core.JMXCoreActivator;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
+import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorerLabelProvider;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -81,8 +81,9 @@ public class OpenMBeanSelectionDialog extends SelectionStatusDialog {
         viewer = filter.getViewer();
         viewer.setContentProvider(new ContentProvider());
         viewer.setLabelProvider(new MBeanExplorerLabelProvider());
-        MBeanServerConnection mbsc = JMXCoreActivator.getDefault()
-                .getMBeanServerConnection();
+        
+        MBeanServerConnection mbsc = JMXUIActivator.getDefault().getCurrentConnection();
+                
         if (mbsc != null) {
             try {
                 Set set = mbsc.queryNames(ObjectName.getInstance("*:*"), null); //$NON-NLS-1$
@@ -140,7 +141,7 @@ public class OpenMBeanSelectionDialog extends SelectionStatusDialog {
         @SuppressWarnings("unchecked")//$NON-NLS-1$
         public Object[] getElements(Object parent) {
             if (mbeans != null) {
-                return (MBeanInfoWrapper[]) mbeans
+                return mbeans
                         .toArray(new MBeanInfoWrapper[mbeans.size()]);
             }
             return new Object[0];
