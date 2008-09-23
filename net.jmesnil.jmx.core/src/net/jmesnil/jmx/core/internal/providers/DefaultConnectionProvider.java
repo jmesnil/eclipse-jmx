@@ -17,20 +17,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.management.MBeanServerConnection;
-import javax.management.remote.JMXConnector;
-import javax.management.remote.JMXConnectorFactory;
-import javax.management.remote.JMXServiceURL;
-
 import net.jmesnil.jmx.core.IConnectionProvider;
 import net.jmesnil.jmx.core.IConnectionProviderListener;
 import net.jmesnil.jmx.core.IConnectionWrapper;
-import net.jmesnil.jmx.core.IJMXRunnable;
 import net.jmesnil.jmx.core.IMemento;
 import net.jmesnil.jmx.core.JMXActivator;
-import net.jmesnil.jmx.core.JMXException;
-import net.jmesnil.jmx.core.tree.NodeUtils;
-import net.jmesnil.jmx.core.tree.Root;
+import net.jmesnil.jmx.core.JMXCoreMessages;
 import net.jmesnil.jmx.core.util.XMLMemento;
 
 import org.eclipse.core.runtime.CoreException;
@@ -66,21 +58,21 @@ public class DefaultConnectionProvider implements IConnectionProvider {
 		listeners.remove(listener);
 	}
 
-	private void fireAdded(IConnectionWrapper wrapper) {
+	void fireAdded(IConnectionWrapper wrapper) {
 		for(Iterator<IConnectionProviderListener> i = listeners.iterator(); i.hasNext();)
 			try {
 				i.next().connectionAdded(wrapper);
 			} catch(RuntimeException re) {}
 		}
 
-	private void fireChanged(IConnectionWrapper wrapper) {
+	void fireChanged(IConnectionWrapper wrapper) {
 		for(Iterator<IConnectionProviderListener> i = listeners.iterator(); i.hasNext();)
 			try {
 				i.next().connectionChanged(wrapper);
 			} catch(RuntimeException re) {}
 	}
 
-	private void fireRemoved(IConnectionWrapper wrapper) {
+	void fireRemoved(IConnectionWrapper wrapper) {
 		for(Iterator<IConnectionProviderListener> i = listeners.iterator(); i.hasNext();)
 			try {
 				i.next().connectionRemoved(wrapper);
@@ -116,88 +108,6 @@ public class DefaultConnectionProvider implements IConnectionProvider {
 		return connections.values().toArray(new IConnectionWrapper[connections.values().size()]);
 	}
 
-	private class DefaultConnectionWrapper implements IConnectionWrapper {
-		private JMXServiceURL url;
-		private JMXConnector connector;
-		private MBeanServerConnection connection;
-		private Root root;
-
-		private boolean isConnected;
-		private Map<String, String[]> environment;
-
-		private MBeanServerConnectionDescriptor descriptor;
-		public DefaultConnectionWrapper(MBeanServerConnectionDescriptor descriptor) throws MalformedURLException {
-			this.descriptor = descriptor;
-			this.isConnected = false;
-	        String username = descriptor.getUserName();
-	        environment = new HashMap<String, String[]>();
-	        if (username != null && username.length() > 0) {
-	            String[] credentials = new String[] { username, descriptor.getPassword() };
-	            environment.put(JMXConnector.CREDENTIALS, credentials);
-	        }
-
-			url = new JMXServiceURL(descriptor.getURL());
-		}
-
-		public MBeanServerConnectionDescriptor getDescriptor() {
-			return descriptor;
-		}
-
-		public IConnectionProvider getProvider() {
-			return DefaultConnectionProvider.this;
-		}
-
-		public MBeanServerConnection getConnection() {
-			return connection;
-		}
-
-		public boolean canControl() {
-			return true;
-		}
-
-		public synchronized void connect() throws IOException {
-			// try to connect
-	        connector = JMXConnectorFactory.connect(url, environment);
-	        connection = connector.getMBeanServerConnection();
-			isConnected = true;
-			fireChanged(this);
-		}
-		public synchronized void disconnect() throws IOException {
-			// close
-			root = null;
-			connector = null;
-			connection = null;
-			isConnected = false;
-			try {
-				connector.close();
-			} finally {
-				fireChanged(this);
-			}
-		}
-		public boolean isConnected() {
-			return isConnected;
-		}
-		public Root getRoot() {
-			if( isConnected ) {
-				if( root == null )
-					try {
-						root = NodeUtils.createObjectNameTree(this);
-					} catch( CoreException ce ) {
-						// TODO LOG
-					}
-			}
-			return root;
-		}
-
-		public void run(IJMXRunnable runnable) throws CoreException {
-			try {
-				runnable.run(connection);
-			} catch( JMXException ce ) {
-				// TODO LOG
-			}
-		}
-	}
-
 	public void addConnection(IConnectionWrapper connection) {
 		if( connection instanceof DefaultConnectionWrapper ) {
 			MBeanServerConnectionDescriptor descriptor =
@@ -207,7 +117,8 @@ public class DefaultConnectionProvider implements IConnectionProvider {
 				save();
 				fireAdded(connection);
 			} catch( IOException ioe ) {
-				// TODO LOG
+				IStatus s = new Status(IStatus.ERROR, JMXActivator.PLUGIN_ID, JMXCoreMessages.DefaultConnection_ErrorAdding, ioe);
+				JMXActivator.log(s);
 			}
 		}
 	}
@@ -221,7 +132,8 @@ public class DefaultConnectionProvider implements IConnectionProvider {
 				save();
 				fireRemoved(connection);
 			} catch( IOException ioe ) {
-				// TODO LOG
+				IStatus s = new Status(IStatus.ERROR, JMXActivator.PLUGIN_ID, JMXCoreMessages.DefaultConnection_ErrorRemoving, ioe);
+				JMXActivator.log(s);
 			}
 		}
 	}
@@ -248,7 +160,8 @@ public class DefaultConnectionProvider implements IConnectionProvider {
 				}
 				connections = map;
 			} catch( IOException ioe ) {
-				// TODO LOG
+				IStatus s = new Status(IStatus.ERROR, JMXActivator.PLUGIN_ID, JMXCoreMessages.DefaultConnection_ErrorLoading, ioe);
+				JMXActivator.log(s);
 			}
 		} else {
 			connections = map;

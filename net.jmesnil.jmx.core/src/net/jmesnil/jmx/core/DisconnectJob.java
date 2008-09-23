@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.jobs.Job;
 public class DisconnectJob extends Job {
 	private IConnectionWrapper connection;
 	public DisconnectJob(IConnectionWrapper connection) {
-		super("DisconnectJob");
+		super(JMXCoreMessages.DisconnectJob);
 		this.connection = connection;
 	}
 
@@ -31,7 +31,7 @@ public class DisconnectJob extends Job {
 			connection.disconnect();
 			return Status.OK_STATUS;
 		} catch( IOException ioe ) {
-			return new Status(IStatus.ERROR, JMXActivator.PLUGIN_ID, "CloseJMXConnectionError", ioe);
+			return new Status(IStatus.ERROR, JMXActivator.PLUGIN_ID, JMXCoreMessages.DisconnectJobFailed, ioe);
 		}
 	}
 

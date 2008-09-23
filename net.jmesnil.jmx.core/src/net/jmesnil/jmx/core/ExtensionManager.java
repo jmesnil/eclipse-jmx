@@ -17,8 +17,10 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 
 /**
  * This class is in charge of loading all extensions
@@ -67,9 +69,11 @@ public class ExtensionManager {
 							.createExecutableExtension(CLASS);
 					tmp.put(o.getId(),o);
 				} catch (InvalidRegistryObjectException e) {
-					e.printStackTrace(); // TODO LOG
+					IStatus s = new Status(IStatus.ERROR, JMXActivator.PLUGIN_ID, JMXCoreMessages.ExtensionManagerError1,e);
+					JMXActivator.log(s);
 				} catch (CoreException e) {
-					e.printStackTrace(); // TODO LOG
+					IStatus s = new Status(IStatus.ERROR, JMXActivator.PLUGIN_ID, JMXCoreMessages.ExtensionManagerError1,e);
+					JMXActivator.log(s);
 				}
 			}
 		}

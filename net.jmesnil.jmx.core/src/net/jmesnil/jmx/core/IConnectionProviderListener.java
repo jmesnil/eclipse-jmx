@@ -10,7 +10,7 @@ package net.jmesnil.jmx.core;
 /**
  * Listen to connection provider events
  * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
+ *   // TODO this needs improvement
  */
 public interface IConnectionProviderListener {
 	public void connectionAdded(IConnectionWrapper connection);

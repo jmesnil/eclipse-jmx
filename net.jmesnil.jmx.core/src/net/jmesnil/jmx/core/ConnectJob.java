@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.jobs.Job;
 public class ConnectJob extends Job {
 	private IConnectionWrapper connection;
 	public ConnectJob(IConnectionWrapper connection) {
-		super("Connect Job");
+		super(JMXCoreMessages.ConnectJob);
 		this.connection = connection;
 	}
 
@@ -31,8 +31,7 @@ public class ConnectJob extends Job {
 			connection.connect();
 			return Status.OK_STATUS;
 		} catch( IOException ioe ) {
-			// TODO EXTERNALIZE STRING
-			return new Status(IStatus.ERROR, JMXActivator.PLUGIN_ID, "OpenJMXConnectionError", ioe);
+			return new Status(IStatus.ERROR, JMXActivator.PLUGIN_ID, JMXCoreMessages.ConnectJobFailed, ioe);
 		}
 	}
 }
