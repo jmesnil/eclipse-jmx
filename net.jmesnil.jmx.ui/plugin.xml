@@ -54,13 +54,13 @@
          <selectionEnablement>
             <or>
                <instanceof
-                     value="net.jmesnil.jmx.resources.IConnectionWrapper">
+                     value="net.jmesnil.jmx.core.IConnectionWrapper">
                </instanceof>
                <instanceof
-                     value="net.jmesnil.jmx.resources.tree.Node">
+                     value="net.jmesnil.jmx.core.tree.Node">
                </instanceof>
                <instanceof
-                     value="net.jmesnil.jmx.resources.MBeanFeatureInfoWrapper">
+                     value="net.jmesnil.jmx.core.MBeanFeatureInfoWrapper">
                </instanceof>
             </or>
          </selectionEnablement>
@@ -94,7 +94,7 @@
                      value="net.jmesnil.jmx.ui.internal.tree.Node">
                </instanceof>
                <instanceof
-                     value="net.jmesnil.jmx.resources.IConnectionProvider">
+                     value="net.jmesnil.jmx.core.IConnectionProvider">
                </instanceof>
             </or>
          </possibleChildren>
@@ -111,10 +111,10 @@
                   </count>
                </adapt>
                <instanceof
-                     value="net.jmesnil.jmx.resources.IConnectionWrapper">
+                     value="net.jmesnil.jmx.core.IConnectionWrapper">
                </instanceof>
                <instanceof
-                     value="net.jmesnil.jmx.resources.tree.Node">
+                     value="net.jmesnil.jmx.core.tree.Node">
                </instanceof>
             </or>
          </enablement>
@@ -222,7 +222,7 @@
          point="net.jmesnil.jmx.ui.providerUI">
       <providerUI
             icon="icons/full/obj16/write_obj.gif"
-            id="net.jmesnil.jmx.resources.internal.providers.DefaultConnectionProvider"
+            id="net.jmesnil.jmx.core.internal.providers.DefaultConnectionProvider"
             name="Default JMX Connection">
          <wizardPage
                class="net.jmesnil.jmx.ui.internal.wizards.DefaultConnectionWizardPage">

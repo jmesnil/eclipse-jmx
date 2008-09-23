@@ -91,6 +91,10 @@ public class DefaultConnectionProvider implements IConnectionProvider {
 		return true;
 	}
 
+	public boolean canDelete(IConnectionWrapper wrapper) {
+		return wrapper instanceof DefaultConnectionWrapper;
+	}
+
 	public IConnectionWrapper createConnection(Map map) throws CoreException {
 		String id = (String)map.get(ID);
 		String url = (String)map.get(URL);

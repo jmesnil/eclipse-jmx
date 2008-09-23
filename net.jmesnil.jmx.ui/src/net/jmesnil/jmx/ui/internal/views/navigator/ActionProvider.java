@@ -1,6 +1,7 @@
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
 import net.jmesnil.jmx.core.IConnectionWrapper;
+import net.jmesnil.jmx.ui.internal.actions.DeleteConnectionAction;
 import net.jmesnil.jmx.ui.internal.actions.DoubleClickAction;
 import net.jmesnil.jmx.ui.internal.actions.MBeanServerConnectAction;
 import net.jmesnil.jmx.ui.internal.actions.MBeanServerDisconnectAction;
@@ -42,6 +43,8 @@ public class ActionProvider extends CommonActionProvider {
 	    		menu.add(new MBeanServerConnectAction(connection));
 	    	else if( connection.canControl())
 	    		menu.add(new MBeanServerDisconnectAction(connection));
+
+	    	menu.add(new DeleteConnectionAction(connection));
     	}
 
     	// Finish up

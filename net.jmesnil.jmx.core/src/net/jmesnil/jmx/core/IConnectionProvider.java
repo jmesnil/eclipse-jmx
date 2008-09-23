@@ -46,6 +46,13 @@ public interface IConnectionProvider {
 	public boolean canCreate();
 
 	/**
+	 * Can this provider remove this connection?
+	 * @param wrapper
+	 * @return
+	 */
+	public boolean canDelete(IConnectionWrapper wrapper);
+
+	/**
 	 * Create a new connection wrapper based on a HashMap
 	 * filled with properties of any object type.
 	 * Do not persist it. Just return it.
