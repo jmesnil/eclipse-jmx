@@ -8,18 +8,11 @@
 
 package net.jmesnil.jmx.ui.internal.actions;
 
-import java.io.IOException;
-
+import net.jmesnil.jmx.core.ConnectJob;
 import net.jmesnil.jmx.core.IConnectionWrapper;
-import net.jmesnil.jmx.ui.JMXMessages;
-import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 
 /**
@@ -37,18 +30,7 @@ public class MBeanServerConnectAction extends Action {
 
 	public void run() {
 		if( connection != null ) {
-			final IConnectionWrapper wrapper = connection;
-			new Job(JMXMessages.OpenJMXConnectionJob) {
-				protected IStatus run(IProgressMonitor monitor) {
-					try {
-						wrapper.connect();
-					} catch( IOException ioe ) {
-						// TODO EXTERNALIZE STRING
-						return new Status(IStatus.ERROR, JMXUIActivator.PLUGIN_ID, JMXMessages.OpenJMXConnectionError, ioe);
-					}
-					return Status.OK_STATUS;
-				}
-			}.schedule();
+			new ConnectJob(connection).schedule();
 		}
     }
 }

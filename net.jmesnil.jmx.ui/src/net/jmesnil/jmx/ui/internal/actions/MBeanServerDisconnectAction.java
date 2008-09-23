@@ -8,20 +8,18 @@
 
 package net.jmesnil.jmx.ui.internal.actions;
 
-import java.io.IOException;
-
+import net.jmesnil.jmx.core.DisconnectJob;
 import net.jmesnil.jmx.core.IConnectionWrapper;
-import net.jmesnil.jmx.ui.JMXMessages;
-import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 
+/**
+ *
+ * @author "Rob Stryker"<rob.stryker@redhat.com>
+ *
+ */
 public class MBeanServerDisconnectAction extends Action {
 	private IConnectionWrapper connection;
     public MBeanServerDisconnectAction(IConnectionWrapper wrapper) {
@@ -32,17 +30,7 @@ public class MBeanServerDisconnectAction extends Action {
 
     public void run() {
 		if( connection != null ) {
-			final IConnectionWrapper wrapper = connection;
-			new Job(JMXMessages.CloseJMXConnectionJob) {
-				protected IStatus run(IProgressMonitor monitor) {
-					try {
-						wrapper.disconnect();
-					} catch( IOException ioe ) {
-						return new Status(IStatus.ERROR, JMXUIActivator.PLUGIN_ID, JMXMessages.CloseJMXConnectionError, ioe);
-					}
-					return Status.OK_STATUS;
-				}
-			}.schedule();
+			new DisconnectJob(connection).schedule();
 		}
     	// TODO close editors on disconnect
     }

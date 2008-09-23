@@ -164,12 +164,15 @@ public class DefaultConnectionProvider implements IConnectionProvider {
 		}
 		public synchronized void disconnect() throws IOException {
 			// close
-			connector.close();
 			root = null;
 			connector = null;
 			connection = null;
 			isConnected = false;
-			fireChanged(this);
+			try {
+				connector.close();
+			} finally {
+				fireChanged(this);
+			}
 		}
 		public boolean isConnected() {
 			return isConnected;

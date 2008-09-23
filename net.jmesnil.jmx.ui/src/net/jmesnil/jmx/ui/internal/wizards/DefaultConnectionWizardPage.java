@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Jeff Mesnil
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.wizards;
 
 import java.net.InetAddress;
@@ -28,6 +35,11 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ *
+ * @author "Rob Stryker"<rob.stryker@redhat.com>
+ *
+ */
 public class DefaultConnectionWizardPage extends WizardPage implements
 		ConnectionWizardPage {
 	private static final String _BLANK_ = ""; //$NON-NLS-1$

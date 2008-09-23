@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Jeff Mesnil
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
 import net.jmesnil.jmx.core.IConnectionWrapper;
@@ -16,6 +23,11 @@ import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionConstants;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 
+/**
+ *
+ * @author "Rob Stryker"<rob.stryker@redhat.com>
+ *
+ */
 public class ActionProvider extends CommonActionProvider {
 	private DoubleClickAction doubleClickAction;
 	private NewConnectionAction newConnectionAction;
