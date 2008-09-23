@@ -8,9 +8,9 @@
 
 package net.jmesnil.jmx.ui.internal;
 
-import net.jmesnil.jmx.resources.MBeanFeatureInfoWrapper;
-import net.jmesnil.jmx.resources.MBeanInfoWrapper;
-import net.jmesnil.jmx.resources.tree.ObjectNameNode;
+import net.jmesnil.jmx.core.MBeanFeatureInfoWrapper;
+import net.jmesnil.jmx.core.MBeanInfoWrapper;
+import net.jmesnil.jmx.core.tree.ObjectNameNode;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.editors.MBeanEditor;
 import net.jmesnil.jmx.ui.internal.editors.MBeanEditorInput;

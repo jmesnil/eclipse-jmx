@@ -18,7 +18,7 @@ import javax.management.Attribute;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServerConnection;
 
-import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
+import net.jmesnil.jmx.core.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.extensions.IWritableAttributeHandler;
 import net.jmesnil.jmx.ui.internal.JMXImages;

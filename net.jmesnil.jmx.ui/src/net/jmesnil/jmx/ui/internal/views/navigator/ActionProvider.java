@@ -1,6 +1,6 @@
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
-import net.jmesnil.jmx.resources.IConnectionWrapper;
+import net.jmesnil.jmx.core.IConnectionWrapper;
 import net.jmesnil.jmx.ui.internal.actions.DoubleClickAction;
 import net.jmesnil.jmx.ui.internal.actions.MBeanServerConnectAction;
 import net.jmesnil.jmx.ui.internal.actions.MBeanServerDisconnectAction;

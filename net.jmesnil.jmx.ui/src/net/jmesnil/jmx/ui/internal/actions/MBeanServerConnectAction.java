@@ -10,7 +10,7 @@ package net.jmesnil.jmx.ui.internal.actions;
 
 import java.io.IOException;
 
-import net.jmesnil.jmx.resources.IConnectionWrapper;
+import net.jmesnil.jmx.core.IConnectionWrapper;
 import net.jmesnil.jmx.ui.JMXMessages;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.JMXImages;

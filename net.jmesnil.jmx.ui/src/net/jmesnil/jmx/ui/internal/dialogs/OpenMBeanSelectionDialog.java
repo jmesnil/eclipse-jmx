@@ -18,7 +18,7 @@ import javax.management.MBeanInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
-import net.jmesnil.jmx.resources.MBeanInfoWrapper;
+import net.jmesnil.jmx.core.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.views.navigator.MBeanExplorerLabelProvider;
 

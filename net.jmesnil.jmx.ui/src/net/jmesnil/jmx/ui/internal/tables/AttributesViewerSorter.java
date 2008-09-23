@@ -10,7 +10,7 @@ package net.jmesnil.jmx.ui.internal.tables;
 
 import javax.management.MBeanAttributeInfo;
 
-import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
+import net.jmesnil.jmx.core.MBeanAttributeInfoWrapper;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;

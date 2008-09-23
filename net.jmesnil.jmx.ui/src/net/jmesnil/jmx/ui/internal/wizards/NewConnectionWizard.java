@@ -7,9 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import net.jmesnil.jmx.resources.ExtensionManager;
-import net.jmesnil.jmx.resources.IConnectionProvider;
-import net.jmesnil.jmx.resources.IConnectionWrapper;
+import net.jmesnil.jmx.core.ExtensionManager;
+import net.jmesnil.jmx.core.IConnectionProvider;
+import net.jmesnil.jmx.core.IConnectionWrapper;
 import net.jmesnil.jmx.ui.ConnectionWizardPage;
 import net.jmesnil.jmx.ui.JMXMessages;
 import net.jmesnil.jmx.ui.UIExtensionManager;

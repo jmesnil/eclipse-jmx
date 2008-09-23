@@ -2,29 +2,29 @@
  * Eclipse JMX Console
  * Copyright (C) 2007 Jeff Mesnil
  * Contact: http://www.jmesnil.net
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
-import net.jmesnil.jmx.resources.ExtensionManager;
-import net.jmesnil.jmx.resources.IConnectionProviderListener;
-import net.jmesnil.jmx.resources.IConnectionWrapper;
-import net.jmesnil.jmx.resources.MBeanFeatureInfoWrapper;
-import net.jmesnil.jmx.resources.tree.DomainNode;
-import net.jmesnil.jmx.resources.tree.Node;
-import net.jmesnil.jmx.resources.tree.ObjectNameNode;
-import net.jmesnil.jmx.resources.tree.Root;
+import net.jmesnil.jmx.core.ExtensionManager;
+import net.jmesnil.jmx.core.IConnectionProviderListener;
+import net.jmesnil.jmx.core.IConnectionWrapper;
+import net.jmesnil.jmx.core.MBeanFeatureInfoWrapper;
+import net.jmesnil.jmx.core.tree.DomainNode;
+import net.jmesnil.jmx.core.tree.Node;
+import net.jmesnil.jmx.core.tree.ObjectNameNode;
+import net.jmesnil.jmx.core.tree.Root;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -86,7 +86,7 @@ public class MBeanExplorerContentProvider implements IConnectionProviderListener
         }
         return new Object[0];
     }
-    
+
     protected Object[] loadAndGetRootChildren(Object parent) {
 		// Must load the model
 		final Object parent2 = parent;
@@ -157,7 +157,7 @@ public class MBeanExplorerContentProvider implements IConnectionProviderListener
 	}
 
 	private void fireRefresh(final IConnectionWrapper connection, final boolean full) {
-		Display.getDefault().asyncExec(new Runnable() { 
+		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				if( viewer != null ) {
 					if(full || !(viewer instanceof StructuredViewer))

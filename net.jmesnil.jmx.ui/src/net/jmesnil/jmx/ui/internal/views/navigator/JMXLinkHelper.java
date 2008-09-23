@@ -1,6 +1,6 @@
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
-import net.jmesnil.jmx.resources.MBeanFeatureInfoWrapper;
+import net.jmesnil.jmx.core.MBeanFeatureInfoWrapper;
 import net.jmesnil.jmx.ui.internal.EditorUtils;
 
 import org.eclipse.jface.viewers.IStructuredSelection;

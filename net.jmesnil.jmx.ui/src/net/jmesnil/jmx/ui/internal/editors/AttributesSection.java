@@ -8,8 +8,8 @@
 
 package net.jmesnil.jmx.ui.internal.editors;
 
-import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
-import net.jmesnil.jmx.resources.MBeanInfoWrapper;
+import net.jmesnil.jmx.core.MBeanAttributeInfoWrapper;
+import net.jmesnil.jmx.core.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.tables.MBeanAttributesTable;
 

@@ -11,6 +11,13 @@
 
 package net.jmesnil.jmx.ui.internal.controls;
 
+import net.jmesnil.jmx.ui.JMXUIActivator;
+import net.jmesnil.jmx.ui.extensions.IAttributeControlFactory;
+import net.jmesnil.jmx.ui.extensions.IWritableAttributeHandler;
+import net.jmesnil.jmx.ui.internal.MBeanUtils;
+import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.internal.StringUtils;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -24,13 +31,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
-import net.jmesnil.jmx.ui.JMXUIActivator;
-import net.jmesnil.jmx.ui.extensions.IAttributeControlFactory;
-import net.jmesnil.jmx.ui.extensions.IWritableAttributeHandler;
-import net.jmesnil.jmx.ui.internal.MBeanUtils;
-import net.jmesnil.jmx.ui.internal.Messages;
-import net.jmesnil.jmx.ui.internal.StringUtils;
 
 public class TextControlFactory implements IAttributeControlFactory {
 

@@ -11,6 +11,9 @@
 
 package net.jmesnil.jmx.ui.internal.controls;
 
+import net.jmesnil.jmx.ui.extensions.IAttributeControlFactory;
+import net.jmesnil.jmx.ui.extensions.IWritableAttributeHandler;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -19,9 +22,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
-import net.jmesnil.jmx.ui.extensions.IAttributeControlFactory;
-import net.jmesnil.jmx.ui.extensions.IWritableAttributeHandler;
 
 public class BooleanControlFactory implements IAttributeControlFactory {
 

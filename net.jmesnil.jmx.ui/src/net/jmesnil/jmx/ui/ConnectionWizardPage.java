@@ -7,7 +7,7 @@
  *******************************************************************************/
 package net.jmesnil.jmx.ui;
 
-import net.jmesnil.jmx.resources.IConnectionWrapper;
+import net.jmesnil.jmx.core.IConnectionWrapper;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.IWizardPage;

@@ -13,7 +13,7 @@ import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
-import net.jmesnil.jmx.resources.MBeanOperationInfoWrapper;
+import net.jmesnil.jmx.core.MBeanOperationInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.MBeanUtils;
 import net.jmesnil.jmx.ui.internal.Messages;

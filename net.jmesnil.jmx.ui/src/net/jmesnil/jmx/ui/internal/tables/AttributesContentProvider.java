@@ -8,7 +8,7 @@
 
 package net.jmesnil.jmx.ui.internal.tables;
 
-import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
+import net.jmesnil.jmx.core.MBeanAttributeInfoWrapper;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
