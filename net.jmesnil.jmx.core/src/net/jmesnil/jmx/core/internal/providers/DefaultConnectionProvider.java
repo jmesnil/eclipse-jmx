@@ -46,6 +46,10 @@ public class DefaultConnectionProvider implements IConnectionProvider {
 	private ArrayList<IConnectionProviderListener> listeners =
 		new ArrayList<IConnectionProviderListener>();
 
+	public DefaultConnectionProvider() {
+		addListener(new AutomaticStarter());
+	}
+
 	public String getId() {
 		return PROVIDER_ID;
 	}
