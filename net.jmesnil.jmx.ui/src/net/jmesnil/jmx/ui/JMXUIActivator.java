@@ -5,14 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-
 package net.jmesnil.jmx.ui;
 
 import javax.management.MBeanServerConnection;
 
-import net.jmesnil.jmx.resources.MBeanServerConnectionFactory;
 import net.jmesnil.jmx.resources.DomainWrapper;
-import net.jmesnil.jmx.resources.DefaultMBeanServerConnectionFactory;
 import net.jmesnil.jmx.resources.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanOperationInfoWrapper;
@@ -26,7 +23,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -40,14 +36,14 @@ public class JMXUIActivator extends AbstractUIPlugin {
     private static JMXUIActivator plugin;
 
     private JMXAdapterFactory adapterFactory;
-    private ServiceTracker connectionFactoryServiceTracker;
     private MBeanServerConnection connection;
-    
-    
+
+
     /**
      * The constructor
      */
     public JMXUIActivator() {
+    	super();
     }
 
     @Override
@@ -55,10 +51,6 @@ public class JMXUIActivator extends AbstractUIPlugin {
         super.start(context);
         registerAdapters();
         plugin = this;
-        
-        connectionFactoryServiceTracker = new ServiceTracker(context, MBeanServerConnectionFactory.class.getName(), null);
-        connectionFactoryServiceTracker.open();
-        
     }
 
     @Override
@@ -66,30 +58,17 @@ public class JMXUIActivator extends AbstractUIPlugin {
         plugin = null;
         unregisterAdapters();
         super.stop(context);
-        connectionFactoryServiceTracker.close();
     }
 
     /**
      * Returns the shared instance
-     * 
+     *
      * @return the shared instance
      */
     public static JMXUIActivator getDefault() {
         return plugin;
     }
-    public  MBeanServerConnectionFactory getConnectionFactory(){
-    	MBeanServerConnectionFactory connectionFactory;
-        Object service  = connectionFactoryServiceTracker.getService();
-        if (service instanceof MBeanServerConnectionFactory && service != null) {
-        	//if an appropriate service is registered, use it
-        	connectionFactory =  (MBeanServerConnectionFactory)service;
-        } else {
-        	//make sure that there is always a service
-        	connectionFactory =  new DefaultMBeanServerConnectionFactory();
-        }
-        return connectionFactory;
-    }
-    
+
     public static Shell getActiveWorkbenchShell() {
          IWorkbenchWindow window= getActiveWorkbenchWindow();
          if (window != null) {
@@ -105,7 +84,7 @@ public class JMXUIActivator extends AbstractUIPlugin {
     public static IWorkbenchPage getActivePage() {
         return getDefault().internalGetActivePage();
     }
-    
+
     private IWorkbenchPage internalGetActivePage() {
         IWorkbenchWindow window= getWorkbench().getActiveWorkbenchWindow();
         if (window == null)
@@ -116,11 +95,11 @@ public class JMXUIActivator extends AbstractUIPlugin {
     public void setCurrentConnection(MBeanServerConnection connection) {
     	this.connection  =  connection;
     }
-    
+
     public MBeanServerConnection getCurrentConnection() {
     	return this.connection;
     }
-    
+
     public static void log(IStatus status) {
         getDefault().getLog().log(status);
     }

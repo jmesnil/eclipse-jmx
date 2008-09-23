@@ -3,6 +3,7 @@
 <plugin>
    <extension-point id="net.jmesnil.jmx.ui.attribute.controls" name="Attribute Controls" schema="schema/attributeControls.exsd"/>
    <extension-point id="net.jmesnil.jmx.ui.attribute.bindings" name="Attribute Bindings" schema="schema/attributeBindings.exsd"/>
+   <extension-point id="net.jmesnil.jmx.ui.providerUI" name="Connection Provider UI" schema="schema/providerUI.exsd"/>
 
    <extension
          point="org.eclipse.ui.views">
@@ -11,12 +12,113 @@
             id="net.jmesnil.jmx.ui.views">
       </category>
       <view
-            name="%MBeanExplorer.name"
-            icon="icons/sample.gif"
             category="net.jmesnil.jmx.ui.views"
-            class="net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer"
-            id="net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer">
+            class="net.jmesnil.jmx.ui.internal.views.navigator.Navigator"
+            icon="icons/sample.gif"
+            id="net.jmesnil.jmx.ui.internal.views.navigator.MBeanExplorer"
+            name="MBean Explorer 5"
+            restorable="true">
       </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewer
+            viewerId="net.jmesnil.jmx.ui.internal.views.navigator.MBeanExplorer">
+      </viewer>
+      <viewerContentBinding
+            viewerId="net.jmesnil.jmx.ui.internal.views.navigator.MBeanExplorer">
+         <includes>
+            <contentExtension
+                  isRoot="true"
+                  pattern="net.jmesnil.jmx.ui.internal.views.navigator.root">
+            </contentExtension>
+            <contentExtension
+                  pattern="net.jmesnil.jmx.ui.internal.views.navigator.JMXLinkHelper">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+      <viewerActionBinding
+            viewerId="net.jmesnil.jmx.ui.internal.views.navigator.MBeanExplorer">
+         <includes>
+            <actionExtension
+                  pattern="net.jmesnil.jmx.ui.internal.views.navigator.actionProvider">
+            </actionExtension>
+         </includes>
+      </viewerActionBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.linkHelper">
+      <linkHelper
+            class="net.jmesnil.jmx.ui.internal.views.navigator.JMXLinkHelper"
+            id="net.jmesnil.jmx.ui.internal.views.navigator.JMXLinkHelper">
+         <selectionEnablement>
+            <or>
+               <instanceof
+                     value="net.jmesnil.jmx.resources.IConnectionWrapper">
+               </instanceof>
+               <instanceof
+                     value="net.jmesnil.jmx.resources.tree.Node">
+               </instanceof>
+               <instanceof
+                     value="net.jmesnil.jmx.resources.MBeanFeatureInfoWrapper">
+               </instanceof>
+            </or>
+         </selectionEnablement>
+         <editorInputEnablement>
+            <not>
+               <instanceof
+                     value="java.lang.Object">
+               </instanceof>
+            </not>
+         </editorInputEnablement>
+      </linkHelper>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="net.jmesnil.jmx.ui.internal.views.navigator.MBeanExplorerContentProvider"
+            icon="icons/sample.gif"
+            id="net.jmesnil.jmx.ui.internal.views.navigator.root"
+            labelProvider="net.jmesnil.jmx.ui.internal.views.navigator.MBeanExplorerLabelProvider"
+            name="MBeans"
+            priority="normal">
+         <triggerPoints>
+            <instanceof
+                  value="org.eclipse.ui.IViewPart">
+            </instanceof>
+         </triggerPoints>
+         <possibleChildren>
+            <or>
+               <instanceof
+                     value="net.jmesnil.jmx.ui.internal.tree.Node">
+               </instanceof>
+               <instanceof
+                     value="net.jmesnil.jmx.resources.IConnectionProvider">
+               </instanceof>
+            </or>
+         </possibleChildren>
+      </navigatorContent>
+      <actionProvider
+            class="net.jmesnil.jmx.ui.internal.views.navigator.ActionProvider"
+            id="net.jmesnil.jmx.ui.internal.views.navigator.actionProvider">
+         <enablement>
+            <or>
+               <adapt
+                     type="java.util.Collection">
+                  <count
+                        value="0">
+                  </count>
+               </adapt>
+               <instanceof
+                     value="net.jmesnil.jmx.resources.IConnectionWrapper">
+               </instanceof>
+               <instanceof
+                     value="net.jmesnil.jmx.resources.tree.Node">
+               </instanceof>
+            </or>
+         </enablement>
+      </actionProvider>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -115,5 +217,16 @@
             class="net.jmesnil.jmx.ui.internal.controls.TabularDataControlFactory"
             type="javax.management.openmbean.TabularData">
       </control>
+   </extension>
+   <extension
+         point="net.jmesnil.jmx.ui.providerUI">
+      <providerUI
+            icon="icons/full/obj16/write_obj.gif"
+            id="net.jmesnil.jmx.resources.internal.providers.DefaultConnectionProvider"
+            name="Default JMX Connection">
+         <wizardPage
+               class="net.jmesnil.jmx.ui.internal.wizards.DefaultConnectionWizardPage">
+         </wizardPage>
+      </providerUI>
    </extension>
 </plugin>

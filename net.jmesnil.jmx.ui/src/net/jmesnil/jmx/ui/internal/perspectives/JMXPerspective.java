@@ -5,10 +5,9 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-
 package net.jmesnil.jmx.ui.internal.perspectives;
 
-import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
+import net.jmesnil.jmx.ui.internal.views.navigator.Navigator;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -32,11 +31,11 @@ public class JMXPerspective implements IPerspectiveFactory {
     private void addViews() {
         IFolderLayout left = factory.createFolder("left", //$NON-NLS-1$
                 IPageLayout.LEFT, 0.2f, factory.getEditorArea());
-        left.addView(MBeanExplorer.ID);
+        left.addView(Navigator.VIEW_ID);
     }
 
     private void addViewShortcuts() {
-        factory.addShowViewShortcut(MBeanExplorer.ID);
+        factory.addShowViewShortcut(Navigator.VIEW_ID);
         factory.addShowViewShortcut("org.eclipse.ui.views.PropertySheet"); //$NON-NLS-1$
     }
 

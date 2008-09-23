@@ -20,7 +20,7 @@ import javax.management.ObjectName;
 
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
-import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorerLabelProvider;
+import net.jmesnil.jmx.ui.internal.views.navigator.MBeanExplorerLabelProvider;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -71,9 +71,9 @@ public class OpenMBeanSelectionDialog extends SelectionStatusDialog {
         viewer = filter.getViewer();
         viewer.setContentProvider(new ContentProvider());
         viewer.setLabelProvider(new MBeanExplorerLabelProvider());
-        
+
         MBeanServerConnection mbsc = JMXUIActivator.getDefault().getCurrentConnection();
-                
+
         if (mbsc != null) {
             try {
                 Set set = mbsc.queryNames(ObjectName.getInstance("*:*"), null); //$NON-NLS-1$

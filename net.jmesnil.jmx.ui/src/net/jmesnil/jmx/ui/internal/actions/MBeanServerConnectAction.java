@@ -8,51 +8,47 @@
 
 package net.jmesnil.jmx.ui.internal.actions;
 
-import javax.management.MBeanServerConnection;
+import java.io.IOException;
 
-import net.jmesnil.jmx.resources.MBeanServerConnectionDescriptor;
+import net.jmesnil.jmx.resources.IConnectionWrapper;
+import net.jmesnil.jmx.ui.JMXMessages;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
-import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.window.Window;
 
+/**
+ * The connect action
+ * @author "Rob Stryker"<rob.stryker@redhat.com>
+ *
+ */
 public class MBeanServerConnectAction extends Action {
-
-    private final MBeanExplorer view;
-
-    public MBeanServerConnectAction(MBeanExplorer view) {
+	private IConnectionWrapper connection;
+    public MBeanServerConnectAction(IConnectionWrapper wrapper) {
         super(Messages.MBeanServerConnectAction_text, AS_PUSH_BUTTON);
-        this.view = view;
         JMXImages.setLocalImageDescriptors(this, "attachAgent.gif"); //$NON-NLS-1$
+        this.connection = wrapper;
     }
 
-    @Override
 	public void run() {
-        MBeanServerConnectDialog dialog = new MBeanServerConnectDialog(view
-                .getViewSite().getShell());
-        if (dialog.open() != Window.OK) {
-            return;
-        }
-        try {
-            String url = dialog.getURL();
-            String userName = dialog.getUserName();
-            String password = dialog.getPassword();
-            MBeanServerConnectionDescriptor connectionDescriptor  = new MBeanServerConnectionDescriptor(url, url, userName, password);  
-            MBeanServerConnection mbsc = JMXUIActivator.getDefault().getConnectionFactory().createMBeanServerConnection(connectionDescriptor);
-            view.setMBeanServerConnection(mbsc);
-            JMXUIActivator.getDefault().setCurrentConnection(mbsc);
-        } catch (Exception e) {
-            String message = Messages.MBeanServerConnectAction_connectionFailure;
-            ErrorDialog.openError(view.getSite().getShell(),
-                    Messages.MBeanServerConnectAction_error, message,
-                    new Status(IStatus.ERROR, JMXUIActivator.PLUGIN_ID,
-                            IStatus.OK, message, e));
-        }
+		if( connection != null ) {
+			final IConnectionWrapper wrapper = connection;
+			new Job(JMXMessages.OpenJMXConnectionJob) {
+				protected IStatus run(IProgressMonitor monitor) {
+					try {
+						wrapper.connect();
+					} catch( IOException ioe ) {
+						// TODO EXTERNALIZE STRING
+						return new Status(IStatus.ERROR, JMXUIActivator.PLUGIN_ID, JMXMessages.OpenJMXConnectionError, ioe);
+					}
+					return Status.OK_STATUS;
+				}
+			}.schedule();
+		}
     }
 }

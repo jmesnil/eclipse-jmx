@@ -50,7 +50,7 @@ public class MBeanInfoWrapper implements Comparable {
     /**
      * Test if the wrapped MBean is a <code>NotificationBroadcaster</code>
      * using {@link MBeanServerConnection#isInstanceOf(ObjectName, String)}.
-     * 
+     *
      * @return <code>true</code> if the wrapped MBean is a
      *         <code>NotificationBroadcaster</code>, <code>false</code>
      *         else

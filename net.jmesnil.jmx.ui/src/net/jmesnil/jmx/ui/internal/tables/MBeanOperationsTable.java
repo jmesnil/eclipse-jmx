@@ -4,10 +4,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
- *  Code was inspired by org.eclipse.equinox.client source, (c) 2006 IBM 
+ *
+ *  Code was inspired by org.eclipse.equinox.client source, (c) 2006 IBM
  *******************************************************************************/
-
 package net.jmesnil.jmx.ui.internal.tables;
 
 import javax.management.MBeanOperationInfo;
@@ -15,17 +14,13 @@ import javax.management.MBeanParameterInfo;
 
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanOperationInfoWrapper;
-import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
-import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -37,9 +32,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.part.ISetSelectionTarget;
 
 public class MBeanOperationsTable {
 
@@ -165,16 +158,6 @@ public class MBeanOperationsTable {
         viewer = new TableViewer(operationsTable);
         viewer.setContentProvider(new MBeanOpContentProvider());
         viewer.setLabelProvider(new MBeanOpLabelProvider());
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged(SelectionChangedEvent event) {
-                IViewPart part = JMXUIActivator.getActivePage().findView(
-                        MBeanExplorer.ID);
-                if (part != JMXUIActivator.getActivePage().getActivePart()) {
-                    ((ISetSelectionTarget) part).selectReveal(event
-                            .getSelection());
-                }
-            }
-        });
     }
 
     private void createColumns(final Table opTable) {

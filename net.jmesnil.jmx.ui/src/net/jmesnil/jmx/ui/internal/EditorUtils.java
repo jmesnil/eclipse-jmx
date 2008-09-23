@@ -10,10 +10,10 @@ package net.jmesnil.jmx.ui.internal;
 
 import net.jmesnil.jmx.resources.MBeanFeatureInfoWrapper;
 import net.jmesnil.jmx.resources.MBeanInfoWrapper;
+import net.jmesnil.jmx.resources.tree.ObjectNameNode;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.editors.MBeanEditor;
 import net.jmesnil.jmx.ui.internal.editors.MBeanEditorInput;
-import net.jmesnil.jmx.ui.internal.tree.ObjectNameNode;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -26,7 +26,7 @@ public class EditorUtils {
 
     public static IEditorInput getEditorInput(Object input) {
         Assert.isNotNull(input);
-        
+
         if (input instanceof ObjectNameNode) {
             ObjectNameNode node = (ObjectNameNode) input;
             MBeanInfoWrapper wrapper = node.getMbeanInfoWrapper();

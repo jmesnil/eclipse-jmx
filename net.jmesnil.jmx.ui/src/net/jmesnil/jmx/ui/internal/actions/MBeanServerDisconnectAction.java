@@ -8,40 +8,42 @@
 
 package net.jmesnil.jmx.ui.internal.actions;
 
+import java.io.IOException;
+
+import net.jmesnil.jmx.resources.IConnectionWrapper;
+import net.jmesnil.jmx.ui.JMXMessages;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.Messages;
-import net.jmesnil.jmx.ui.internal.editors.MBeanEditor;
-import net.jmesnil.jmx.ui.internal.views.explorer.MBeanExplorer;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbenchPage;
 
 public class MBeanServerDisconnectAction extends Action {
-
-    private MBeanExplorer view;
-
-    public MBeanServerDisconnectAction(MBeanExplorer view) {
+	private IConnectionWrapper connection;
+    public MBeanServerDisconnectAction(IConnectionWrapper wrapper) {
         super(Messages.MBeanServerDisconnectAction_text, AS_PUSH_BUTTON);
-        this.view = view;
         JMXImages.setLocalImageDescriptors(this, "detachAgent.gif"); //$NON-NLS-1$
+        this.connection = wrapper;
     }
 
     public void run() {
-        IEditorReference[] references = JMXUIActivator.getActivePage()
-                .findEditors(null, MBeanEditor.ID, IWorkbenchPage.MATCH_ID);
-        boolean close = true;
-        if (references.length > 0) {
-            close = MessageDialog.openConfirm(JMXUIActivator
-                    .getActiveWorkbenchShell(),
-                    Messages.MBeanServerDisconnectAction_dialogTitle,
-                    Messages.MBeanServerDisconnectAction_dialogText);
-        }
-        if (close) {
-            JMXUIActivator.getActivePage().closeEditors(references, false);
-            view.setMBeanServerConnection(null);
-        }
+		if( connection != null ) {
+			final IConnectionWrapper wrapper = connection;
+			new Job(JMXMessages.CloseJMXConnectionJob) {
+				protected IStatus run(IProgressMonitor monitor) {
+					try {
+						wrapper.disconnect();
+					} catch( IOException ioe ) {
+						return new Status(IStatus.ERROR, JMXUIActivator.PLUGIN_ID, JMXMessages.CloseJMXConnectionError, ioe);
+					}
+					return Status.OK_STATUS;
+				} 
+			}.schedule();
+		}
+    	// TODO close editors on disconnect
     }
 }
