@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="MBeanServerConnectionProvider" name="net.jmesnil.jmx.resources.MBeanServerConnectionProvider" schema="schema/MBeanServerConnectionProvider.exsd"/>
+   <extension
+         point="net.jmesnil.jmx.resources.MBeanServerConnectionProvider">
+      <connectionProvider
+            class="net.jmesnil.jmx.resources.internal.providers.DefaultConnectionProvider">
+      </connectionProvider>
+   </extension>
+</plugin>
