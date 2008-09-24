@@ -32,8 +32,8 @@ import org.eclipse.core.runtime.Status;
  *
  */
 public class ExtensionManager {
-	private static final String MBEAN_CONNECTION = "net.jmesnil.jmx.core.MBeanServerConnectionProvider"; //$NON-NLS-1$
-	private static final String CLASS = "class"; //$NON-NLS-1$
+	public static final String MBEAN_CONNECTION = "net.jmesnil.jmx.core.MBeanServerConnectionProvider"; //$NON-NLS-1$
+	public static final String CLASS = "class"; //$NON-NLS-1$
 	private static HashMap<String, IConnectionProvider> providers;
 
 	public static IConnectionProvider[] getProviders() {
