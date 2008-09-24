@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package net.jmesnil.jmx.resources;
+package net.jmesnil.jmx.core.tests;
 
 import java.lang.management.ManagementFactory;
 import java.util.UUID;

@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %BundleName
-Bundle-SymbolicName: net.jmesnil.jmx.resources.test
+Bundle-SymbolicName: net.jmesnil.jmx.core.test
 Bundle-Version: 0.2.2.qualifier
-Fragment-Host: net.jmesnil.jmx.resources;bundle-version="0.2.2.qualifier"
+Fragment-Host: net.jmesnil.jmx.core.tests;bundle-version="0.2.2.qualifier"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %BundleProvider
 Require-Bundle: org.junit
