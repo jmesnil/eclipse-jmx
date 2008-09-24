@@ -4,6 +4,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.actions;
 
@@ -19,8 +22,6 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * The action to delete a connection
- * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
  */
 public class DeleteConnectionAction extends Action {
 	private IConnectionWrapper connection;

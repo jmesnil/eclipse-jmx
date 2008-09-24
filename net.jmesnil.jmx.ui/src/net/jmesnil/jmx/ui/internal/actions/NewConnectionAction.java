@@ -4,8 +4,10 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
-
 package net.jmesnil.jmx.ui.internal.actions;
 
 import net.jmesnil.jmx.ui.Messages;
@@ -20,8 +22,6 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * Create a new connection
- * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
  */
 public class NewConnectionAction extends Action {
 	public NewConnectionAction() {

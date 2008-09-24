@@ -4,6 +4,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
@@ -24,9 +27,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
 
 /**
- *
- * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
+ * Content provider for the view
  */
 public class MBeanExplorerContentProvider implements IConnectionProviderListener,
         IStructuredContentProvider, ITreeContentProvider {

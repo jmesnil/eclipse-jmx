@@ -4,6 +4,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
 package net.jmesnil.jmx.core;
 
@@ -14,8 +17,6 @@ import org.osgi.framework.BundleContext;
 
 /**
  * Adding an activator where there wasn't one before
- * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
  */
 public class JMXActivator extends Plugin {
     public static final String PLUGIN_ID = "net.jmesnil.jmx.core"; //$NON-NLS-1$

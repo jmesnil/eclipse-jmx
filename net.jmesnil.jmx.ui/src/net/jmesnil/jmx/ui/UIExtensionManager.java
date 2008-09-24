@@ -4,6 +4,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
 package net.jmesnil.jmx.ui;
 
@@ -23,8 +26,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * Extension Manager for UI extensions
- * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
  */
 public class UIExtensionManager {
 	/* Wizard Pages */

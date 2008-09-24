@@ -4,6 +4,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
@@ -24,9 +27,8 @@ import org.eclipse.ui.navigator.ICommonActionConstants;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 
 /**
- *
- * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
+ * The action provider as declared in plugin.xml
+ * as relates to Common Navigator
  */
 public class ActionProvider extends CommonActionProvider {
 	private DoubleClickAction doubleClickAction;

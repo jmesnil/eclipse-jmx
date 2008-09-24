@@ -4,6 +4,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
 package net.jmesnil.jmx.core;
 
@@ -26,8 +29,6 @@ import org.eclipse.core.runtime.Status;
  * This class is in charge of loading all extensions
  * declared in this application, as well as providing
  * getters so others can gain access to them.
- *
- * @author rob.stryker@redhat.com
  *
  */
 public class ExtensionManager {

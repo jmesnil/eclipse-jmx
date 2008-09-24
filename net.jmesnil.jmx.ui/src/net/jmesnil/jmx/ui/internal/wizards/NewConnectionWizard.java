@@ -4,6 +4,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.wizards;
 
@@ -42,9 +45,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 
 /**
- *
- * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
+ * The connection wizard
  */
 public class NewConnectionWizard extends Wizard {
     private IConnectionProvider selected;

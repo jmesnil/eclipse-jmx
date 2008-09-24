@@ -4,6 +4,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
 
 package net.jmesnil.jmx.ui.internal.actions;
@@ -17,8 +20,6 @@ import org.eclipse.jface.action.Action;
 
 /**
  * The connect action
- * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
  */
 public class MBeanServerConnectAction extends Action {
 	private IConnectionWrapper connection;

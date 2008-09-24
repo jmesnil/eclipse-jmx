@@ -9,8 +9,6 @@ package net.jmesnil.jmx.core;
 
 /**
  * An exception occurring during a JMX query
- * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
  */
 public class JMXException extends Exception {
 	private static final long serialVersionUID = 1L;

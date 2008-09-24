@@ -4,6 +4,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
 package net.jmesnil.jmx.core;
 
@@ -15,8 +18,6 @@ import org.eclipse.core.runtime.CoreException;
  * API for a connection provider.
  * A connection provider represents, creates, adds, and removes
  * instances of one type of jmx connection
- * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
  */
 public interface IConnectionProvider {
 

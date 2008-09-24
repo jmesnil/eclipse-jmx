@@ -4,6 +4,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
@@ -14,9 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 /**
- *
- * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
+ * The view itself
  */
 public class Navigator extends CommonNavigator {
 	public static final String VIEW_ID = "net.jmesnil.jmx.ui.internal.views.navigator.MBeanExplorer"; //$NON-NLS-1$

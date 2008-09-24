@@ -4,6 +4,9 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.wizards;
 
@@ -36,9 +39,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 /**
- *
- * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
+ * The connection page for the default wizard implementation.
  */
 public class DefaultConnectionWizardPage extends WizardPage implements
 		ConnectionWizardPage {
@@ -49,7 +50,6 @@ public class DefaultConnectionWizardPage extends WizardPage implements
 	private Text nameText, userNameText, passwordText;
 	private Text advancedNameText, advancedUserNameText, advancedPasswordText;
 	private String name, url, userName, password;
-	private boolean canComplete = false;
 
 	private void addListeners() {
 		ModifyListener listener = new ModifyListener() {

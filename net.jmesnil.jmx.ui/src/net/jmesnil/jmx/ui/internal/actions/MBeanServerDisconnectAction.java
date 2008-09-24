@@ -16,9 +16,7 @@ import net.jmesnil.jmx.ui.Messages;
 import org.eclipse.jface.action.Action;
 
 /**
- *
- * @author "Rob Stryker"<rob.stryker@redhat.com>
- *
+ * Disconnect from a server
  */
 public class MBeanServerDisconnectAction extends Action {
 	private IConnectionWrapper connection;
