@@ -10,7 +10,7 @@ package net.jmesnil.jmx.ui.internal.editors;
 
 import net.jmesnil.jmx.core.MBeanInfoWrapper;
 import net.jmesnil.jmx.core.MBeanOperationInfoWrapper;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.widgets.Composite;

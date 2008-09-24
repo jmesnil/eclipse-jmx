@@ -22,7 +22,7 @@ import net.jmesnil.jmx.core.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.extensions.IWritableAttributeHandler;
 import net.jmesnil.jmx.ui.internal.JMXImages;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 import net.jmesnil.jmx.ui.internal.controls.AttributeControlFactory;
 

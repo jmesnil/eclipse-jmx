@@ -15,7 +15,7 @@ import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.extensions.IAttributeControlFactory;
 import net.jmesnil.jmx.ui.extensions.IWritableAttributeHandler;
 import net.jmesnil.jmx.ui.internal.MBeanUtils;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 
 import org.eclipse.core.runtime.IStatus;

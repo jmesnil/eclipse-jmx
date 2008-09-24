@@ -13,7 +13,7 @@ package net.jmesnil.jmx.ui.internal.controls;
 
 import java.util.Map;
 
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 
 import org.eclipse.swt.SWT;

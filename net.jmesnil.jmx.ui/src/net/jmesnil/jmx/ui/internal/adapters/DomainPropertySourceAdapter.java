@@ -11,7 +11,7 @@ package net.jmesnil.jmx.ui.internal.adapters;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;

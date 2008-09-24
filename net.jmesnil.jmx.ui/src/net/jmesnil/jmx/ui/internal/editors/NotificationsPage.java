@@ -17,7 +17,7 @@ import javax.management.NotificationListener;
 import net.jmesnil.jmx.core.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.JMXImages;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;

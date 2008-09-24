@@ -15,7 +15,7 @@ import javax.management.MBeanParameterInfo;
 import net.jmesnil.jmx.core.MBeanInfoWrapper;
 import net.jmesnil.jmx.core.MBeanOperationInfoWrapper;
 import net.jmesnil.jmx.ui.internal.JMXImages;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;

@@ -12,7 +12,7 @@ import javax.management.MBeanAttributeInfo;
 
 import net.jmesnil.jmx.core.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 
 import org.eclipse.core.runtime.IStatus;

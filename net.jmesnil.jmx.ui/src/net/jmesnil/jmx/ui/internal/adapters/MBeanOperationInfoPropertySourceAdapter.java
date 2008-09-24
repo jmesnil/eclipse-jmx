@@ -15,7 +15,7 @@ import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
 
 import net.jmesnil.jmx.core.Impact;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;

@@ -10,7 +10,7 @@
 package net.jmesnil.jmx.ui.internal.tables;
 
 import net.jmesnil.jmx.core.MBeanInfoWrapper;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;

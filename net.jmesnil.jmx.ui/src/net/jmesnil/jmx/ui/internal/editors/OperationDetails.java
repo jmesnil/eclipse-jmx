@@ -16,7 +16,7 @@ import javax.management.ObjectName;
 import net.jmesnil.jmx.core.MBeanOperationInfoWrapper;
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.MBeanUtils;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 import net.jmesnil.jmx.ui.internal.StringUtils;
 import net.jmesnil.jmx.ui.internal.dialogs.OperationInvocationResultDialog;
 

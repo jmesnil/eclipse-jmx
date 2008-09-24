@@ -10,7 +10,7 @@ package net.jmesnil.jmx.ui.internal.editors;
 
 import net.jmesnil.jmx.core.MBeanInfoWrapper;
 import net.jmesnil.jmx.core.MBeanOperationInfoWrapper;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 import net.jmesnil.jmx.ui.internal.tables.MBeanOperationsTable;
 
 import org.eclipse.jface.viewers.ISelection;

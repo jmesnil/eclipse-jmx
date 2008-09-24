@@ -16,7 +16,7 @@ import net.jmesnil.jmx.core.IConnectionProvider;
 import net.jmesnil.jmx.core.IConnectionWrapper;
 import net.jmesnil.jmx.core.internal.providers.DefaultConnectionProvider;
 import net.jmesnil.jmx.ui.ConnectionWizardPage;
-import net.jmesnil.jmx.ui.JMXMessages;
+import net.jmesnil.jmx.ui.Messages;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.WizardPage;
@@ -88,7 +88,7 @@ public class DefaultConnectionWizardPage extends WizardPage implements
 	}
 	public DefaultConnectionWizardPage() {
 		super(_BLANK_);
-		setDescription(JMXMessages.DefaultConnectionWizardPage_Description);
+		setDescription(Messages.DefaultConnectionWizardPage_Description);
 	}
 
 	public void createControl(Composite parent) {
@@ -96,11 +96,11 @@ public class DefaultConnectionWizardPage extends WizardPage implements
 		c.setLayout(new FillLayout());
 		folder = new TabFolder(c, SWT.TOP);
 		simpleItem = new TabItem(folder, SWT.NONE);
-		simpleItem.setText(JMXMessages.DefaultConnectionWizardPage_Simple);
+		simpleItem.setText(Messages.DefaultConnectionWizardPage_Simple);
 		simpleItem.setControl(createSimpleConnectionPage(folder));
 
 		advancedItem = new TabItem(folder, SWT.NONE);
-		advancedItem.setText(JMXMessages.DefaultConnectionWizardPage_Advanced);
+		advancedItem.setText(Messages.DefaultConnectionWizardPage_Advanced);
 		advancedItem.setControl(createAdvancedConnectionPage(folder));
 		setControl(c);
 
@@ -116,7 +116,7 @@ public class DefaultConnectionWizardPage extends WizardPage implements
 
 		// 0 - name
 		Label nameLabel = new Label(fieldComposite, SWT.CENTER);
-		nameLabel.setText(JMXMessages.DefaultConnectionWizardPage_Name);
+		nameLabel.setText(Messages.DefaultConnectionWizardPage_Name);
 
 		nameText = new Text(fieldComposite, SWT.BORDER);
 		nameText.setText(getNextName());
@@ -126,7 +126,7 @@ public class DefaultConnectionWizardPage extends WizardPage implements
 
 		// 1 host label
 		Label label = new Label(fieldComposite, SWT.CENTER);
-		label.setText(JMXMessages.DefaultConnectionWizardPage_Host);
+		label.setText(Messages.DefaultConnectionWizardPage_Host);
 
 		// 2 host text entry
 		hostText = new Text(fieldComposite, SWT.BORDER);
@@ -137,7 +137,7 @@ public class DefaultConnectionWizardPage extends WizardPage implements
 
 		// 3 port label
 		label = new Label(fieldComposite, SWT.CENTER);
-		label.setText(JMXMessages.DefaultConnectionWizardPage_Port);
+		label.setText(Messages.DefaultConnectionWizardPage_Port);
 
 		// 4 port text entry
 		portText = new Text(fieldComposite, SWT.BORDER);
@@ -149,7 +149,7 @@ public class DefaultConnectionWizardPage extends WizardPage implements
 
 		// 5 user name label
 		label = new Label(fieldComposite, SWT.CENTER);
-		label.setText(JMXMessages.DefaultConnectionWizardPage_Username);
+		label.setText(Messages.DefaultConnectionWizardPage_Username);
 
 		// 6 user name text entry
 		userNameText = new Text(fieldComposite, SWT.BORDER);
@@ -161,7 +161,7 @@ public class DefaultConnectionWizardPage extends WizardPage implements
 
 		// 7 password label
 		label = new Label(fieldComposite, SWT.CENTER);
-		label.setText(JMXMessages.DefaultConnectionWizardPage_Password);
+		label.setText(Messages.DefaultConnectionWizardPage_Password);
 
 		// 8 user name text entry
 		passwordText = new Text(fieldComposite, SWT.BORDER | SWT.PASSWORD);
@@ -182,7 +182,7 @@ public class DefaultConnectionWizardPage extends WizardPage implements
 
 		// 0 - name
 		Label nameLabel = new Label(fieldComposite, SWT.CENTER);
-		nameLabel.setText(JMXMessages.DefaultConnectionWizardPage_Name);
+		nameLabel.setText(Messages.DefaultConnectionWizardPage_Name);
 
 		advancedNameText = new Text(fieldComposite, SWT.BORDER);
 		advancedNameText.setText(getNextName());
@@ -192,7 +192,7 @@ public class DefaultConnectionWizardPage extends WizardPage implements
 
 		// 1 host label
 		Label label = new Label(fieldComposite, SWT.CENTER);
-		label.setText(JMXMessages.DefaultConnectionWizardPage_JMX_URL);
+		label.setText(Messages.DefaultConnectionWizardPage_JMX_URL);
 
 		// 2 URL text entry
 		urlText = new Text(fieldComposite, SWT.BORDER);
@@ -203,7 +203,7 @@ public class DefaultConnectionWizardPage extends WizardPage implements
 
 		// 3 user name label
 		label = new Label(fieldComposite, SWT.CENTER);
-		label.setText(JMXMessages.DefaultConnectionWizardPage_Username);
+		label.setText(Messages.DefaultConnectionWizardPage_Username);
 
 		// 4 user name text entry
 		advancedUserNameText = new Text(fieldComposite, SWT.BORDER);
@@ -214,7 +214,7 @@ public class DefaultConnectionWizardPage extends WizardPage implements
 
 		// 5 password label
 		label = new Label(fieldComposite, SWT.CENTER);
-		label.setText(JMXMessages.DefaultConnectionWizardPage_Password);
+		label.setText(Messages.DefaultConnectionWizardPage_Password);
 
 		// 6 user name text entry
 		advancedPasswordText = new Text(fieldComposite, SWT.BORDER
@@ -230,13 +230,13 @@ public class DefaultConnectionWizardPage extends WizardPage implements
 	protected String getNextName() {
 		String name;
 		int count = 1;
-		if( nameTaken( JMXMessages.DefaultConnectionWizardPage_Default_Name )) {
+		if( nameTaken( Messages.DefaultConnectionWizardPage_Default_Name )) {
 			do {
-				name = JMXMessages.DefaultConnectionWizardPage_Default_Name + " " + count++; //$NON-NLS-1$
+				name = Messages.DefaultConnectionWizardPage_Default_Name + " " + count++; //$NON-NLS-1$
 			} while( nameTaken(name));
 			return name;
 		} else
-			return JMXMessages.DefaultConnectionWizardPage_Default_Name;
+			return Messages.DefaultConnectionWizardPage_Default_Name;
 	}
 
 	protected void validate() {

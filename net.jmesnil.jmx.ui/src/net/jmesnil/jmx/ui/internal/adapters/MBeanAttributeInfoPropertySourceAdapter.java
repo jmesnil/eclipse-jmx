@@ -17,7 +17,7 @@ import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
 import net.jmesnil.jmx.ui.JMXUIActivator;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;

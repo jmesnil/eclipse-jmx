@@ -9,7 +9,7 @@
 package net.jmesnil.jmx.ui.internal.editors;
 
 import net.jmesnil.jmx.ui.internal.JMXImages;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;

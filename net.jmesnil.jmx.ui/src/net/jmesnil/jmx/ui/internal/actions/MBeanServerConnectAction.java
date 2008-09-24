@@ -11,7 +11,7 @@ package net.jmesnil.jmx.ui.internal.actions;
 import net.jmesnil.jmx.core.ConnectJob;
 import net.jmesnil.jmx.core.IConnectionWrapper;
 import net.jmesnil.jmx.ui.internal.JMXImages;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 
 import org.eclipse.jface.action.Action;
 

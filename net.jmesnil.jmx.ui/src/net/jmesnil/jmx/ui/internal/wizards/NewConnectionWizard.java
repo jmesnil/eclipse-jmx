@@ -18,7 +18,7 @@ import net.jmesnil.jmx.core.ExtensionManager;
 import net.jmesnil.jmx.core.IConnectionProvider;
 import net.jmesnil.jmx.core.IConnectionWrapper;
 import net.jmesnil.jmx.ui.ConnectionWizardPage;
-import net.jmesnil.jmx.ui.JMXMessages;
+import net.jmesnil.jmx.ui.Messages;
 import net.jmesnil.jmx.ui.UIExtensionManager;
 import net.jmesnil.jmx.ui.UIExtensionManager.ConnectionProviderUI;
 
@@ -134,7 +134,7 @@ public class NewConnectionWizard extends Wizard {
 	private class FirstPage extends WizardPage {
 		TreeViewer viewer;
 		public FirstPage() {
-			super(JMXMessages.NewConnectionWizard);
+			super(Messages.NewConnectionWizard);
 			setDescription("Create a new JMX Connection");
 		}
 		public void createControl(Composite parent) {

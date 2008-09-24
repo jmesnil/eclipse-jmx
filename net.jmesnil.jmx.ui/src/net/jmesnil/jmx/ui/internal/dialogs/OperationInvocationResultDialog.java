@@ -8,7 +8,7 @@
 
 package net.jmesnil.jmx.ui.internal.dialogs;
 
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 import net.jmesnil.jmx.ui.internal.controls.AttributeControlFactory;
 
 import org.eclipse.jface.dialogs.Dialog;

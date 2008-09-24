@@ -8,7 +8,7 @@
 
 package net.jmesnil.jmx.ui.internal.actions;
 
-import net.jmesnil.jmx.ui.JMXMessages;
+import net.jmesnil.jmx.ui.Messages;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.wizards.NewConnectionWizard;
 
@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class NewConnectionAction extends Action {
 	public NewConnectionAction() {
-		super(JMXMessages.NewConnectionAction);
+		super(Messages.NewConnectionAction);
         JMXImages.setLocalImageDescriptors(this, "attachAgent.gif");  //$NON-NLS-1$
 	}
 

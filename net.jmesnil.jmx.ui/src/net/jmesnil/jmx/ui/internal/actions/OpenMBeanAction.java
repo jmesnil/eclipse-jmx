@@ -10,7 +10,7 @@ package net.jmesnil.jmx.ui.internal.actions;
 
 import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.internal.EditorUtils;
-import net.jmesnil.jmx.ui.internal.Messages;
+import net.jmesnil.jmx.ui.Messages;
 import net.jmesnil.jmx.ui.internal.dialogs.OpenMBeanSelectionDialog;
 
 import org.eclipse.jface.action.Action;
