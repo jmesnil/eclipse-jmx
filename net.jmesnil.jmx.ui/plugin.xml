@@ -16,7 +16,7 @@
             class="net.jmesnil.jmx.ui.internal.views.navigator.Navigator"
             icon="icons/sample.gif"
             id="net.jmesnil.jmx.ui.internal.views.navigator.MBeanExplorer"
-            name="MBean Explorer 5"
+            name="%MBeanExplorer.name"
             restorable="true">
       </view>
    </extension>
@@ -91,7 +91,7 @@
          <possibleChildren>
             <or>
                <instanceof
-                     value="net.jmesnil.jmx.ui.internal.tree.Node">
+                     value="net.jmesnil.jmx.core.tree.Node">
                </instanceof>
                <instanceof
                      value="net.jmesnil.jmx.core.IConnectionProvider">
@@ -223,7 +223,7 @@
       <providerUI
             icon="icons/full/obj16/write_obj.gif"
             id="net.jmesnil.jmx.core.internal.providers.DefaultConnectionProvider"
-            name="Default JMX Connection">
+            name="%DefaultJMXConnectionProvider.name">
          <wizardPage
                class="net.jmesnil.jmx.ui.internal.wizards.DefaultConnectionWizardPage">
          </wizardPage>
