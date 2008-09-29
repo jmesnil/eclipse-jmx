@@ -44,6 +44,7 @@ public class DefaultConnectionWrapper implements IConnectionWrapper {
 	private Map<String, String[]> environment;
 
 	private MBeanServerConnectionDescriptor descriptor;
+	
 	public DefaultConnectionWrapper(MBeanServerConnectionDescriptor descriptor) throws MalformedURLException {
 		this.descriptor = descriptor;
 		this.isConnected = false;
@@ -80,21 +81,24 @@ public class DefaultConnectionWrapper implements IConnectionWrapper {
 		isConnected = true;
 		((DefaultConnectionProvider)getProvider()).fireChanged(this);
 	}
+	
 	public synchronized void disconnect() throws IOException {
 		// close
 		root = null;
-		connector = null;
-		connection = null;
 		isConnected = false;
 		try {
 			connector.close();
 		} finally {
 			((DefaultConnectionProvider)getProvider()).fireChanged(this);
 		}
+        connector = null;
+        connection = null;
 	}
+	
 	public boolean isConnected() {
 		return isConnected;
 	}
+	
 	public Root getRoot() {
 		if( isConnected ) {
 			if( root == null )
