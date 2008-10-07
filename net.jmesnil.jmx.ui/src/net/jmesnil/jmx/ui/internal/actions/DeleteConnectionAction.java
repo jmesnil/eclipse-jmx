@@ -24,10 +24,13 @@ import org.eclipse.ui.PlatformUI;
  * The action to delete a connection
  */
 public class DeleteConnectionAction extends Action {
-	private IConnectionWrapper connection;
-	public DeleteConnectionAction(IConnectionWrapper wrapper) {
+	private IConnectionWrapper[] connection;
+	public DeleteConnectionAction(IConnectionWrapper[] wrapper) {
 		connection = wrapper;
-		boolean enabled = connection != null && connection.getProvider().canDelete(connection);
+		boolean enabled = true;
+		for( int i = 0; i < connection.length; i++ ) 
+			if( !connection[i].getProvider().canDelete(connection[i]) )
+					enabled = false;
 		String key = enabled ? ISharedImages.IMG_TOOL_DELETE : ISharedImages.IMG_TOOL_DELETE_DISABLED;
 		setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(key));
 		setEnabled(enabled);
@@ -36,14 +39,14 @@ public class DeleteConnectionAction extends Action {
 
 	public void run() {
 		if( connection != null ) {
-			final IConnectionWrapper wrapper = connection;
+			final IConnectionWrapper[] wrapper = connection;
 			new Job("Delete JMX Connection Job") {
 				protected IStatus run(IProgressMonitor monitor) {
-					wrapper.getProvider().removeConnection(wrapper);
+					for( int i = 0; i < connection.length; i++ )
+						wrapper[i].getProvider().removeConnection(wrapper[i]);
 					return Status.OK_STATUS;
 				}
 			}.schedule();
 		}
-
 	}
 }

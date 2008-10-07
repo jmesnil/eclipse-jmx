@@ -10,6 +10,9 @@
  *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import net.jmesnil.jmx.core.IConnectionWrapper;
 import net.jmesnil.jmx.ui.internal.actions.DeleteConnectionAction;
 import net.jmesnil.jmx.ui.internal.actions.DoubleClickAction;
@@ -51,14 +54,14 @@ public class ActionProvider extends CommonActionProvider {
     }
 
     public void fillContextMenu(IMenuManager menu) {
-    	IConnectionWrapper connection = getWrapperFromSelection();
-    	if( connection != null ) {
-	    	if( !connection.isConnected() && connection.canControl())
-	    		menu.add(new MBeanServerConnectAction(connection));
-	    	else if( connection.canControl())
-	    		menu.add(new MBeanServerDisconnectAction(connection));
+    	IConnectionWrapper[] connections = getWrappersFromSelection();
+    	if( connections != null ) {
+	    	if( !anyConnected(connections) && allControlable(connections))
+	    		menu.add(new MBeanServerConnectAction(connections));
+	    	else if( allControlable(connections))
+	    		menu.add(new MBeanServerDisconnectAction(connections));
 
-	    	menu.add(new DeleteConnectionAction(connection));
+	    	menu.add(new DeleteConnectionAction(connections));
     	}
 
     	// Finish up
@@ -66,16 +69,34 @@ public class ActionProvider extends CommonActionProvider {
     	menu.add(newConnectionAction);
     }
 
-    protected IConnectionWrapper getWrapperFromSelection() {
+    protected boolean anyConnected(IConnectionWrapper[] connections) {
+    	for( int i = 0; i < connections.length; i++ ) 
+    		if( connections[i].isConnected())
+    			return true;
+    	return false;
+    }
+    protected boolean allControlable(IConnectionWrapper[] connections) {
+    	for( int i = 0; i < connections.length; i++ ) 
+    		if( !connections[i].canControl() )
+    			return false;
+    	return true;
+    }
+    
+    protected IConnectionWrapper[] getWrappersFromSelection() {
+    	ArrayList<IConnectionWrapper> list = new ArrayList<IConnectionWrapper>();
     	if( getContext() != null && getContext().getSelection() != null ) {
     		ISelection sel = getContext().getSelection();
     		if( sel instanceof IStructuredSelection ) {
-    			Object first = ((IStructuredSelection)sel).getFirstElement();
-    			if( first instanceof IConnectionWrapper ) {
-    				return ((IConnectionWrapper)first);
+    			Iterator i = ((IStructuredSelection)sel).iterator();
+    			Object o;
+    			while(i.hasNext()) {
+	    			o = i.next();
+    				if( o instanceof IConnectionWrapper ) {
+    					list.add((IConnectionWrapper)o);
+	    			}
     			}
     		}
     	}
-    	return null;
+    	return list.toArray(new IConnectionWrapper[list.size()]);
     }
 }

@@ -18,15 +18,16 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
 public class ConnectJob extends Job {
-	private IConnectionWrapper connection;
-	public ConnectJob(IConnectionWrapper connection) {
+	private IConnectionWrapper[] connection;
+	public ConnectJob(IConnectionWrapper[] connection) {
 		super(JMXCoreMessages.ConnectJob);
 		this.connection = connection;
 	}
 
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
-			connection.connect();
+			for( int i = 0; i < connection.length; i++)
+				connection[i].connect();
 			return Status.OK_STATUS;
 		} catch( IOException ioe ) {
 			return new Status(IStatus.ERROR, JMXActivator.PLUGIN_ID, JMXCoreMessages.ConnectJobFailed, ioe);

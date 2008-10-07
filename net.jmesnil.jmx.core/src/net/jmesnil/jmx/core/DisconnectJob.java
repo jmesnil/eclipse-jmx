@@ -18,15 +18,16 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
 public class DisconnectJob extends Job {
-	private IConnectionWrapper connection;
-	public DisconnectJob(IConnectionWrapper connection) {
+	private IConnectionWrapper[] connection;
+	public DisconnectJob(IConnectionWrapper[] connection) {
 		super(JMXCoreMessages.DisconnectJob);
 		this.connection = connection;
 	}
 
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
-			connection.disconnect();
+			for( int i = 0; i < connection.length; i++ )
+				connection[i].disconnect();
 			return Status.OK_STATUS;
 		} catch( IOException ioe ) {
 			return new Status(IStatus.ERROR, JMXActivator.PLUGIN_ID, JMXCoreMessages.DisconnectJobFailed, ioe);

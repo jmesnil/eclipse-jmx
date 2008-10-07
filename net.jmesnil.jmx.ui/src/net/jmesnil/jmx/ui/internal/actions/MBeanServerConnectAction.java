@@ -22,8 +22,8 @@ import org.eclipse.jface.action.Action;
  * The connect action
  */
 public class MBeanServerConnectAction extends Action {
-	private IConnectionWrapper connection;
-    public MBeanServerConnectAction(IConnectionWrapper wrapper) {
+	private IConnectionWrapper[] connection;
+    public MBeanServerConnectAction(IConnectionWrapper[] wrapper) {
         super(Messages.MBeanServerConnectAction_text, AS_PUSH_BUTTON);
         JMXImages.setLocalImageDescriptors(this, "attachAgent.gif"); //$NON-NLS-1$
         this.connection = wrapper;

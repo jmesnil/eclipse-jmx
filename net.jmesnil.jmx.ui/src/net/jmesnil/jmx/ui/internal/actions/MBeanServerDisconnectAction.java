@@ -19,8 +19,8 @@ import org.eclipse.jface.action.Action;
  * Disconnect from a server
  */
 public class MBeanServerDisconnectAction extends Action {
-	private IConnectionWrapper connection;
-    public MBeanServerDisconnectAction(IConnectionWrapper wrapper) {
+	private IConnectionWrapper[] connection;
+    public MBeanServerDisconnectAction(IConnectionWrapper[] wrapper) {
         super(Messages.MBeanServerDisconnectAction_text, AS_PUSH_BUTTON);
         JMXImages.setLocalImageDescriptors(this, "detachAgent.gif"); //$NON-NLS-1$
         this.connection = wrapper;
@@ -30,6 +30,5 @@ public class MBeanServerDisconnectAction extends Action {
 		if( connection != null ) {
 			new DisconnectJob(connection).schedule();
 		}
-    	// TODO close editors on disconnect
     }
 }

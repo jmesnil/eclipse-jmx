@@ -22,7 +22,7 @@ public class AutomaticStarter implements IConnectionProviderListener {
 
 	public void connectionAdded(IConnectionWrapper connection) {
 		if( connection instanceof DefaultConnectionWrapper ) {
-			new ConnectJob(connection).schedule();
+			new ConnectJob(new IConnectionWrapper[] { connection }).schedule();
 		}
 	}
 
