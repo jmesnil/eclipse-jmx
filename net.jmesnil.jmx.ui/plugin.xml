@@ -65,11 +65,11 @@
             </or>
          </selectionEnablement>
          <editorInputEnablement>
-            <not>
+            <or>
                <instanceof
                      value="java.lang.Object">
                </instanceof>
-            </not>
+            </or>
          </editorInputEnablement>
       </linkHelper>
    </extension>

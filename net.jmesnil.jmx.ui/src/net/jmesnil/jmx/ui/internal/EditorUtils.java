@@ -49,7 +49,7 @@ public class EditorUtils {
         return isOpenInEditor(input);
     }
 
-    private static IEditorPart isOpenInEditor(IEditorInput input) {
+    public static IEditorPart isOpenInEditor(IEditorInput input) {
         if (input != null) {
             IWorkbenchPage p = JMXUIActivator.getActivePage();
             if (p != null) {

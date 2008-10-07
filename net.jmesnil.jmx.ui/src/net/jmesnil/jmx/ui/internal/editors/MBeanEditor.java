@@ -49,7 +49,7 @@ public class MBeanEditor extends FormEditor {
             JMXUIActivator.log(IStatus.ERROR, e.getMessage(), e);
         }
     }
-
+    
     public void doSave(IProgressMonitor monitor) {
 
     }
@@ -59,5 +59,9 @@ public class MBeanEditor extends FormEditor {
 
     public boolean isSaveAsAllowed() {
         return false;
+    }
+    
+    public String toString() {
+    	return getPartName();
     }
 }

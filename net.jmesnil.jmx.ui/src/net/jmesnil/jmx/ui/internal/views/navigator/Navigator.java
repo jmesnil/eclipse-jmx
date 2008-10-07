@@ -13,6 +13,7 @@ package net.jmesnil.jmx.ui.internal.views.navigator;
 import net.jmesnil.jmx.ui.internal.actions.NewConnectionAction;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.navigator.CommonNavigator;
 
@@ -34,6 +35,7 @@ public class Navigator extends CommonNavigator {
 
 	public void fillActionBars() {
 	    getViewSite().getActionBars().getToolBarManager().add(new NewConnectionAction());
+	    getViewSite().getActionBars().getToolBarManager().add(new Separator());
 	    getViewSite().getActionBars().updateActionBars();
 	}
 

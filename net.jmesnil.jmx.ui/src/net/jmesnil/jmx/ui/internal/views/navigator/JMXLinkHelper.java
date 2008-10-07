@@ -11,7 +11,9 @@
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
 import net.jmesnil.jmx.core.MBeanFeatureInfoWrapper;
+import net.jmesnil.jmx.core.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.internal.EditorUtils;
+import net.jmesnil.jmx.ui.internal.editors.MBeanEditorInput;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorInput;
@@ -30,6 +32,7 @@ public class JMXLinkHelper implements ILinkHelper {
 		if (selection.size() == 1) {
 			IEditorPart part = EditorUtils.isOpenInEditor(obj);
 			if (part != null) {
+				page.bringToTop(part);
 				if (obj instanceof MBeanFeatureInfoWrapper) {
 					EditorUtils.revealInEditor(part, obj);
 				}
@@ -38,6 +41,11 @@ public class JMXLinkHelper implements ILinkHelper {
 	}
 
 	public IStructuredSelection findSelection(IEditorInput anInput) {
+		IEditorPart part = EditorUtils.isOpenInEditor(anInput);
+		if( anInput instanceof MBeanEditorInput ) {
+			MBeanInfoWrapper wrapper = ((MBeanEditorInput)anInput).getWrapper();
+			// TODO 
+		}
 		return null;
 	}
 
