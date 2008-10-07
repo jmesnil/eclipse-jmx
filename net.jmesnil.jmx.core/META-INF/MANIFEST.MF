@@ -6,7 +6,11 @@ Bundle-Activator: net.jmesnil.jmx.core.JMXActivator
 Bundle-Vendor: %BundleProvider
 Require-Bundle: org.eclipse.core.runtime
 Export-Package: net.jmesnil.jmx.core,
- net.jmesnil.jmx.core.internal.providers;x-friends:="net.jmesnil.jmx.core",
+ net.jmesnil.jmx.core.internal.providers;
+  x-friends:="net.jmesnil.jmx.core,
+   net.jmesnil.jmx.core.test,
+   net.jmesnil.jmx.ui,
+   net.jmesnil.jmx.ui.test",
  net.jmesnil.jmx.core.tree
 Bundle-Localization: plugin
 Bundle-Vendor: %BundleProvider
