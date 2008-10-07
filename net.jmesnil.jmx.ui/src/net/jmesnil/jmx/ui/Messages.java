@@ -22,7 +22,7 @@ public class Messages extends NLS {
 	public static String DefaultConnectionWizardPage_Username;
 	public static String DefaultConnectionWizardPage_Password;
 	public static String DefaultConnectionWizardPage_JMX_URL;
-
+	public static String DeleteConnection;
 
 
 

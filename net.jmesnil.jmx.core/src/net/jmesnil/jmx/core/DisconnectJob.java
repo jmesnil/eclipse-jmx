@@ -15,12 +15,11 @@ import java.io.IOException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 
-public class DisconnectJob extends Job {
+public class DisconnectJob extends ChainedJob {
 	private IConnectionWrapper[] connection;
 	public DisconnectJob(IConnectionWrapper[] connection) {
-		super(JMXCoreMessages.DisconnectJob);
+		super(JMXCoreMessages.DisconnectJob, JMXActivator.PLUGIN_ID);
 		this.connection = connection;
 	}
 

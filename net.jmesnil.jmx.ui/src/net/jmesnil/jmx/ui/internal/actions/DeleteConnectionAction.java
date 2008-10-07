@@ -10,12 +10,11 @@
  *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.actions;
 
+import net.jmesnil.jmx.core.DeleteConnectionJob;
+import net.jmesnil.jmx.core.DisconnectJob;
 import net.jmesnil.jmx.core.IConnectionWrapper;
+import net.jmesnil.jmx.ui.Messages;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -34,19 +33,16 @@ public class DeleteConnectionAction extends Action {
 		String key = enabled ? ISharedImages.IMG_TOOL_DELETE : ISharedImages.IMG_TOOL_DELETE_DISABLED;
 		setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(key));
 		setEnabled(enabled);
-		setText("Delete Connection");
+		setText(Messages.DeleteConnection);
 	}
 
 	public void run() {
 		if( connection != null ) {
 			final IConnectionWrapper[] wrapper = connection;
-			new Job("Delete JMX Connection Job") {
-				protected IStatus run(IProgressMonitor monitor) {
-					for( int i = 0; i < connection.length; i++ )
-						wrapper[i].getProvider().removeConnection(wrapper[i]);
-					return Status.OK_STATUS;
-				}
-			}.schedule();
+			DisconnectJob dj = new DisconnectJob(wrapper);
+			DeleteConnectionJob deleteJob = new DeleteConnectionJob(wrapper);
+			dj.setNextJob(deleteJob);
+			dj.schedule();
 		}
 	}
 }

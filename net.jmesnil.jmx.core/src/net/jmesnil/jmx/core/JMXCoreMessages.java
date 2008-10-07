@@ -13,6 +13,7 @@ public class JMXCoreMessages extends NLS {
 	public static String ConnectJob;
 	public static String ConnectJobFailed;
 	public static String DisconnectJob;
+	public static String DeleteConnectionJob;
 	public static String DisconnectJobFailed;
 	public static String ExtensionManagerError1;
 	public static String DefaultConnection_ErrorAdding;
