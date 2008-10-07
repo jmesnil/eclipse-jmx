@@ -1,0 +1,64 @@
+package net.jmesnil.jmx.ui.internal.editors;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import net.jmesnil.jmx.core.ExtensionManager;
+import net.jmesnil.jmx.core.IConnectionProviderListener;
+import net.jmesnil.jmx.core.IConnectionWrapper;
+
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.internal.Workbench;
+
+public class EditorConnectionMapping implements IConnectionProviderListener {	
+	private HashMap<IConnectionWrapper, ArrayList<IEditorPart>> map;
+	private IWorkbenchPage page;
+	public EditorConnectionMapping() {
+		this.map = new HashMap<IConnectionWrapper, ArrayList<IEditorPart>>();
+		page = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
+		ExtensionManager.addConnectionProviderListener(this);
+	}
+
+	public void open(IConnectionWrapper wrapper, IEditorPart editor) {
+		ArrayList<IEditorPart> list = map.get(wrapper);
+		if( list == null ) {
+			list = new ArrayList<IEditorPart>();
+			map.put(wrapper, list);
+		}
+		if( !list.contains(editor))
+			list.add(editor);
+	}
+	
+	public void close(final IConnectionWrapper wrapper) {
+		Display.getDefault().asyncExec(new Runnable() { 
+			public void run() {
+				ArrayList<IEditorPart> list = map.get(wrapper);
+				if( list != null ) {
+					Iterator<IEditorPart> i = list.iterator();
+					IEditorPart ep;
+					while(i.hasNext()) {
+						ep = i.next();
+						page.closeEditor(ep, false);
+					}
+					map.remove(wrapper);
+				}
+			}
+		});
+	}
+
+	public void connectionChanged(IConnectionWrapper connection) {
+		if( !connection.isConnected() ) {
+			close(connection);
+		}
+	}
+
+	public void connectionAdded(IConnectionWrapper connection) {
+		// do nothing
+	}
+	public void connectionRemoved(IConnectionWrapper connection) {
+		// do nothing
+	}
+}

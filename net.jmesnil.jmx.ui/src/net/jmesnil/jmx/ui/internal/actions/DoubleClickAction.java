@@ -11,13 +11,18 @@
 
 package net.jmesnil.jmx.ui.internal.actions;
 
+import net.jmesnil.jmx.core.IConnectionWrapper;
 import net.jmesnil.jmx.ui.internal.EditorUtils;
+import net.jmesnil.jmx.ui.internal.editors.EditorConnectionMapping;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -29,6 +34,13 @@ public class DoubleClickAction extends Action implements
 		ISelectionChangedListener {
 	private ISelection selection;
 	private CommonViewer viewer;
+	protected EditorConnectionMapping mapping;
+	public DoubleClickAction() {
+		mapping = new EditorConnectionMapping();
+	}
+	public EditorConnectionMapping getMapping() {
+		return mapping;
+	}
 	public void selectionChanged(SelectionChangedEvent event) {
 		this.selection = event.getSelection();
 		viewer = (CommonViewer)event.getSource();
@@ -45,7 +57,20 @@ public class DoubleClickAction extends Action implements
 			if (editor != null) {
 				EditorUtils.revealInEditor(editor, element);
 				editor.setFocus();
+				mapping.open(findParent(structured), editor);
 			}
 		}
+	}
+	
+	protected IConnectionWrapper findParent(IStructuredSelection sel) {
+		if( sel instanceof TreeSelection ) {
+			TreeSelection sel2 = ((TreeSelection)sel);
+			TreePath[] paths = sel2.getPathsFor(sel.getFirstElement());
+			if( paths != null && paths.length == 1 ) {
+				if( paths[0].getFirstSegment() instanceof IConnectionWrapper )
+					return (IConnectionWrapper) paths[0].getFirstSegment();
+			}
+		}
+		return null;
 	}
 }
