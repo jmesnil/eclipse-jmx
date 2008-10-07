@@ -59,6 +59,8 @@ public class EditorConnectionMapping implements IConnectionProviderListener {
 		// do nothing
 	}
 	public void connectionRemoved(IConnectionWrapper connection) {
-		// do nothing
+		if( !connection.isConnected() ) {
+			close(connection);
+		}
 	}
 }
