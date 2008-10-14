@@ -8,7 +8,7 @@
  * Contributors:
  *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
-package net.jmesnil.jmx.core.internal.providers;
+package net.jmesnil.jmx.core.providers;
 
 import net.jmesnil.jmx.core.ConnectJob;
 import net.jmesnil.jmx.core.IConnectionProviderListener;

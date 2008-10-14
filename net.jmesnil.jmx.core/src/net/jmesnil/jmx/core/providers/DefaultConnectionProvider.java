@@ -8,7 +8,7 @@
  * Contributors:
  *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
  *******************************************************************************/
-package net.jmesnil.jmx.core.internal.providers;
+package net.jmesnil.jmx.core.providers;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +36,7 @@ import org.eclipse.core.runtime.Status;
  * The default connection type that comes bundled
  */
 public class DefaultConnectionProvider implements IConnectionProvider {
-	public static final String PROVIDER_ID = "net.jmesnil.jmx.core.internal.providers.DefaultConnectionProvider"; //$NON-NLS-1$
+	public static final String PROVIDER_ID = "net.jmesnil.jmx.core.providers.DefaultConnectionProvider"; //$NON-NLS-1$
 	public static final String ID = "id"; //$NON-NLS-1$
 	public static final String URL = "url"; //$NON-NLS-1$
 	public static final String USERNAME = "username"; //$NON-NLS-1$

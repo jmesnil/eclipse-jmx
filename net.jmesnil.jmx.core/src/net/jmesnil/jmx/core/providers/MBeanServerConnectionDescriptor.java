@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package net.jmesnil.jmx.core.internal.providers;
+package net.jmesnil.jmx.core.providers;
 
 import java.io.Serializable;
 
