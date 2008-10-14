@@ -10,10 +10,12 @@ package net.jmesnil.jmx.ui.internal.actions;
 
 import net.jmesnil.jmx.core.DisconnectJob;
 import net.jmesnil.jmx.core.IConnectionWrapper;
-import net.jmesnil.jmx.ui.internal.JMXImages;
+import net.jmesnil.jmx.ui.JMXUIActivator;
 import net.jmesnil.jmx.ui.Messages;
+import net.jmesnil.jmx.ui.internal.JMXImages;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 
 /**
  * Disconnect from a server
@@ -28,7 +30,15 @@ public class MBeanServerDisconnectAction extends Action {
 
     public void run() {
 		if( connection != null ) {
-			new DisconnectJob(connection).schedule();
+			if( showDialog(connection))
+				new DisconnectJob(connection).schedule();
 		}
+    }
+    
+    protected boolean showDialog(IConnectionWrapper[] wrappers) {
+        return MessageDialog.openConfirm(JMXUIActivator
+                .getActiveWorkbenchShell(),
+                Messages.MBeanServerDisconnectAction_dialogTitle,
+                Messages.MBeanServerDisconnectAction_dialogText);
     }
 }

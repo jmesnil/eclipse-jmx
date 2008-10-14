@@ -44,6 +44,8 @@ public class Messages extends NLS {
     public static String MBeanAttributeValue_Warning;
     public static String MBeanServerConnectAction_text;
     public static String MBeanServerDisconnectAction_text;
+    public static String MBeanServerDisconnectAction_dialogTitle;
+    public static String MBeanServerDisconnectAction_dialogText;
     public static String name;
     public static String NotificationsPage_clearActionToolTip;
     public static String NotificationsPage_message;

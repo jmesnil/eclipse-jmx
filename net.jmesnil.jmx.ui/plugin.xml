@@ -222,7 +222,7 @@
          point="net.jmesnil.jmx.ui.providerUI">
       <providerUI
             icon="icons/full/obj16/write_obj.gif"
-            id="net.jmesnil.jmx.core.internal.providers.DefaultConnectionProvider"
+            id="net.jmesnil.jmx.core.providers.DefaultConnectionProvider"
             name="%DefaultJMXConnectionProvider.name">
          <wizardPage
                class="net.jmesnil.jmx.ui.internal.wizards.DefaultConnectionWizardPage">

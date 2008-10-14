@@ -17,7 +17,7 @@ import java.util.HashMap;
 import net.jmesnil.jmx.core.ExtensionManager;
 import net.jmesnil.jmx.core.IConnectionProvider;
 import net.jmesnil.jmx.core.IConnectionWrapper;
-import net.jmesnil.jmx.core.internal.providers.DefaultConnectionProvider;
+import net.jmesnil.jmx.core.providers.DefaultConnectionProvider;
 import net.jmesnil.jmx.ui.ConnectionWizardPage;
 import net.jmesnil.jmx.ui.Messages;
 
