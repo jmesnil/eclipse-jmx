@@ -124,7 +124,7 @@
       </actionProvider>
       <commonFilter
             activeByDefault="true"
-            class="net.jmesnil.jmx.ui.internal.views.navigator.Navigator$QueryFilter"
+            class="net.jmesnil.jmx.ui.internal.views.navigator.QueryContribution$QueryFilter"
             description="A filter which uses the text box provided in the view"
             id="net.jmesnil.jmx.ui.internal.views.navigator.queryFilter"
             name="Query Filter">

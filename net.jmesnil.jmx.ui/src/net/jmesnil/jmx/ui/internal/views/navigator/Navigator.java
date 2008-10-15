@@ -10,15 +10,10 @@
  *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
-import net.jmesnil.jmx.core.IConnectionWrapper;
-import net.jmesnil.jmx.core.tree.DomainNode;
-import net.jmesnil.jmx.core.tree.ObjectNameNode;
 import net.jmesnil.jmx.ui.internal.actions.NewConnectionAction;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.navigator.CommonNavigator;
 
@@ -45,21 +40,5 @@ public class Navigator extends CommonNavigator {
 	    getViewSite().getActionBars().getToolBarManager().add(new NewConnectionAction());
 	    getViewSite().getActionBars().getToolBarManager().add(new Separator());
 	    getViewSite().getActionBars().updateActionBars();
-	}
-
-	public QueryContribution getQueryContribution() {
-		return queryContribution;
-	}
-	
-	public static class QueryFilter extends ViewerFilter {
-		public boolean select(Viewer viewer, Object parentElement,
-				Object element) {
-			
-			QueryContribution contrib = QueryContribution.getContributionFor(viewer);
-			if( contrib != null ) {
-				return contrib.shouldShow(element);
-			}
-			return true;
-		}
 	}
 }

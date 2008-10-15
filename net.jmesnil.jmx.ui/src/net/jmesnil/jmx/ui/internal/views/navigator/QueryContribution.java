@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Jeff Mesnil
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    "Rob Stryker" <rob.stryker@redhat.com> - Initial implementation
+ *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
 import java.util.HashMap;
@@ -5,6 +15,7 @@ import java.util.HashMap;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -22,6 +33,19 @@ public class QueryContribution extends ControlContribution {
 		return map.get(v);
 	}
 
+	public static class QueryFilter extends ViewerFilter {
+		public boolean select(Viewer viewer, Object parentElement,
+				Object element) {
+			
+			QueryContribution contrib = QueryContribution.getContributionFor(viewer);
+			if( contrib != null ) {
+				return contrib.shouldShow(element);
+			}
+			return true;
+		}
+	}
+
+	
 	private String filterText, oldFilterText;
 	private HashMap<Object, Boolean> cache = new HashMap<Object, Boolean>();
 
