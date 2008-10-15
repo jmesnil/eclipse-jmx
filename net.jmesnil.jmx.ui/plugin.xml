@@ -35,6 +35,9 @@
             <contentExtension
                   pattern="net.jmesnil.jmx.ui.internal.views.navigator.JMXLinkHelper">
             </contentExtension>
+            <contentExtension
+                  pattern="net.jmesnil.jmx.ui.internal.views.navigator.queryFilter">
+            </contentExtension>
          </includes>
       </viewerContentBinding>
       <viewerActionBinding
@@ -119,6 +122,13 @@
             </or>
          </enablement>
       </actionProvider>
+      <commonFilter
+            activeByDefault="true"
+            class="net.jmesnil.jmx.ui.internal.views.navigator.Navigator$QueryFilter"
+            description="A filter which uses the text box provided in the view"
+            id="net.jmesnil.jmx.ui.internal.views.navigator.queryFilter"
+            name="Query Filter">
+      </commonFilter>
    </extension>
    <extension
          point="org.eclipse.ui.editors">

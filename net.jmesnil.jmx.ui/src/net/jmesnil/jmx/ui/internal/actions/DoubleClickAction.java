@@ -47,6 +47,9 @@ public class DoubleClickAction extends Action implements
 	}
 
 	public void run() {
+		if( selection == null )
+			return;
+
 		StructuredSelection structured = (StructuredSelection) selection;
 		Object element = structured.getFirstElement();
 		viewer.expandToLevel(element, 1);

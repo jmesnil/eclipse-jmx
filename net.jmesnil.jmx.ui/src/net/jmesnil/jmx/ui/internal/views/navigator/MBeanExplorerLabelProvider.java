@@ -56,9 +56,11 @@ public class MBeanExplorerLabelProvider extends LabelProvider {
     	super.dispose();
     }
 
-	@SuppressWarnings("unchecked")
-	@Override
 	public String getText(Object obj) {
+		return MBeanExplorerLabelProvider.getText2(obj);
+	}
+	
+	public static String getText2(Object obj) {
 		if( obj instanceof IConnectionWrapper ) {
 			IConnectionProvider provider = ((IConnectionWrapper)obj).getProvider();
 			return provider.getName((IConnectionWrapper)obj);
