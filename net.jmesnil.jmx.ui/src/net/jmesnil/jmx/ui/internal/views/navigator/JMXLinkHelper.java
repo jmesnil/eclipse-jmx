@@ -11,18 +11,15 @@
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
 import net.jmesnil.jmx.core.MBeanFeatureInfoWrapper;
-import net.jmesnil.jmx.core.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.internal.EditorUtils;
 import net.jmesnil.jmx.ui.internal.editors.AttributesPage;
 import net.jmesnil.jmx.ui.internal.editors.MBeanEditor;
-import net.jmesnil.jmx.ui.internal.editors.MBeanEditorInput;
 import net.jmesnil.jmx.ui.internal.editors.OperationsPage;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.navigator.ILinkHelper;
 
 /**
@@ -55,7 +52,6 @@ public class JMXLinkHelper implements ILinkHelper {
 			} else if( page instanceof OperationsPage) {
 				sel = ((OperationsPage)page).getSelection();
 			}
-			System.out.println("1" + sel);
 			return sel;
 		}
 		

@@ -1,4 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.views.navigator;
+
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -59,13 +72,23 @@ public class UpdateSelectionJob extends UIJob {
 							IEditorInput input = editor.getEditorInput();
 							IStructuredSelection newSelection = linkService
 									.getSelectionFor(input);
-							if (!newSelection.isEmpty() && !newSelection.equals(commonNavigator.getCommonViewer().getSelection())) {
+							if (!newSelection.isEmpty() && 
+									!allShown((IStructuredSelection)commonNavigator.getCommonViewer().getSelection(), 
+											newSelection)) {
 								commonNavigator.selectReveal(newSelection);
 							}
 						}
 					}
 				}
-
+				protected boolean allShown(IStructuredSelection navigatorSel, IStructuredSelection editorSel) {
+					List navList = navigatorSel.toList();
+					Iterator i = editorSel.iterator();
+					while(i.hasNext()) {
+						if( !navList.contains(i.next()))
+							return false;
+					}
+					return true;
+				}
 				public void handleException(Throwable e) {
 					String msg = e.getMessage() != null ? e.getMessage()
 							: e.toString();
