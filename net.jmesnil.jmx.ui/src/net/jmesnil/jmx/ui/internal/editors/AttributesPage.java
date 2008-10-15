@@ -11,12 +11,16 @@ package net.jmesnil.jmx.ui.internal.editors;
 import net.jmesnil.jmx.core.MBeanAttributeInfoWrapper;
 import net.jmesnil.jmx.core.MBeanInfoWrapper;
 import net.jmesnil.jmx.ui.Messages;
+import net.jmesnil.jmx.ui.internal.views.navigator.Navigator;
+import net.jmesnil.jmx.ui.internal.views.navigator.UpdateSelectionJob;
 
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.DetailsPart;
 import org.eclipse.ui.forms.IDetailsPage;
 import org.eclipse.ui.forms.IDetailsPageProvider;
-import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.MasterDetailsBlock;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -34,7 +38,7 @@ public class AttributesPage extends FormPage {
     public class AttributesBLock extends MasterDetailsBlock implements
             IDetailsPageProvider {
 
-        private IFormPart masterSection;
+        private AttributesSection masterSection;
 
         private IDetailsPage attributeDetails;
 
@@ -83,6 +87,15 @@ public class AttributesPage extends FormPage {
         form.getForm().setSeparatorVisible(true);
         form.getForm().setText(wrapper.getObjectName().toString());
         block.createContent(managedForm);
+        block.masterSection.getTableViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				UpdateSelectionJob.launchJob(Navigator.VIEW_ID);
+			} 
+        });
+    }
+    
+    public IStructuredSelection getSelection() {
+    	return (IStructuredSelection)block.masterSection.getTableViewer().getSelection();
     }
 
     @Override

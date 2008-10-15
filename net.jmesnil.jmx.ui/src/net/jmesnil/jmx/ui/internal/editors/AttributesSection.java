@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -59,6 +60,10 @@ public class AttributesSection extends SectionPart {
                 });
     }
 
+    public Viewer getTableViewer() {
+    	return attributesTable.getViewer();
+    }
+    
     @Override
     public void refresh() {
         super.refresh();
