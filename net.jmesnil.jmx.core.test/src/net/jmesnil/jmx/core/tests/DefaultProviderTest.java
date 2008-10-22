@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 import net.jmesnil.jmx.core.ExtensionManager;
 import net.jmesnil.jmx.core.IConnectionProvider;
 import net.jmesnil.jmx.core.IConnectionWrapper;
-import net.jmesnil.jmx.core.internal.providers.DefaultConnectionProvider;
+import net.jmesnil.jmx.core.providers.DefaultConnectionProvider;
 import net.jmesnil.jmx.core.tests.util.TestProjectProvider;
 import net.jmesnil.jmx.core.tree.Node;
 import net.jmesnil.jmx.core.tree.Root;
@@ -39,13 +39,12 @@ public class DefaultProviderTest extends TestCase {
 	}
 
 	public void testExtensionExists() {
-    	String providerClass = "net.jmesnil.jmx.core.internal.providers.DefaultConnectionProvider";
-		HashMap<String, IConnectionProvider> tmp = new HashMap<String, IConnectionProvider>();
+    	String providerClass = "net.jmesnil.jmx.core.providers.DefaultConnectionProvider";
 		IExtension[] extensions = findExtension(ExtensionManager.MBEAN_CONNECTION);
 		for (int i = 0; i < extensions.length; i++) {
 			IConfigurationElement elements[] = extensions[i]
 					.getConfigurationElements();
-			for( int j = 0; i < elements.length; j++ ) {
+			for( int j = 0; j < elements.length; j++ ) {
 				if( elements[j].getAttribute("class").equals(providerClass))
 					return;
 			}
@@ -81,6 +80,9 @@ public class DefaultProviderTest extends TestCase {
 
 		ILaunchConfigurationWorkingCopy wc = createLaunch();
 		ILaunch launch = wc.launch("run", new NullProgressMonitor());
+		
+		Thread.sleep(10000);
+		
 		try {
 			IConnectionProvider defProvider =
 				ExtensionManager.getProvider(DefaultConnectionProvider.PROVIDER_ID);
@@ -95,8 +97,12 @@ public class DefaultProviderTest extends TestCase {
 
 			wrapper.connect();
 			Root root = wrapper.getRoot();
+			assertTrue("Root was not null", root == null);
+			
+			wrapper.loadRoot();
+			root = wrapper.getRoot();
 			assertTrue("Root was null", root != null);
-
+			
 			Node[] children = root.getChildren();
 			assertTrue("children were null", children != null);
 			assertEquals("Example had the wrong number of domains", 5, children.length);
