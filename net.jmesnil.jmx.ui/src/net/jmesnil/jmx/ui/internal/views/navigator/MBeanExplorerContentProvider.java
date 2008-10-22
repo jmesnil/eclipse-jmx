@@ -10,6 +10,8 @@
  *******************************************************************************/
 package net.jmesnil.jmx.ui.internal.views.navigator;
 
+import java.util.HashMap;
+
 import net.jmesnil.jmx.core.ExtensionManager;
 import net.jmesnil.jmx.core.IConnectionProviderListener;
 import net.jmesnil.jmx.core.IConnectionWrapper;
@@ -31,10 +33,19 @@ import org.eclipse.ui.IViewPart;
  */
 public class MBeanExplorerContentProvider implements IConnectionProviderListener,
         IStructuredContentProvider, ITreeContentProvider {
-
+	
+	public static class DelayProxy {
+		public IConnectionWrapper wrapper;
+		public DelayProxy(IConnectionWrapper wrapper) {
+			this.wrapper = wrapper;
+		}
+	}
+	
 	private Viewer viewer;
+	private HashMap<IConnectionWrapper, DelayProxy> loading;
     public MBeanExplorerContentProvider() {
     	ExtensionManager.addConnectionProviderListener(this);
+    	loading = new HashMap<IConnectionWrapper, DelayProxy>();
     }
 
     public void inputChanged(Viewer v, Object oldInput, Object newInput) {
@@ -83,44 +94,39 @@ public class MBeanExplorerContentProvider implements IConnectionProviderListener
         return new Object[0];
     }
 
-    protected Object[] loadAndGetRootChildren(Object parent) {
+    protected synchronized Object[] loadAndGetRootChildren(final Object parent) {
+		final IConnectionWrapper w = (IConnectionWrapper)parent;
+		
+		if( w.getRoot() != null ) 
+			return getChildren(w.getRoot());
+		
 		// Must load the model
-		final Object parent2 = parent;
-		final Root[] roots = new Root[1];
-		final Boolean[] done = new Boolean[1];
-		roots[0] = null;
-		done[0] = new Boolean(false);
 		Thread t = new Thread() {
 			public void run() {
 				try {
-					roots[0] = ((IConnectionWrapper)parent2).getRoot();
-					done[0] = new Boolean(true);
+					w.loadRoot();
 				} catch( RuntimeException re ) {
-					done[0] = new Boolean(true);
 				}
+				loading.remove(w);
+				Display.getDefault().asyncExec(new Runnable() { 
+					public void run() {
+						if( viewer instanceof StructuredViewer) 
+							((StructuredViewer)viewer).refresh(parent);
+						else
+							viewer.refresh();
+					}
+				});
 			}
 		};
-		t.start();
-		while(!done[0].booleanValue()) {
-			Display.getDefault().readAndDispatch();
+		
+		if( loading.containsKey(((IConnectionWrapper)parent))) {
+			return new Object[] { loading.get((IConnectionWrapper)parent)};
 		}
-		return getChildren(roots[0]);
+		DelayProxy p = new DelayProxy(w);
+		loading.put(w, p);
+		t.start();
+		return new Object[] { p };
     }
-
-//    @SuppressWarnings("unchecked")
-//    private List findOnlyObjectNames(Node node) {
-//        List objectNameNodes = new ArrayList();
-//        Node[] children = node.getChildren();
-//        for (int i = 0; i < children.length; i++) {
-//            Node child = children[i];
-//            if (child instanceof ObjectNameNode) {
-//                objectNameNodes.add(child);
-//            } else {
-//                objectNameNodes.addAll(findOnlyObjectNames(child));
-//            }
-//        }
-//        return objectNameNodes;
-//    }
 
     public boolean hasChildren(Object parent) {
         if (parent instanceof ObjectNameNode) {
@@ -158,7 +164,8 @@ public class MBeanExplorerContentProvider implements IConnectionProviderListener
 				if( viewer != null ) {
 					if(full || !(viewer instanceof StructuredViewer))
 						viewer.refresh();
-					((StructuredViewer)viewer).refresh(connection);
+					else
+						((StructuredViewer)viewer).refresh(connection);
 				}
 			}
 		});

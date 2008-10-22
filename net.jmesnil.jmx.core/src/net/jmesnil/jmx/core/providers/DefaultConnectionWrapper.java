@@ -100,17 +100,19 @@ public class DefaultConnectionWrapper implements IConnectionWrapper {
 	}
 	
 	public Root getRoot() {
-		if( isConnected ) {
-			if( root == null )
-				try {
-					root = NodeUtils.createObjectNameTree(this);
-				} catch( CoreException ce ) {
-					// TODO LOG
-				}
-		}
 		return root;
 	}
 
+	public void loadRoot() {
+		if( isConnected && root == null ) {
+			try {
+				root = NodeUtils.createObjectNameTree(this);
+			} catch( CoreException ce ) {
+				// TODO LOG
+			}
+		}
+	}
+	
 	public void run(IJMXRunnable runnable) throws CoreException {
 		try {
 			runnable.run(connection);

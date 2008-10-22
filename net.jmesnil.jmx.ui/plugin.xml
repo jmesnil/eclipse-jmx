@@ -99,6 +99,9 @@
                <instanceof
                      value="net.jmesnil.jmx.core.IConnectionProvider">
                </instanceof>
+               <instanceof
+                     value="net.jmesnil.jmx.ui.internal.views.navigator.MBeanExplorerContentProvider$DelayProxy">
+               </instanceof>
             </or>
          </possibleChildren>
       </navigatorContent>

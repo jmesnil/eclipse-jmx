@@ -27,6 +27,7 @@ import net.jmesnil.jmx.ui.UIExtensionManager;
 import net.jmesnil.jmx.ui.UIExtensionManager.ConnectionProviderUI;
 import net.jmesnil.jmx.ui.internal.JMXImages;
 import net.jmesnil.jmx.ui.internal.MBeanUtils;
+import net.jmesnil.jmx.ui.internal.views.navigator.MBeanExplorerContentProvider.DelayProxy;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -65,6 +66,11 @@ public class MBeanExplorerLabelProvider extends LabelProvider {
 			IConnectionProvider provider = ((IConnectionWrapper)obj).getProvider();
 			return provider.getName((IConnectionWrapper)obj);
 		}
+
+		if( obj instanceof DelayProxy ) {
+			return "Loading...";
+		}
+		
 		if (obj instanceof DomainNode) {
 			DomainNode node = (DomainNode) obj;
 			return node.getDomain();
@@ -104,7 +110,10 @@ public class MBeanExplorerLabelProvider extends LabelProvider {
 				return images.get(ui.getId());
 			}
 		}
-
+		if( obj instanceof DelayProxy ) {
+			return null;
+		}
+		
 		if (obj instanceof DomainNode) {
 			return JMXImages.get(JMXImages.IMG_OBJS_LIBRARY);
 		}

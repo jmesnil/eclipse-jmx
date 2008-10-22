@@ -25,6 +25,17 @@ public interface IConnectionWrapper {
 	public boolean canControl();
 	public void connect() throws IOException;
 	public void disconnect() throws IOException;
+	
+	/**
+	 * Loads the root object in the current thread if it is not loaded.
+	 * If it is loaded, does nothing.
+	 */
+	public void loadRoot();
+	
+	/**
+	 * Gets the current root object, or null if its not yet loaded.
+	 * @return
+	 */
 	public Root getRoot();
 	public void run(IJMXRunnable runnable) throws CoreException;
 }

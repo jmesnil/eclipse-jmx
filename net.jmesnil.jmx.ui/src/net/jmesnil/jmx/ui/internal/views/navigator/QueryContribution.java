@@ -12,19 +12,14 @@ package net.jmesnil.jmx.ui.internal.views.navigator;
 
 import java.util.HashMap;
 
-import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Text;
 
-public class QueryContribution extends ControlContribution {
+public class QueryContribution {
 	
 	private static HashMap<Viewer, QueryContribution> map = 
 			new HashMap<Viewer, QueryContribution>();
@@ -32,23 +27,7 @@ public class QueryContribution extends ControlContribution {
 	public static QueryContribution getContributionFor(Viewer v) {
 		return map.get(v);
 	}
-
-	public static class QueryFilter extends ViewerFilter {
-		public boolean select(Viewer viewer, Object parentElement,
-				Object element) {
-			
-			QueryContribution contrib = QueryContribution.getContributionFor(viewer);
-			if( contrib != null ) {
-				return contrib.shouldShow(element);
-			}
-			return true;
-		}
-	}
-
 	
-	private String filterText, oldFilterText;
-	private HashMap<Object, Boolean> cache = new HashMap<Object, Boolean>();
-
 	public static String getFilterText(Viewer viewer) {
 		QueryContribution qc = map.get(viewer);
 		if( qc != null ) {
@@ -57,42 +36,47 @@ public class QueryContribution extends ControlContribution {
 		return null;
 	}
 
-	
-	
-	private Navigator navigator;
-	private Text text;
-	private boolean requiresRefine;
-	public QueryContribution(final Navigator navigator) {
-		super("net.jmesnil.jmx.ui.internal.views.navigator.ControlContribution");
-		this.navigator = navigator;
-		Display.getDefault().asyncExec(new Runnable(){
-			public void run(){
-				map.put(navigator.getCommonViewer(), QueryContribution.this);
+
+	public static class QueryFilter extends ViewerFilter {
+		public boolean select(Viewer viewer, Object parentElement,
+				Object element) {
+			
+			QueryContribution contrib = QueryContribution.getContributionFor(viewer);
+			if( contrib != null ) {
+				return contrib.shouldShow(element, parentElement);
 			}
-		});
+			return true;
+		}
 	}
 
-	protected Control createControl(Composite parent) {
-		text = new Text(parent, SWT.SINGLE | SWT.BORDER );
-		text.setToolTipText("Type in a filter"); 
-		text.setText("Type in a filter"); 
-		text.addModifyListener(new ModifyListener() {
+	
+	private String filterText, oldFilterText;
+	private HashMap<Object, Boolean> cache = new HashMap<Object, Boolean>();
+	private Navigator navigator;
+	private boolean requiresRefine;
+	public QueryContribution(final Navigator navigator) {
+		this.navigator = navigator;
+		map.put(navigator.getCommonViewer(), this);
+		addListener();
+	}
+
+	protected void addListener() {
+		navigator.getFilterText().addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				oldFilterText = filterText;
-				filterText = text.getText();
+				filterText = navigator.getFilterText().getText();
 				final String old = oldFilterText == null ? "" : oldFilterText;
 				final String neww = filterText == null ? "" : filterText;
 				
 				if( old.equals("") || neww.equals("") || !neww.startsWith(old)) {
 					clearCache();
-					navigator.getCommonViewer().refresh();
 				}  else if(neww.startsWith(old) && !neww.equals(old)) {
 					requiresRefine = true;
-					navigator.getCommonViewer().refresh();
 				}
+				cacheEntry(requiresRefine, (ITreeContentProvider)navigator.getCommonViewer().getContentProvider());
+				navigator.getCommonViewer().refresh();
 			} 
 		});
-		return text;
 	}
 	
 	protected void clearCache() {
@@ -100,11 +84,26 @@ public class QueryContribution extends ControlContribution {
 		requiresRefine = false;
 	}
 	
+	protected void cacheEntry(boolean refine, ITreeContentProvider provider) {
+		Object[] elements = provider.getElements(navigator.getCommonViewer().getInput());
+		for( int i = 0; i < elements.length; i++ )
+			cache(elements[i], refine, provider);
+	}
 	protected boolean cache(Object o, boolean refine, ITreeContentProvider provider) {
 		if( !refine ) {
-			if( cache.get(o) != null )
+			if( cache.get(o) != null ) {
 				return cache.get(o).booleanValue();
+			}
 		}
+		
+		// If I match, all my children and grandchildren must match
+		String elementAsString = MBeanExplorerLabelProvider.getText2(o);
+		if( elementAsString.contains(filterText)) {
+				recurseTrue(o, provider);
+			return true;
+		}
+
+		// if I don't match, then if ANY of my children match, I also match
 		boolean belongs = false;
 		Object tmp;
 		Object[] children = provider.getChildren(o);
@@ -114,29 +113,24 @@ public class QueryContribution extends ControlContribution {
 				belongs |= cache(children[i], refine, provider);
 			}
 		}
-		if( !belongs ) {
-			String elementAsString = MBeanExplorerLabelProvider.getText2(o);
-			if( elementAsString.contains(filterText))
-				belongs = true;
-		}
 		cache.put(o, new Boolean(belongs));
 		return belongs;
 	}
 		
-	public boolean shouldShow(Object element) {
-		String filterText = this.filterText;
-		if( filterText != null && !("".equals(filterText))) {
-			if( navigator.getCommonViewer().getContentProvider() instanceof ITreeContentProvider ) {
-				ITreeContentProvider tcp = (ITreeContentProvider)navigator.getCommonViewer().getContentProvider();
-				cache(element, requiresRefine, tcp);
-			}
-			return cache.get(element).booleanValue();
-		}
-		return true;
+	protected void recurseTrue(Object o, ITreeContentProvider provider) {
+		cache.put(o, new Boolean(true));
+		Object[] children = provider.getChildren(o);
+		for( int i = 0; i < children.length; i++ )
+			recurseTrue(children[i], provider);
 	}
 	
-	protected int computeWidth(Control control) {
-		return 100;
+	public boolean shouldShow(Object element, Object parentElement) {
+		String filterText = this.filterText;
+		if( filterText != null && !("".equals(filterText))) {
+			boolean tmp = cache.get(element) != null && cache.get(element).booleanValue();
+			return tmp;
+		}
+		return true;
 	}
 	
     public void dispose() {

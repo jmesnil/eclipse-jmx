@@ -14,7 +14,13 @@ import net.jmesnil.jmx.ui.internal.actions.NewConnectionAction;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 /**
@@ -22,7 +28,9 @@ import org.eclipse.ui.navigator.CommonNavigator;
  */
 public class Navigator extends CommonNavigator {
 	public static final String VIEW_ID = "net.jmesnil.jmx.ui.internal.views.navigator.MBeanExplorer"; //$NON-NLS-1$
-	private QueryContribution queryContribution;
+	private Text filterText;
+	private QueryContribution query;
+	
 	public Navigator() {
 		super();
 	}
@@ -31,12 +39,42 @@ public class Navigator extends CommonNavigator {
 	}
 	public void createPartControl(Composite aParent) {
 		fillActionBars();
-		super.createPartControl(aParent);
+		Composite newParent = new Composite(aParent, SWT.NONE);
+		newParent.setLayout(new FormLayout());
+		super.createPartControl(newParent);
+		filterText = new Text(newParent, SWT.SINGLE | SWT.BORDER );
+		
+		// layout the two objects
+		FormData fd = new FormData();
+		fd.left = new FormAttachment(0,5);
+		fd.right = new FormAttachment(100,-5);
+		fd.top = new FormAttachment(0,5);
+		filterText.setLayoutData(fd);
+		
+		fd = new FormData();
+		fd.left = new FormAttachment(0,0);
+		fd.right = new FormAttachment(100,0);
+		fd.top = new FormAttachment(filterText, 5);
+		fd.bottom = new FormAttachment(100,0);
+		getCommonViewer().getTree().setLayoutData(fd);
+		
+		filterText.setToolTipText("Type in a filter"); 
+		filterText.setText("Type in a filter");
+		
+		Display.getDefault().asyncExec(new Runnable() { 
+			public void run() {
+				query = new QueryContribution(Navigator.this);
+			}
+		});
 	}
 
+	public Text getFilterText() {
+		return filterText;
+	}
+	
 	public void fillActionBars() {
-		queryContribution = new QueryContribution(this);
-	    getViewSite().getActionBars().getToolBarManager().add(queryContribution);
+//		queryContribution = new QueryContribution(this);
+//	    getViewSite().getActionBars().getToolBarManager().add(queryContribution);
 	    getViewSite().getActionBars().getToolBarManager().add(new NewConnectionAction());
 	    getViewSite().getActionBars().getToolBarManager().add(new Separator());
 	    getViewSite().getActionBars().updateActionBars();
